@@ -19,6 +19,12 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
     </style>
 
+    <style name="AppTheme.NoActionBar" parent="AppTheme27">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
     <style name="AppThemeDark" parent="Theme.AppCompat">
         <item name="android:windowLightStatusBar">false</item>
         <item name="colorPrimary">@color/colorPrimaryDark</item>
@@ -30,11 +36,23 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
+    <style name="AppThemeDark.NoActionBar" parent="AppThemeDark">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
     <style name="AppThemeBlack" parent="AppThemeDark">
         <item name="colorPrimary">@color/colorPrimaryBlack</item>
         <item name="colorPrimaryDark">@color/colorPrimaryBlack</item>
         <item name="android:navigationBarColor">@color/colorPrimaryBlack</item>
         <item name="android:windowBackground">@color/colorPrimaryBlack</item>
+    </style>
+
+    <style name="AppThemeBlack.NoActionBar" parent="AppThemeBlack">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="AppThemePatch">
@@ -63,23 +81,6 @@
 
     <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:textColor">@color/colorAccent</item>
-    </style>
-
-    <style name="PopUpThemeLight" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="dialogCornerRadius">@dimen/corner_radius</item>
-        <item name="android:backgroundDimAmount">.32</item>
-    </style>
-
-    <style name="PopUpThemeDark" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="dialogCornerRadius">@dimen/corner_radius</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="android:backgroundDimAmount">.32</item>
-    </style>
-
-    <style name="PopUpThemeBlack" parent="PopUpThemeDark">
-        <item name="android:background">@color/colorPrimaryBlack</item>
     </style>
 
     <style name="BatteryBig">

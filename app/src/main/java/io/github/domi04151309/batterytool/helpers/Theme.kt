@@ -45,6 +45,40 @@ internal object Theme {
         context.setTheme(R.style.AppThemePatch)
     }
 
+    fun setNoActionBar(context: Context) {
+        when (PreferenceManager.getDefaultSharedPreferences(context).getString("theme", "auto")) {
+            "light" -> {
+                context.setTheme(R.style.AppTheme_NoActionBar)
+                recent(context, R.color.colorPrimary)
+            }
+            "dark" -> {
+                context.setTheme(R.style.AppThemeDark_NoActionBar)
+                recent(context, R.color.colorPrimaryDark)
+            }
+            "black" -> {
+                context.setTheme(R.style.AppThemeBlack_NoActionBar)
+                recent(context, R.color.colorPrimaryBlack)
+            }
+            "auto" -> {
+                when (context.resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        context.setTheme(R.style.AppThemeDark_NoActionBar)
+                        recent(context, R.color.colorPrimaryDark)
+                    }
+                    else -> {
+                        context.setTheme(R.style.AppTheme_NoActionBar)
+                        recent(context, R.color.colorPrimary)
+                    }
+                }
+            }
+            else -> {
+                context.setTheme(R.style.AppTheme_NoActionBar)
+                recent(context, R.color.colorPrimary)
+            }
+        }
+        context.setTheme(R.style.AppThemePatch)
+    }
+
     private fun recent(c: Context, color: Int) {
         val taskDescription = ActivityManager.TaskDescription(
             c.getString(R.string.app_name),

@@ -1,4 +1,72 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/settings"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    tools:context="io.github.domi04151309.batterytool.activities.MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        app:elevation="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <ImageView
+                android:id="@+id/settings_icon"
+                android:layout_width="50dp"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_settings"
+                android:alpha="0.6"
+                android:padding="13dp"
+                android:layout_centerVertical="true"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="?android:attr/textColorPrimary"
+                android:alpha="0.6"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include layout="@layout/content_main" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/space"
+        app:layout_anchorGravity="top|end"
+        android:tint="?android:attr/colorAccent"
+        android:backgroundTint="?android:attr/colorPrimary"
+        app:borderWidth="0dp"
+        app:srcCompat="@drawable/ic_edit" />
+
+    <View
+        android:id="@+id/space"
+        android:layout_width="@dimen/fab_margin_2"
+        android:layout_height="@dimen/fab_margin_2"
+        app:layout_anchor="@id/hibernate"
+        app:layout_anchorGravity="top|end" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/hibernate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_spa" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

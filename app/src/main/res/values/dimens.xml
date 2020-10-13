@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="corner_radius">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_margin_2">32dp</dimen>
 
     <dimen name="pref_icon_height">128dp</dimen>
 

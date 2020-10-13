@@ -1,0 +1,34 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/dummy_text">
+
+        <Preference
+            android:icon="@drawable/ic_info"
+            android:summary="@string/dummy_text"
+            android:title="@string/dummy_text" />
+        <Preference
+            android:icon="@drawable/ic_info"
+            android:summary="@string/dummy_text"
+            android:title="@string/dummy_text" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/dummy_text">
+
+        <Preference
+            android:icon="@drawable/ic_info"
+            android:summary="@string/dummy_text"
+            android:title="@string/dummy_text" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/dummy_text">
+
+        <Preference
+            android:icon="@drawable/ic_info"
+            android:summary="@string/dummy_text"
+            android:title="@string/dummy_text" />
+        <Preference
+            android:icon="@drawable/ic_info"
+            android:summary="@string/dummy_text"
+            android:title="@string/dummy_text" />
+    </PreferenceCategory>
+</PreferenceScreen>
