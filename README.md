@@ -1,4 +1,4 @@
-![App Icon](https://raw.githubusercontent.com/Domi04151309/BatteryTool/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
+![App Icon](https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 ## <b style="color:red;">This app does not fully work yet</b>
 # Battery Tool
 
@@ -16,7 +16,7 @@ TODO: Write description
 </a>
 
 ## Previews
-<img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/master/fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="18%" />
+<img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="18%" />
 
 <i style="color:gray;">
   Android, Google Play and the Google Play logo are trademarks of Google LLC.
