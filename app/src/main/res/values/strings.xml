@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Battery Tool</string>
+    <string name="app_by">Battery Tool by Domi04151309</string>
+
+    <string name="service_text">Battery Tool is running in the background</string>
+    <string name="service_channel">Service channel</string>
+
+    <string name="setup_title">Automatically stop apps running in the background.</string>
+    <string name="setup_summary">To do that this app needs root permissions. Just grant them after you have clicked continue.</string>
+    <string name="setup_button">Continue</string>
+
+    <string name="action_failed">Action failed</string>
+    <string name="action_failed_summary">Root is needed. Please enable root.</string>
+
+    <string name="str_security">Security</string>
+
+    <string name="prefs">Settings</string>
+    <string name="pref_theme">Change theme</string>
+    <string name="pref_theme_summary">Changes the look of the app</string>
+
+    <string-array name="pref_theme_array">
+        <item>Light theme</item>
+        <item>Dark theme</item>
+        <item>Black theme</item>
+        <item>Follow system theme</item>
+    </string-array>
+    <string-array name="pref_theme_array_values" translatable="false">
+        <item>light</item>
+        <item>dark</item>
+        <item>black</item>
+        <item>auto</item>
+    </string-array>
+
+    <string name="about">About</string>
+    <string name="about_summary">About the app</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_github">There may be newer versions available on <a href="https://github.com/Domi04151309/BatteryTool">GitHub</a>. This app is and always will be free software. Do not pay for this app.</string>
+    <string name="about_license">This app is distributed under the terms and conditions of the <a href="https://github.com/Domi04151309/BatteryTool/blob/master/LICENSE">GNU General Public License v3.0</a></string>
+    <string name="about_damage">I am not responsible for any damage to your device.</string>
+    <string name="about_icons">Icons by <a href="https://icons8.com/">Icons8</a> and <a href="https://material.io/resources/icons/">Google</a>.</string>
+</resources>

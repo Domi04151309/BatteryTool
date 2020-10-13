@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:padding="?dialogPreferredPadding"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pref_icon_height"
+        android:layout_marginBottom="?dialogPreferredPadding"
+        android:contentDescription="@string/str_security"
+        android:src="@drawable/ic_security" />
+
+    <TextView
+        style="@style/BatteryBig"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="?dialogPreferredPadding"
+        android:text="@string/setup_title" />
+
+    <TextView
+        style="@style/BatterySmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="?dialogPreferredPadding"
+        android:text="@string/setup_summary" />
+
+    <Button
+        style="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@null"
+        android:text="@string/setup_button" />
+</LinearLayout>

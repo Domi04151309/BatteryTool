@@ -1,0 +1,97 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppThemeSplash" parent="Theme.AppCompat">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <style name="AppTheme27" parent="AppThemeLight">
+        <item name="android:navigationBarColor">@color/colorPrimaryBlack</item>
+    </style>
+
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="alertDialogTheme">@style/DialogThemeLight</item>
+        <item name="dialogTheme">@style/DialogThemeLight</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+    </style>
+
+    <style name="AppThemeDark" parent="Theme.AppCompat">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="alertDialogTheme">@style/DialogThemeDark</item>
+        <item name="dialogTheme">@style/DialogThemeDark</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:windowBackground">@color/colorPrimaryDark</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+    </style>
+
+    <style name="AppThemeBlack" parent="AppThemeDark">
+        <item name="colorPrimary">@color/colorPrimaryBlack</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryBlack</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryBlack</item>
+        <item name="android:windowBackground">@color/colorPrimaryBlack</item>
+    </style>
+
+    <style name="AppThemePatch">
+        <item name="actionBarTheme">@style/ActionBarTheme</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="dialogCornerRadius">8dp</item>
+    </style>
+
+    <style name="ActionBarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+    </style>
+
+    <style name="DialogThemeLight" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="buttonBarButtonStyle">@style/DialogButtonStyle</item>
+        <item name="dialogCornerRadius">8dp</item>
+        <item name="android:backgroundDimAmount">.32</item>
+    </style>
+
+    <style name="DialogThemeDark" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="buttonBarButtonStyle">@style/DialogButtonStyle</item>
+        <item name="dialogCornerRadius">8dp</item>
+        <item name="android:backgroundDimAmount">.32</item>
+    </style>
+
+    <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="PopUpThemeLight" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="dialogCornerRadius">@dimen/corner_radius</item>
+        <item name="android:backgroundDimAmount">.32</item>
+    </style>
+
+    <style name="PopUpThemeDark" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="dialogCornerRadius">@dimen/corner_radius</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:backgroundDimAmount">.32</item>
+    </style>
+
+    <style name="PopUpThemeBlack" parent="PopUpThemeDark">
+        <item name="android:background">@color/colorPrimaryBlack</item>
+    </style>
+
+    <style name="BatteryBig">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+    </style>
+
+    <style name="BatterySmall">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+    </style>
+
+</resources>
