@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppThemeSplash" parent="Theme.AppCompat">
+    <style name="AppThemeSplash" parent="Theme.MaterialComponents">
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
@@ -8,7 +8,7 @@
         <item name="android:navigationBarColor">@color/colorPrimaryBlack</item>
     </style>
 
-    <style name="AppThemeLight" parent="Theme.AppCompat.Light">
+    <style name="AppThemeLight" parent="Theme.MaterialComponents.Light">
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
@@ -25,7 +25,7 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="AppThemeDark" parent="Theme.AppCompat">
+    <style name="AppThemeDark" parent="Theme.MaterialComponents">
         <item name="android:windowLightStatusBar">false</item>
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -58,28 +58,30 @@
     <style name="AppThemePatch">
         <item name="actionBarTheme">@style/ActionBarTheme</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSurface">?attr/colorPrimary</item>
+        <item name="colorSecondary">?attr/colorAccent</item>
         <item name="dialogCornerRadius">8dp</item>
     </style>
 
-    <style name="ActionBarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+    <style name="ActionBarTheme" parent="ThemeOverlay.MaterialComponents.ActionBar">
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="DialogThemeLight" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="DialogThemeLight" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="buttonBarButtonStyle">@style/DialogButtonStyle</item>
         <item name="dialogCornerRadius">8dp</item>
         <item name="android:backgroundDimAmount">.32</item>
     </style>
 
-    <style name="DialogThemeDark" parent="Theme.AppCompat.Dialog">
+    <style name="DialogThemeDark" parent="Theme.MaterialComponents.Dialog">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="buttonBarButtonStyle">@style/DialogButtonStyle</item>
         <item name="dialogCornerRadius">8dp</item>
         <item name="android:backgroundDimAmount">.32</item>
     </style>
 
-    <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+    <style name="DialogButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 

@@ -47,8 +47,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_margin="@dimen/fab_margin"
-        android:tint="?android:attr/colorAccent"
-        android:backgroundTint="?android:attr/colorPrimary"
+        app:tint="?android:attr/colorAccent"
+        app:backgroundTint="?android:attr/colorPrimary"
         app:layout_anchor="@id/space"
         app:layout_anchorGravity="top|end"
         app:borderWidth="0dp"
@@ -67,6 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_spa" />
+        app:srcCompat="@drawable/ic_spa"
+        app:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

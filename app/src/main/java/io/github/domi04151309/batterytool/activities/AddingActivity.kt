@@ -2,6 +2,7 @@ package io.github.domi04151309.batterytool.activities
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -14,10 +15,10 @@ class AddingActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.set(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        setContentView(R.layout.activity_adding)
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.settings, PreferenceFragment())
+            .replace(R.id.content, PreferenceFragment())
             .commit()
     }
 
@@ -29,7 +30,7 @@ class AddingActivity : AppCompatActivity(),
         fragment.arguments = pref.extras
         fragment.setTargetFragment(caller, 0)
         supportFragmentManager.beginTransaction()
-            .replace(R.id.settings, fragment)
+            .replace(R.id.content, fragment)
             .addToBackStack(null)
             .commit()
         return true
@@ -39,6 +40,10 @@ class AddingActivity : AppCompatActivity(),
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             addPreferencesFromResource(R.xml.pref_adding)
+
+            val addingArray: ArrayList<CharSequence> = arrayListOf()
+            val addingArrayDisplay: ArrayList<CharSequence> = arrayListOf()
+            val bottomBar = requireActivity().findViewById<TextView>(R.id.bottom_title)
 
             Thread {
                 val pm: PackageManager = requireContext().packageManager
@@ -51,6 +56,18 @@ class AddingActivity : AppCompatActivity(),
                         preference.icon = packageInfo.loadIcon(pm)
                         preference.title = packageInfo.loadLabel(pm)
                         preference.summary = packageInfo.packageName
+                        preference.setOnPreferenceClickListener {
+                            if (addingArray.contains(it.summary)) {
+                                addingArray.remove(it.summary)
+                                addingArrayDisplay.remove(pm.getApplicationLabel(pm.getApplicationInfo(it.summary.toString(), 0)))
+                            }
+                            else {
+                                addingArray.add(it.summary)
+                                addingArrayDisplay.add(pm.getApplicationLabel(pm.getApplicationInfo(it.summary.toString(), 0)))
+                            }
+                            bottomBar.text = addingArrayDisplay.joinToString()
+                            true
+                        }
                         arrayList.add(preference)
                     }
                 }
