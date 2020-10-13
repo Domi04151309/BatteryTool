@@ -16,6 +16,10 @@
 
     <string name="str_security">Security</string>
 
+    <string name="main_stopped_soon">Will get stopped soon</string>
+    <string name="main_stopped_unnecessary">No need to stop</string>
+    <string name="main_stopped">Stopped</string>
+
     <string name="prefs">Settings</string>
     <string name="pref_theme">Change theme</string>
     <string name="pref_theme_summary">Changes the look of the app</string>
