@@ -54,6 +54,14 @@
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
+            android:name=".activities.AddingActivity"
+            android:label="@string/adding"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+        <activity
             android:name=".activities.AboutActivity"
             android:label="@string/about"
             android:parentActivityName=".activities.SettingsActivity">

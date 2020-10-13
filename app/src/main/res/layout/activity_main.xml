@@ -42,17 +42,17 @@
     <include layout="@layout/content_main" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/edit"
+        android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/space"
-        app:layout_anchorGravity="top|end"
         android:tint="?android:attr/colorAccent"
         android:backgroundTint="?android:attr/colorPrimary"
+        app:layout_anchor="@id/space"
+        app:layout_anchorGravity="top|end"
         app:borderWidth="0dp"
-        app:srcCompat="@drawable/ic_edit" />
+        app:srcCompat="@drawable/ic_add" />
 
     <View
         android:id="@+id/space"

@@ -31,8 +31,8 @@ class MainActivity : AppCompatActivity(),
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
-        findViewById<FloatingActionButton>(R.id.edit).setOnClickListener {
-            Toast.makeText(this, R.string.dummy_text, Toast.LENGTH_SHORT).show()
+        findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
+            startActivity(Intent(this, AddingActivity::class.java))
         }
 
         findViewById<FloatingActionButton>(R.id.hibernate).setOnClickListener {
