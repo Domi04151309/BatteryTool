@@ -22,8 +22,6 @@ import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.ForegroundService
 import org.json.JSONArray
-import org.json.JSONObject
-
 
 class MainActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -124,7 +122,8 @@ class MainActivity : AppCompatActivity(),
                                             break
                                         }
                                     }
-                                    prefs.edit().putString(P.PREF_APP_LIST, jsonArray.toString()).apply()
+                                    prefs.edit().putString(P.PREF_APP_LIST, jsonArray.toString())
+                                        .apply()
                                     loadLists()
                                 }
                             }

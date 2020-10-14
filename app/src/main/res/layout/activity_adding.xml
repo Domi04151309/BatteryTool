@@ -29,7 +29,8 @@
                 android:layout_marginStart="@dimen/bottom_app_bar_start"
                 android:layout_marginEnd="@dimen/bottom_app_bar_end"
                 android:layout_marginVertical="@dimen/bottom_app_bar_vertical"
-                android:textColor="?android:attr/textColorPrimary"/>
+                android:textColor="?android:attr/textColorPrimary"
+                android:textIsSelectable="false" />
         </RelativeLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>
 

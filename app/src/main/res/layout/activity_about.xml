@@ -54,55 +54,55 @@
             android:id="@+id/by"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_info"
             android:drawablePadding="@dimen/about_item_margin"
             android:gravity="center_vertical"
             android:layout_marginTop="@dimen/about_item_margin"
             android:textColor="?android:textColorSecondary"
-            android:text="@string/app_by" />
+            android:text="@string/app_by"
+            app:drawableStartCompat="@drawable/ic_info" />
 
         <TextView
             android:id="@+id/github"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_github"
             android:drawablePadding="@dimen/about_item_margin"
             android:gravity="center_vertical"
             android:layout_marginTop="@dimen/about_item_margin"
             android:textColor="?android:textColorSecondary"
-            android:text="@string/about_github" />
+            android:text="@string/about_github"
+            app:drawableStartCompat="@drawable/ic_github" />
 
         <TextView
             android:id="@+id/license"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/about_item_margin"
-            android:drawableStart="@drawable/ic_scales"
             android:drawablePadding="@dimen/about_item_margin"
             android:gravity="center_vertical"
             android:textColor="?android:textColorSecondary"
-            android:text="@string/about_license" />
+            android:text="@string/about_license"
+            app:drawableStartCompat="@drawable/ic_scales" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_warning"
             android:drawablePadding="@dimen/about_item_margin"
             android:gravity="center_vertical"
             android:layout_marginTop="@dimen/about_item_margin"
             android:textColor="?android:textColorSecondary"
-            android:text="@string/about_damage" />
+            android:text="@string/about_damage"
+            app:drawableStartCompat="@drawable/ic_warning" />
 
         <TextView
             android:id="@+id/icons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/about_item_margin"
-            android:drawableStart="@drawable/ic_palette"
             android:drawablePadding="@dimen/about_item_margin"
             android:gravity="center_vertical"
             android:textColor="?android:textColorSecondary"
-            android:text="@string/about_icons" />
+            android:text="@string/about_icons"
+            app:drawableStartCompat="@drawable/ic_palette" />
 
     </LinearLayout>
 

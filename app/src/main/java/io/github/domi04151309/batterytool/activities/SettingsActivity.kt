@@ -46,7 +46,10 @@ class SettingsActivity : AppCompatActivity(),
         prefs.unregisterOnSharedPreferenceChangeListener(prefsChangedListener)
     }
 
-    override fun onPreferenceStartFragment(caller: PreferenceFragmentCompat, pref: Preference): Boolean {
+    override fun onPreferenceStartFragment(
+        caller: PreferenceFragmentCompat,
+        pref: Preference
+    ): Boolean {
         val fragment = supportFragmentManager.fragmentFactory.instantiate(
             classLoader,
             pref.fragment

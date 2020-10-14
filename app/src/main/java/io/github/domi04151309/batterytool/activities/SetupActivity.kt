@@ -19,7 +19,8 @@ class SetupActivity : Activity() {
 
         findViewById<Button>(R.id.button).setOnClickListener {
             if (Root.request()) {
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("setup_complete", true).apply()
+                PreferenceManager.getDefaultSharedPreferences(this).edit()
+                    .putBoolean("setup_complete", true).apply()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             } else {
