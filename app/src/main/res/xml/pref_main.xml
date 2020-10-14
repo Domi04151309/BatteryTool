@@ -12,11 +12,7 @@
             android:title="@string/dummy_text" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/main_stopped">
-
-        <Preference
-            android:icon="@mipmap/ic_launcher"
-            android:summary="@string/dummy_text"
-            android:title="@string/dummy_text" />
-    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="stopped"
+        android:title="@string/main_stopped" />
 </PreferenceScreen>
