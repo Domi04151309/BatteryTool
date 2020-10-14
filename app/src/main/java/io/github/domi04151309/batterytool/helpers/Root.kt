@@ -2,6 +2,7 @@ package io.github.domi04151309.batterytool.helpers
 
 import android.util.Log
 import java.io.DataOutputStream
+import java.util.*
 
 internal object Root {
 
@@ -27,5 +28,25 @@ internal object Root {
         } catch (e: Exception) {
             Log.e("Superuser", e.toString())
         }
+    }
+
+    fun getServices(): String {
+        var result = ""
+        try {
+            Runtime.getRuntime().exec(
+                arrayOf(
+                    "su",
+                    "-c",
+                    "dumpsys activity services"
+                )
+            ).inputStream.use { inputStream ->
+                Scanner(inputStream).useDelimiter("\\A").use { s ->
+                    result = if (s.hasNext()) s.next() else ""
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("Superuser", e.toString())
+        }
+        return result
     }
 }

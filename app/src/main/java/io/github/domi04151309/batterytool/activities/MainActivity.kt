@@ -1,6 +1,5 @@
 package io.github.domi04151309.batterytool.activities
 
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,7 +8,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -77,6 +75,7 @@ class MainActivity : AppCompatActivity(),
         private lateinit var c: Context
         private lateinit var prefs: SharedPreferences
         private lateinit var categorySoon: PreferenceCategory
+        private lateinit var categoryUnnecessary: PreferenceCategory
         private lateinit var categoryStopped: PreferenceCategory
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -85,6 +84,7 @@ class MainActivity : AppCompatActivity(),
             c = requireContext()
             prefs = PreferenceManager.getDefaultSharedPreferences(c)
             categorySoon = findPreference("soon") ?: throw NullPointerException()
+            categoryUnnecessary = findPreference("unnecessary") ?: throw NullPointerException()
             categoryStopped = findPreference("stopped") ?: throw NullPointerException()
 
         }
@@ -96,18 +96,13 @@ class MainActivity : AppCompatActivity(),
 
         private fun loadLists() {
             categorySoon.removeAll()
+            categoryUnnecessary.removeAll()
             categoryStopped.removeAll()
 
             val appArray = JSONArray(prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT))
             val preferenceSoonArray: ArrayList<Preference> = ArrayList(appArray.length() / 2)
             val preferenceStoppedArray: ArrayList<Preference> = ArrayList(appArray.length() / 2)
-            val activityManager = c.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-
-            activityManager.runningAppProcesses.forEach {
-                it.pkgList.forEach {
-                    Log.e("TAG", it)
-                }
-            }
+            val services = Root.getServices()
 
             var preference: Preference
             for (i in 0 until appArray.length()) {
@@ -156,13 +151,14 @@ class MainActivity : AppCompatActivity(),
                         preference.summary.toString(),
                         PackageManager.GET_META_DATA
                     ).flags and ApplicationInfo.FLAG_STOPPED != 0
-                ) preferenceSoonArray.add(preference)
-                else preferenceStoppedArray.add(preference)
-            }
-            for (item in preferenceStoppedArray.sortedWith(compareBy { it.title.toString() })) {
-                categorySoon.addPreference(item)
+                ) preferenceStoppedArray.add(preference)
+                else preferenceSoonArray.add(preference)
             }
             for (item in preferenceSoonArray.sortedWith(compareBy { it.title.toString() })) {
+                if (services.contains(item.summary)) categorySoon.addPreference(item)
+                else categoryUnnecessary.addPreference(item)
+            }
+            for (item in preferenceStoppedArray.sortedWith(compareBy { it.title.toString() })) {
                 categoryStopped.addPreference(item)
             }
         }

@@ -4,13 +4,9 @@
         android:key="soon"
         android:title="@string/main_stopped_soon" />
 
-    <PreferenceCategory android:title="@string/main_stopped_unnecessary">
-
-        <Preference
-            android:icon="@mipmap/ic_launcher"
-            android:summary="@string/dummy_text"
-            android:title="@string/dummy_text" />
-    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="unnecessary"
+        android:title="@string/main_stopped_unnecessary" />
 
     <PreferenceCategory
         android:key="stopped"
