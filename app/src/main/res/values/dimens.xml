@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="bottom_app_bar_start">0dp</dimen>
+    <dimen name="bottom_app_bar_end">128dp</dimen>
+    <dimen name="bottom_app_bar_vertical">8dp</dimen>
+
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_margin_2">32dp</dimen>
 

@@ -1,1 +1,11 @@
-<PreferenceScreen />
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="user"
+        android:title="@string/adding_user" />
+
+    <PreferenceCategory
+        android:key="system"
+        android:title="@string/adding_system" />
+
+</PreferenceScreen>

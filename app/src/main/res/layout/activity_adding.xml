@@ -7,8 +7,7 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="?attr/actionBarSize"
-        android:clipToPadding="false" />
+        android:paddingBottom="?attr/actionBarSize" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_app_bar"
@@ -24,10 +23,12 @@
 
             <TextView
                 android:id="@+id/bottom_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingHorizontal="?dialogPreferredPadding"
+                android:layout_marginStart="@dimen/bottom_app_bar_start"
+                android:layout_marginEnd="@dimen/bottom_app_bar_end"
+                android:layout_marginVertical="@dimen/bottom_app_bar_vertical"
                 android:textColor="?android:attr/textColorPrimary"/>
         </RelativeLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>

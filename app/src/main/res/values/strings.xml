@@ -21,6 +21,8 @@
     <string name="main_stopped">Stopped</string>
 
     <string name="adding">Add applications</string>
+    <string name="adding_user">User Applications</string>
+    <string name="adding_system">System Applications</string>
 
     <string name="prefs">Settings</string>
     <string name="pref_theme">Change theme</string>
