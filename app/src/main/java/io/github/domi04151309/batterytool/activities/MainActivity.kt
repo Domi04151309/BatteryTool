@@ -19,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.helpers.AppHelper
 import io.github.domi04151309.batterytool.helpers.P
+import io.github.domi04151309.batterytool.helpers.Root
 import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.ForegroundService
 import org.json.JSONArray
@@ -101,8 +102,11 @@ class MainActivity : AppCompatActivity(),
                         .setTitle(R.string.main_click_dialog_title)
                         .setItems(R.array.main_click_dialog_options) { _, which ->
                             when (which) {
-                                0 -> Toast.makeText(c, R.string.dummy_text, Toast.LENGTH_SHORT)
-                                    .show()
+                                0 -> {
+                                    Root.shell("am force-stop ${it.summary}")
+                                    Toast.makeText(c, R.string.toast_stopped, Toast.LENGTH_SHORT)
+                                        .show()
+                                }
                                 1 -> {
                                     startActivity(Intent().apply {
                                         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS

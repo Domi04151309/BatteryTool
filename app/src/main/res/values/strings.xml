@@ -27,6 +27,8 @@
         <item>Remove from list</item>
     </string-array>
 
+    <string name="toast_stopped">Stopped selected app</string>
+
     <string name="adding">Add applications</string>
     <string name="adding_user">User Applications</string>
     <string name="adding_system">System Applications</string>
