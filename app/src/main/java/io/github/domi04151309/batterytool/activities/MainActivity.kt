@@ -1,9 +1,14 @@
 package io.github.domi04151309.batterytool.activities
 
-import android.content.*
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.preference.Preference
@@ -17,7 +22,8 @@ import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.ForegroundService
 import org.json.JSONArray
-import java.lang.NullPointerException
+import org.json.JSONObject
+
 
 class MainActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -89,11 +95,48 @@ class MainActivity : AppCompatActivity(),
             val appArray = JSONArray(prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT))
             val preferenceArray: ArrayList<Preference> = ArrayList(appArray.length())
 
+            var preference: Preference
             for (i in 0 until appArray.length()) {
-                preferenceArray.add(AppHelper.generatePreference(c, appArray.getString(i)))
+                preference = AppHelper.generatePreference(c, appArray.getString(i))
+                preference.setOnPreferenceClickListener {
+                    AlertDialog.Builder(c)
+                        .setTitle(R.string.main_click_dialog_title)
+                        .setItems(R.array.main_click_dialog_options) { _, which ->
+                            when (which) {
+                                0 -> Toast.makeText(c, R.string.dummy_text, Toast.LENGTH_SHORT)
+                                    .show()
+                                1 -> {
+                                    startActivity(Intent().apply {
+                                        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                                        data = Uri.fromParts("package", it.summary.toString(), null)
+                                    })
+                                }
+                                2 -> {
+                                    val jsonArray = JSONArray(
+                                        prefs.getString(
+                                            P.PREF_APP_LIST,
+                                            P.PREF_APP_LIST_DEFAULT
+                                        )
+                                    )
+                                    for (j in 0 until jsonArray.length()) {
+                                        if (jsonArray.getString(j) == it.summary) {
+                                            jsonArray.remove(j)
+                                            break
+                                        }
+                                    }
+                                    prefs.edit().putString(P.PREF_APP_LIST, jsonArray.toString()).apply()
+                                    loadLists()
+                                }
+                            }
+                        }
+                        .setNegativeButton(android.R.string.cancel) { _, _ -> }
+                        .show()
+                    true
+                }
+                preferenceArray.add(preference)
             }
-            for (preference in preferenceArray.sortedWith(compareBy { it.title.toString() })) {
-                categorySoon.addPreference(preference)
+            for (item in preferenceArray.sortedWith(compareBy { it.title.toString() })) {
+                categorySoon.addPreference(item)
             }
 
         }

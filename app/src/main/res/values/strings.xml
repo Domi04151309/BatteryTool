@@ -20,6 +20,13 @@
     <string name="main_stopped_unnecessary">No need to stop</string>
     <string name="main_stopped">Stopped</string>
 
+    <string name="main_click_dialog_title">Select Action</string>
+    <string-array name="main_click_dialog_options">
+        <item>Stop now</item>
+        <item>Open app settings</item>
+        <item>Remove from list</item>
+    </string-array>
+
     <string name="adding">Add applications</string>
     <string name="adding_user">User Applications</string>
     <string name="adding_system">System Applications</string>
