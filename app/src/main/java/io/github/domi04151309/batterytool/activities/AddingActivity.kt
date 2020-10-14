@@ -4,14 +4,20 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.os.Looper
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.github.domi04151309.batterytool.R
+import io.github.domi04151309.batterytool.helpers.AppHelper
+import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Theme
+import org.json.JSONArray
 
 class AddingActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -46,9 +52,9 @@ class AddingActivity : AppCompatActivity(),
     class PreferenceFragment : PreferenceFragmentCompat() {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            addPreferencesFromResource(R.xml.pref_adding)
-
-            val pm: PackageManager = requireContext().packageManager
+            val c = requireContext()
+            val prefs = PreferenceManager.getDefaultSharedPreferences(c)
+            val pm: PackageManager = c.packageManager
             val addingArray: ArrayList<CharSequence> = arrayListOf()
             val addingArrayDisplay: ArrayList<CharSequence> = arrayListOf()
             val bottomBar = requireActivity().findViewById<TextView>(R.id.bottom_title)
@@ -59,12 +65,11 @@ class AddingActivity : AppCompatActivity(),
                 val arrayListSystem: ArrayList<Preference> = ArrayList(packages.size)
                 for (packageInfo in packages) {
                     if (pm.getLaunchIntentForPackage(packageInfo.packageName) != null
-                        && packageInfo.packageName != requireContext().packageName
+                        && prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
+                            ?.contains(packageInfo.packageName) != true
+                        && packageInfo.packageName != c.packageName
                     ) {
-                        val preference = Preference(requireContext())
-                        preference.icon = packageInfo.loadIcon(pm)
-                        preference.title = packageInfo.loadLabel(pm)
-                        preference.summary = packageInfo.packageName
+                        val preference = AppHelper.generatePreference(c, packageInfo)
                         preference.setOnPreferenceClickListener {
                             if (addingArray.contains(it.summary)) {
                                 it.icon = pm.getApplicationIcon(
@@ -92,7 +97,7 @@ class AddingActivity : AppCompatActivity(),
                                             )
                                         ),
                                         ContextCompat.getDrawable(
-                                            requireContext(),
+                                            c,
                                             R.drawable.overlay_icon
                                         )
                                     )
@@ -107,7 +112,9 @@ class AddingActivity : AppCompatActivity(),
                                     )
                                 )
                             }
-                            bottomBar.text = addingArrayDisplay.joinToString()
+                            bottomBar.text =
+                                addingArrayDisplay.sortedWith(compareBy { chars -> chars.toString() })
+                                    .joinToString()
                             true
                         }
                         if (packageInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) {
@@ -117,17 +124,28 @@ class AddingActivity : AppCompatActivity(),
                         }
                     }
                 }
+
+                Looper.prepare()
+                addPreferencesFromResource(R.xml.pref_adding)
                 for (preference in arrayList.sortedWith(compareBy { it.title.toString() })) {
                     findPreference<PreferenceCategory>("user")?.addPreference(preference)
                 }
                 for (preference in arrayListSystem.sortedWith(compareBy { it.title.toString() })) {
                     findPreference<PreferenceCategory>("system")?.addPreference(preference)
                 }
-                val bottomDivider = Preference(requireContext())
+                val bottomDivider = Preference(c)
                 bottomDivider.layoutResource = R.layout.preference_divider
                 bottomDivider.isSelectable = false
                 preferenceScreen.addPreference(bottomDivider)
             }.start()
+
+            requireActivity().findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
+                val currentList =
+                    JSONArray(prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT))
+                for (item in addingArray) currentList.put(item)
+                prefs.edit().putString(P.PREF_APP_LIST, currentList.toString()).apply()
+                requireActivity().finish()
+            }
         }
     }
 }

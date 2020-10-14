@@ -1,21 +1,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/main_stopped_soon">
-
-        <Preference
-            android:icon="@drawable/ic_info"
-            android:summary="@string/dummy_text"
-            android:title="@string/dummy_text" />
-        <Preference
-            android:icon="@drawable/ic_info"
-            android:summary="@string/dummy_text"
-            android:title="@string/dummy_text" />
-    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="soon"
+        android:title="@string/main_stopped_soon" />
 
     <PreferenceCategory android:title="@string/main_stopped_unnecessary">
 
         <Preference
-            android:icon="@drawable/ic_info"
+            android:icon="@mipmap/ic_launcher"
             android:summary="@string/dummy_text"
             android:title="@string/dummy_text" />
     </PreferenceCategory>
@@ -23,11 +15,7 @@
     <PreferenceCategory android:title="@string/main_stopped">
 
         <Preference
-            android:icon="@drawable/ic_info"
-            android:summary="@string/dummy_text"
-            android:title="@string/dummy_text" />
-        <Preference
-            android:icon="@drawable/ic_info"
+            android:icon="@mipmap/ic_launcher"
             android:summary="@string/dummy_text"
             android:title="@string/dummy_text" />
     </PreferenceCategory>
