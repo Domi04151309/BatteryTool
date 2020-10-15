@@ -3,7 +3,6 @@ package io.github.domi04151309.batterytool.helpers
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import org.json.JSONArray

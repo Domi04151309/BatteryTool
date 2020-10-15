@@ -25,7 +25,10 @@ class StopActivity : Activity() {
             RESULT_OK,
             Intent().putExtra(Intent.EXTRA_SHORTCUT_INTENT, Intent(this, this::class.java))
                 .putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.shortcut))
-                .putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher))
+                .putExtra(
+                    Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+                    Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher)
+                )
         )
     }
 }
