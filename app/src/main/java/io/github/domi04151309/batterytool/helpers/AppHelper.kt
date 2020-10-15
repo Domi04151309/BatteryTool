@@ -40,8 +40,6 @@ object AppHelper {
         val services = Root.getServices()
         val commandArray: ArrayList<String> = ArrayList(appArray.length() / 2)
 
-        Log.e("TAG", "spaghetti noodles")
-
         for (i in 0 until appArray.length()) {
             if (c.packageManager.getApplicationInfo(
                     appArray.getString(i),
@@ -49,10 +47,9 @@ object AppHelper {
                 ).flags and ApplicationInfo.FLAG_STOPPED == 0
                 && services.contains(appArray.getString(i))
             ) {
-                Log.e("TAG", appArray.getString(i))
                 commandArray.add("am force-stop ${appArray.getString(i)}")
             }
         }
-        Root.shell(commandArray.toArray(arrayOf<String>()))
+        if (commandArray.isNotEmpty()) Root.shell(commandArray.toArray(arrayOf<String>()))
     }
 }
