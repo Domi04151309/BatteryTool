@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Battery Tool</string>
     <string name="app_by">Battery Tool by Domi04151309</string>
+    <string name="shortcut">Stop now</string>
 
     <string name="service_text">Battery Tool is running in the background</string>
     <string name="service_channel">Service channel</string>
