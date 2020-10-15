@@ -30,6 +30,10 @@ import org.json.JSONArray
 class MainActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
+    private var themeId = ""
+    private fun getThemeId(): String =
+        PreferenceManager.getDefaultSharedPreferences(this).getString("theme", "auto") ?: "auto"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.setNoActionBar(this)
         super.onCreate(savedInstanceState)
@@ -47,6 +51,17 @@ class MainActivity : AppCompatActivity(),
 
         findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
             startActivity(Intent(this, AddingActivity::class.java))
+        }
+
+        themeId = getThemeId()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (getThemeId() != themeId) {
+            themeId = getThemeId()
+            recreate()
         }
     }
 
@@ -84,14 +99,13 @@ class MainActivity : AppCompatActivity(),
             categoryUnnecessary = findPreference("unnecessary") ?: throw NullPointerException()
             categoryStopped = findPreference("stopped") ?: throw NullPointerException()
 
-            requireActivity().findViewById<FloatingActionButton>(R.id.hibernate)
-                .setOnClickListener {
-                    AppHelper.hibernate(c)
-                    Toast.makeText(c, R.string.toast_stopped_all, Toast.LENGTH_SHORT).show()
-                    Handler().postDelayed({
-                        loadLists()
-                    }, 1000)
-                }
+            activity?.findViewById<FloatingActionButton>(R.id.hibernate)?.setOnClickListener {
+                AppHelper.hibernate(c)
+                Toast.makeText(c, R.string.toast_stopped_all, Toast.LENGTH_SHORT).show()
+                Handler().postDelayed({
+                    loadLists()
+                }, 1000)
+            }
         }
 
         override fun onStart() {
