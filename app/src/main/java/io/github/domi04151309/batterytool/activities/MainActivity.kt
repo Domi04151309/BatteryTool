@@ -99,6 +99,15 @@ class MainActivity : AppCompatActivity(),
             loadLists()
         }
 
+        private fun generateEmptyListIndicator(): Preference {
+            val emptyPreference = Preference(c)
+            emptyPreference.icon = ContextCompat.getDrawable(c, R.mipmap.ic_launcher)
+            emptyPreference.title = c.getString(R.string.main_empty)
+            emptyPreference.summary = c.getString(R.string.main_empty_summary)
+            emptyPreference.isSelectable = false
+            return emptyPreference
+        }
+
         private fun loadLists() {
             categorySoon.removeAll()
             categoryUnnecessary.removeAll()
@@ -159,12 +168,27 @@ class MainActivity : AppCompatActivity(),
                 ) preferenceStoppedArray.add(preference)
                 else preferenceSoonArray.add(preference)
             }
+            var isSoonEmpty = true
+            var isUnnecessaryEmpty = true
             for (item in preferenceSoonArray.sortedWith(compareBy { it.title.toString() })) {
-                if (services.contains(item.summary)) categorySoon.addPreference(item)
-                else categoryUnnecessary.addPreference(item)
+                if (services.contains(item.summary)) {
+                    categorySoon.addPreference(item)
+                    isSoonEmpty = false
+                } else {
+                    categoryUnnecessary.addPreference(item)
+                    isUnnecessaryEmpty = false
+                }
             }
-            for (item in preferenceStoppedArray.sortedWith(compareBy { it.title.toString() })) {
-                categoryStopped.addPreference(item)
+
+            if (isSoonEmpty) categorySoon.addPreference(generateEmptyListIndicator())
+            if (isUnnecessaryEmpty) categoryUnnecessary.addPreference(generateEmptyListIndicator())
+
+            if (preferenceStoppedArray.isEmpty()) {
+                categoryStopped.addPreference(generateEmptyListIndicator())
+            } else {
+                for (item in preferenceStoppedArray.sortedWith(compareBy { it.title.toString() })) {
+                    categoryStopped.addPreference(item)
+                }
             }
         }
     }

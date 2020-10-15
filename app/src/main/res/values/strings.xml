@@ -17,6 +17,8 @@
     <string name="main_stopped_soon">Will get stopped soon</string>
     <string name="main_stopped_unnecessary">No need to stop</string>
     <string name="main_stopped">Stopped</string>
+    <string name="main_empty">Nothing to show here</string>
+    <string name="main_empty_summary">It seems that no app falls into this category</string>
 
     <string name="main_click_dialog_title">Select Action</string>
     <string-array name="main_click_dialog_options">
