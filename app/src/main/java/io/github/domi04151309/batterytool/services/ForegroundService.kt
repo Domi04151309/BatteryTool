@@ -22,6 +22,7 @@ class ForegroundService : Service() {
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentText(getString(R.string.service_text))
                 .setSmallIcon(R.drawable.ic_spa)
+                .setColor(getColor(R.color.colorAccent))
                 .setShowWhen(false)
                 .build()
         )
@@ -30,13 +31,13 @@ class ForegroundService : Service() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getSystemService(NotificationManager::class.java)?.createNotificationChannel(
-                NotificationChannel(
-                    CHANNEL_ID,
-                    getString(R.string.service_channel),
-                    NotificationManager.IMPORTANCE_LOW
-                )
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                getString(R.string.service_channel),
+                NotificationManager.IMPORTANCE_LOW
             )
+            channel.setShowBadge(false)
+            getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
         }
     }
 
