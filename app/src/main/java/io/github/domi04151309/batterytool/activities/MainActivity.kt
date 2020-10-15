@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
 import android.widget.ImageView
 import android.widget.Toast
@@ -47,10 +48,6 @@ class MainActivity : AppCompatActivity(),
         findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
             startActivity(Intent(this, AddingActivity::class.java))
         }
-
-        findViewById<FloatingActionButton>(R.id.hibernate).setOnClickListener {
-            Toast.makeText(this, R.string.dummy_text, Toast.LENGTH_SHORT).show()
-        }
     }
 
     override fun onPreferenceStartFragment(
@@ -87,6 +84,14 @@ class MainActivity : AppCompatActivity(),
             categoryUnnecessary = findPreference("unnecessary") ?: throw NullPointerException()
             categoryStopped = findPreference("stopped") ?: throw NullPointerException()
 
+            requireActivity().findViewById<FloatingActionButton>(R.id.hibernate)
+                .setOnClickListener {
+                    AppHelper.hibernate(c)
+                    Toast.makeText(c, R.string.toast_stopped_all, Toast.LENGTH_SHORT).show()
+                    Handler().postDelayed({
+                        loadLists()
+                    }, 1000)
+                }
         }
 
         override fun onStart() {

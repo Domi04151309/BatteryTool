@@ -1,6 +1,4 @@
 <resources>
-    <string name="dummy_text">Dummy text</string>
-
     <string name="app_name">Battery Tool</string>
     <string name="app_by">Battery Tool by Domi04151309</string>
 
@@ -28,6 +26,7 @@
     </string-array>
 
     <string name="toast_stopped">Stopped selected app</string>
+    <string name="toast_stopped_all">Stopped selected apps</string>
 
     <string name="adding">Add applications</string>
     <string name="adding_user">User Applications</string>

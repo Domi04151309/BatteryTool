@@ -30,6 +30,19 @@ internal object Root {
         }
     }
 
+    fun shell(commands: Array<String>) {
+        val p: Process
+        try {
+            p = Runtime.getRuntime().exec("su")
+            val os = DataOutputStream(p.outputStream)
+            for (command in commands) os.writeBytes("$command\n")
+            os.writeBytes("exit\n")
+            os.flush()
+        } catch (e: Exception) {
+            Log.e("Superuser", e.toString())
+        }
+    }
+
     fun getServices(): String {
         var result = ""
         try {
