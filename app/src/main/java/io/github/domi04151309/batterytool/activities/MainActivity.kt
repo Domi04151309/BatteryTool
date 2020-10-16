@@ -114,12 +114,13 @@ class MainActivity : AppCompatActivity(),
         }
 
         private fun generateEmptyListIndicator(): Preference {
-            val emptyPreference = Preference(c)
-            emptyPreference.icon = ContextCompat.getDrawable(c, R.mipmap.ic_launcher)
-            emptyPreference.title = c.getString(R.string.main_empty)
-            emptyPreference.summary = c.getString(R.string.main_empty_summary)
-            emptyPreference.isSelectable = false
-            return emptyPreference
+            return Preference(c).let {
+                it.icon = ContextCompat.getDrawable(c, R.mipmap.ic_launcher)
+                it.title = c.getString(R.string.main_empty)
+                it.summary = c.getString(R.string.main_empty_summary)
+                it.isSelectable = false
+                it
+            }
         }
 
         private fun loadLists() {
@@ -153,19 +154,13 @@ class MainActivity : AppCompatActivity(),
                                     })
                                 }
                                 2 -> {
-                                    val jsonArray = JSONArray(
-                                        prefs.getString(
-                                            P.PREF_APP_LIST,
-                                            P.PREF_APP_LIST_DEFAULT
-                                        )
-                                    )
-                                    for (j in 0 until jsonArray.length()) {
-                                        if (jsonArray.getString(j) == it.summary) {
-                                            jsonArray.remove(j)
+                                    for (j in 0 until appArray.length()) {
+                                        if (appArray.getString(j) == it.summary) {
+                                            appArray.remove(j)
                                             break
                                         }
                                     }
-                                    prefs.edit().putString(P.PREF_APP_LIST, jsonArray.toString())
+                                    prefs.edit().putString(P.PREF_APP_LIST, appArray.toString())
                                         .apply()
                                     loadLists()
                                 }

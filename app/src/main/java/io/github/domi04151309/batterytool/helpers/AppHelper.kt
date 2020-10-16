@@ -13,22 +13,29 @@ object AppHelper {
         c: Context,
         packageName: String
     ): Preference {
-        val applicationInfo = c.packageManager.getApplicationInfo(
-            packageName,
-            PackageManager.GET_META_DATA
-        )
-        return generatePreference(c, applicationInfo)
+        return Preference(c).let {
+            it.icon = c.packageManager.getApplicationIcon(packageName)
+            it.title = c.packageManager.getApplicationLabel(
+                c.packageManager.getApplicationInfo(
+                    packageName,
+                    PackageManager.GET_META_DATA
+                )
+            )
+            it.summary = packageName
+            it
+        }
     }
 
     internal fun generatePreference(
         c: Context,
         applicationInfo: ApplicationInfo
     ): Preference {
-        val it = Preference(c)
-        it.icon = applicationInfo.loadIcon(c.packageManager)
-        it.title = applicationInfo.loadLabel(c.packageManager)
-        it.summary = applicationInfo.packageName
-        return it
+        return Preference(c).let {
+            it.icon = applicationInfo.loadIcon(c.packageManager)
+            it.title = applicationInfo.loadLabel(c.packageManager)
+            it.summary = applicationInfo.packageName
+            it
+        }
     }
 
     internal fun hibernate(c: Context) {

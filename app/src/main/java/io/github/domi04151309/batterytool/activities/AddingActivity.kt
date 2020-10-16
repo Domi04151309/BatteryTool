@@ -72,29 +72,14 @@ class AddingActivity : AppCompatActivity(),
                         val preference = AppHelper.generatePreference(c, packageInfo)
                         preference.setOnPreferenceClickListener {
                             if (addingArray.contains(it.summary)) {
-                                it.icon = pm.getApplicationIcon(
-                                    pm.getApplicationInfo(
-                                        it.summary.toString(),
-                                        PackageManager.GET_META_DATA
-                                    )
-                                )
+                                it.icon = pm.getApplicationIcon(it.summary.toString())
                                 addingArray.remove(it.summary)
-                                addingArrayDisplay.remove(
-                                    pm.getApplicationLabel(
-                                        pm.getApplicationInfo(
-                                            it.summary.toString(),
-                                            PackageManager.GET_META_DATA
-                                        )
-                                    )
-                                )
+                                addingArrayDisplay.remove(it.title)
                             } else {
                                 it.icon = LayerDrawable(
                                     arrayOf(
                                         pm.getApplicationIcon(
-                                            pm.getApplicationInfo(
-                                                it.summary.toString(),
-                                                PackageManager.GET_META_DATA
-                                            )
+                                            it.summary.toString()
                                         ),
                                         ContextCompat.getDrawable(
                                             c,
@@ -103,14 +88,7 @@ class AddingActivity : AppCompatActivity(),
                                     )
                                 )
                                 addingArray.add(it.summary)
-                                addingArrayDisplay.add(
-                                    pm.getApplicationLabel(
-                                        pm.getApplicationInfo(
-                                            it.summary.toString(),
-                                            0
-                                        )
-                                    )
-                                )
+                                addingArrayDisplay.add(it.title)
                             }
                             bottomBar.text =
                                 addingArrayDisplay.sortedWith(compareBy { chars -> chars.toString() })
@@ -127,21 +105,27 @@ class AddingActivity : AppCompatActivity(),
 
                 Looper.prepare()
                 addPreferencesFromResource(R.xml.pref_adding)
+                val categoryUser = findPreference<PreferenceCategory>("user")
+                    ?: throw  NullPointerException()
                 for (preference in arrayList.sortedWith(compareBy { it.title.toString() })) {
-                    findPreference<PreferenceCategory>("user")?.addPreference(preference)
+                    categoryUser.addPreference(preference)
                 }
+                val categorySystem = findPreference<PreferenceCategory>("system")
+                    ?: throw  NullPointerException()
                 for (preference in arrayListSystem.sortedWith(compareBy { it.title.toString() })) {
-                    findPreference<PreferenceCategory>("system")?.addPreference(preference)
+                    categorySystem.addPreference(preference)
                 }
-                val bottomDivider = Preference(c)
-                bottomDivider.layoutResource = R.layout.preference_divider
-                bottomDivider.isSelectable = false
-                preferenceScreen.addPreference(bottomDivider)
+                preferenceScreen.addPreference(Preference(c).let {
+                    it.layoutResource = R.layout.preference_divider
+                    it.isSelectable = false
+                    it
+                })
             }.start()
 
             requireActivity().findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
-                val currentList =
-                    JSONArray(prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT))
+                val currentList = JSONArray(
+                    prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
+                )
                 for (item in addingArray) currentList.put(item)
                 prefs.edit().putString(P.PREF_APP_LIST, currentList.toString()).apply()
                 requireActivity().finish()

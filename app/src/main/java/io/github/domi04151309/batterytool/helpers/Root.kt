@@ -60,6 +60,18 @@ internal object Root {
         } catch (e: Exception) {
             Log.e("Superuser", e.toString())
         }
-        return result
+        return simplifiedServices(result)
+    }
+
+    private fun simplifiedServices(services: String): String {
+        var formatted = ""
+        for (line in services.lines()) {
+            if (line.contains('*')) formatted += line.substring(
+                line.indexOf('{'),
+                line.lastIndexOf('}') + 1
+            )
+            else if (line.contains('#')) formatted += line
+        }
+        return formatted
     }
 }
