@@ -11,7 +11,7 @@
     <string name="setup_button">Continue</string>
 
     <string name="action_failed">Action failed</string>
-    <string name="action_failed_summary">Root is needed. Please enable root.</string>
+    <string name="action_failed_summary">Root is needed for this app to work. Please enable root access.</string>
 
     <string name="str_security">Security</string>
 
