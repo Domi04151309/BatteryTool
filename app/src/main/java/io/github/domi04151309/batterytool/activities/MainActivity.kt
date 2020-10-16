@@ -32,7 +32,8 @@ class MainActivity : AppCompatActivity(),
 
     private var themeId = ""
     private fun getThemeId(): String =
-        PreferenceManager.getDefaultSharedPreferences(this).getString("theme", "auto") ?: "auto"
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .getString(P.PREF_THEME, P.PREF_THEME_DEFAULT) ?: P.PREF_THEME_DEFAULT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.setNoActionBar(this)

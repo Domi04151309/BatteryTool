@@ -10,7 +10,7 @@
         android:defaultValue="10"
         android:icon="@drawable/ic_timer"
         android:key="auto_stop_delay"
-        android:summary="@string/pref_auto_stop_delay_summary"
+        android:summary="@string/pref_auto_stop_delay"
         android:title="@string/pref_auto_stop_delay" />
     <ListPreference
         android:defaultValue="auto"

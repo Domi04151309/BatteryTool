@@ -7,20 +7,13 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.R
+import io.github.domi04151309.batterytool.custom.EditIntegerPreference
+import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Theme
+import java.lang.NullPointerException
 
 class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
-
-    companion object {
-        private const val PREF_THEME = "theme"
-    }
-
-    private lateinit var prefs: SharedPreferences
-    private val prefsChangedListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
-            if (key == PREF_THEME) this.recreate()
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.set(this)
@@ -30,20 +23,6 @@ class SettingsActivity : AppCompatActivity(),
             .beginTransaction()
             .replace(R.id.settings, PreferenceFragment())
             .commit()
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(this)
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        prefs.registerOnSharedPreferenceChangeListener(prefsChangedListener)
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        prefs.unregisterOnSharedPreferenceChangeListener(prefsChangedListener)
     }
 
     override fun onPreferenceStartFragment(
@@ -65,12 +44,48 @@ class SettingsActivity : AppCompatActivity(),
 
     class PreferenceFragment : PreferenceFragmentCompat() {
 
+        private val prefsChangedListener =
+            SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+                if (key == P.PREF_THEME) requireActivity().recreate()
+                if (key == P.PREF_AUTO_STOP_DELAY) updateAutoStopDelaySummary()
+            }
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(
+                prefsChangedListener
+            )
+        }
+
+        override fun onDestroy() {
+            super.onDestroy()
+            preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(
+                prefsChangedListener
+            )
+        }
+
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             addPreferencesFromResource(R.xml.pref_general)
+            updateAutoStopDelaySummary()
             findPreference<Preference>("about")?.setOnPreferenceClickListener {
                 startActivity(Intent(context, AboutActivity::class.java))
                 true
             }
+        }
+
+        private fun updateAutoStopDelaySummary() {
+            findPreference<EditIntegerPreference>(P.PREF_AUTO_STOP_DELAY)?.summary =
+                requireContext().resources.getQuantityString(
+                    R.plurals.pref_auto_stop_delay_summary,
+                    preferenceManager.sharedPreferences.getInt(
+                        P.PREF_AUTO_STOP_DELAY,
+                        P.PREF_AUTO_STOP_DELAY_DEFAULT
+                    ),
+                    preferenceManager.sharedPreferences.getInt(
+                        P.PREF_AUTO_STOP_DELAY,
+                        P.PREF_AUTO_STOP_DELAY_DEFAULT
+                    )
+                )
         }
     }
 }
