@@ -8,8 +8,23 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import io.github.domi04151309.batterytool.R
+import io.github.domi04151309.batterytool.receivers.ScreenStateReceiver
 
 class ForegroundService : Service() {
+
+    private val screenStateReceiver = ScreenStateReceiver()
+
+    override fun onCreate() {
+        super.onCreate()
+        val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
+        filter.addAction(Intent.ACTION_SCREEN_OFF)
+        registerReceiver(screenStateReceiver, filter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(screenStateReceiver)
+    }
 
     override fun onBind(intent: Intent): IBinder? {
         return null

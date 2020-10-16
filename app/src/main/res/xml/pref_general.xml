@@ -1,5 +1,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <SwitchPreference
+        android:defaultValue="true"
+        android:icon="@drawable/ic_auto_stop"
+        android:key="auto_stop"
+        android:summary="@string/pref_auto_stop_summary"
+        android:title="@string/pref_auto_stop" />
+    <io.github.domi04151309.batterytool.custom.EditIntegerPreference
+        android:defaultValue="10"
+        android:icon="@drawable/ic_timer"
+        android:key="auto_stop_delay"
+        android:summary="@string/pref_auto_stop_delay_summary"
+        android:title="@string/pref_auto_stop_delay" />
     <ListPreference
         android:defaultValue="auto"
         android:entries="@array/pref_theme_array"
