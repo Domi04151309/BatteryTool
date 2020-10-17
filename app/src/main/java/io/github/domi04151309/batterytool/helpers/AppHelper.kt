@@ -47,13 +47,17 @@ object AppHelper {
         val commandArray: ArrayList<String> = ArrayList(appArray.length() / 2)
 
         for (i in 0 until appArray.length()) {
-            if (c.packageManager.getApplicationInfo(
-                    appArray.getString(i),
-                    PackageManager.GET_META_DATA
-                ).flags and ApplicationInfo.FLAG_STOPPED == 0
-                && services.contains(appArray.getString(i))
-            ) {
-                commandArray.add("am force-stop ${appArray.getString(i)}")
+            try {
+                if (c.packageManager.getApplicationInfo(
+                        appArray.getString(i),
+                        PackageManager.GET_META_DATA
+                    ).flags and ApplicationInfo.FLAG_STOPPED == 0
+                    && services.contains(appArray.getString(i))
+                ) {
+                    commandArray.add("am force-stop ${appArray.getString(i)}")
+                }
+            } catch (e: PackageManager.NameNotFoundException) {
+                continue
             }
         }
         if (commandArray.isNotEmpty()) Root.shell(commandArray.toArray(arrayOf<String>()))

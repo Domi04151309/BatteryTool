@@ -26,6 +26,7 @@ import io.github.domi04151309.batterytool.helpers.Root
 import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.ForegroundService
 import org.json.JSONArray
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -136,7 +137,11 @@ class MainActivity : AppCompatActivity(),
 
             var preference: Preference
             for (i in 0 until appArray.length()) {
-                preference = AppHelper.generatePreference(c, appArray.getString(i))
+                preference = try {
+                    AppHelper.generatePreference(c, appArray.getString(i))
+                } catch (e: Exception) {
+                    continue
+                }
                 preference.setOnPreferenceClickListener {
                     AlertDialog.Builder(c)
                         .setTitle(R.string.main_click_dialog_title)
