@@ -1,8 +1,13 @@
 ![App Icon](https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
-## <b style="color:red;">This app does not fully work yet</b>
 # Battery Tool
 
-TODO: Write description
+Battery Tool helps you save battery by stopping apps that are running in the background.
+You can select which apps to stop but keep in mind that you should not stop alarm clock apps, messaging apps or system apps unless you do not rely on them.
+Additionally you can activate aggressive doze mode to save even more battery.
+
+This app requires root access!
+I am not responsible for any damage to your device!
+
 
 <a href='https://play.google.com/store/apps/details?id=io.github.domi04151309.batterytool'>
   <img src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'
@@ -16,7 +21,7 @@ TODO: Write description
 </a>
 
 ## Previews
-<img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="18%" />
+<img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="18%" />
 
 <i style="color:gray;">
   Android, Google Play and the Google Play logo are trademarks of Google LLC.

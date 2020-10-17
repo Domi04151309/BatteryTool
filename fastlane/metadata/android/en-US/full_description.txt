@@ -1,1 +1,17 @@
-TODO: Add a description
+Battery Tool helps you save battery by stopping apps that are running in the background.
+You can select which apps to stop but keep in mind that you should not stop alarm clock apps, messaging apps or system apps unless you do not rely on them.
+Additionally you can activate aggressive doze mode to save even more battery.
+
+This app requires root access!
+I am not responsible for any damage to your device!
+
+<font color="#2467d6"><b>Features</b></font>
+- Force stop apps automatically
+- Aggressive doze
+- Quick tile
+- Shortcut
+
+<font color="#2467d6"><b>Related Links</b></font>
+Source code: <a href="https://github.com/Domi04151309/BatteryTool">https://github.com/Domi04151309/BatteryTool</a>
+Website: <a href="https://domi04151309.github.io/Android/BatteryTool">https://domi04151309.github.io/Android/BatteryTool</a>
+Icons8: <a href="https://icons8.com/">https://icons8.com/</a>
