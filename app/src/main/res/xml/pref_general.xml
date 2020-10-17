@@ -12,6 +12,18 @@
         android:key="auto_stop_delay"
         android:summary="@string/pref_auto_stop_delay"
         android:title="@string/pref_auto_stop_delay" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_snooze"
+        android:key="aggressive_doze"
+        android:summary="@string/pref_aggressive_doze_summary"
+        android:title="@string/pref_aggressive_doze" />
+    <io.github.domi04151309.batterytool.custom.EditIntegerPreference
+        android:defaultValue="600"
+        android:icon="@drawable/ic_timer"
+        android:key="aggressive_doze_delay"
+        android:summary="@string/pref_aggressive_doze_delay"
+        android:title="@string/pref_aggressive_doze_delay" />
     <ListPreference
         android:defaultValue="auto"
         android:entries="@array/pref_theme_array"

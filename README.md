@@ -2,8 +2,8 @@
 # Battery Tool
 
 Battery Tool helps you save battery by stopping apps that are running in the background.
-You can select which apps to stop but keep in mind that you should not stop alarm clock apps, messaging apps or system apps unless you do not rely on them.
-Additionally you can activate aggressive doze mode to save even more battery.
+You can select which apps to stop but keep in mind that you should not stop alarm clock apps, messaging apps, or system apps unless you do not rely on them.
+Additionally, you can activate aggressive doze mode to save even more battery.
 
 This app requires root access!
 I am not responsible for any damage to your device!

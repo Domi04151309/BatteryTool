@@ -4,4 +4,8 @@
         <item quantity="one">Wait for %d second before stopping</item>
         <item quantity="other">Wait for %d seconds before stopping</item>
     </plurals>
+    <plurals name="pref_aggressive_doze_delay_summary">
+        <item quantity="one">Wait for %d second before entering doze mode</item>
+        <item quantity="other">Wait for %d seconds before entering doze mode</item>
+    </plurals>
 </resources>

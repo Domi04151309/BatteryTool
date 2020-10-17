@@ -5,12 +5,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.custom.EditIntegerPreference
 import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Theme
-import java.lang.NullPointerException
 
 class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -48,6 +46,7 @@ class SettingsActivity : AppCompatActivity(),
             SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
                 if (key == P.PREF_THEME) requireActivity().recreate()
                 if (key == P.PREF_AUTO_STOP_DELAY) updateAutoStopDelaySummary()
+                if (key == P.PREF_AGGRESSIVE_DOZE_DELAY) updateAggressiveDozeDelaySummary()
             }
 
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +66,7 @@ class SettingsActivity : AppCompatActivity(),
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             addPreferencesFromResource(R.xml.pref_general)
             updateAutoStopDelaySummary()
+            updateAggressiveDozeDelaySummary()
             findPreference<Preference>("about")?.setOnPreferenceClickListener {
                 startActivity(Intent(context, AboutActivity::class.java))
                 true
@@ -84,6 +84,21 @@ class SettingsActivity : AppCompatActivity(),
                     preferenceManager.sharedPreferences.getInt(
                         P.PREF_AUTO_STOP_DELAY,
                         P.PREF_AUTO_STOP_DELAY_DEFAULT
+                    )
+                )
+        }
+
+        private fun updateAggressiveDozeDelaySummary() {
+            findPreference<EditIntegerPreference>(P.PREF_AGGRESSIVE_DOZE_DELAY)?.summary =
+                requireContext().resources.getQuantityString(
+                    R.plurals.pref_aggressive_doze_delay_summary,
+                    preferenceManager.sharedPreferences.getInt(
+                        P.PREF_AGGRESSIVE_DOZE_DELAY,
+                        P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT
+                    ),
+                    preferenceManager.sharedPreferences.getInt(
+                        P.PREF_AGGRESSIVE_DOZE_DELAY,
+                        P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT
                     )
                 )
         }
