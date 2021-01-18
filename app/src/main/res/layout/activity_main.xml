@@ -47,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="@string/adding"
         app:tint="?android:attr/colorAccent"
         app:backgroundTint="?android:attr/colorPrimary"
         app:layout_anchor="@id/space"
@@ -67,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="@string/shortcut"
         app:srcCompat="@drawable/ic_spa"
         app:tint="@android:color/white" />
 
