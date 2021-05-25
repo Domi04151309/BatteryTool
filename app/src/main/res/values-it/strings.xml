@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">Battery Tool</string>
+    <string name="app_by">Battery Tool by Domi04151309</string>
+    <string name="shortcut">Stop now</string>
+
+    <string name="service_text">Battery Tool is running in the background</string>
+    <string name="service_channel">Service channel</string>
+
+    <string name="setup_title">Automatically stop apps running in the background.</string>
+    <string name="setup_summary">To do that this app needs root permissions. Just grant them after you have clicked continue.</string>
+    <string name="setup_button">Continue</string>
+
+    <string name="action_failed">Action failed</string>
+    <string name="action_failed_summary">Root is needed for this app to work. Please enable root access.</string>
+
+    <string name="str_security">Security</string>
+
+    <string name="main_stopped_soon">Will get stopped soon</string>
+    <string name="main_stopped_unnecessary">No need to stop</string>
+    <string name="main_stopped">Stopped</string>
+    <string name="main_empty">Nothing to show here</string>
+    <string name="main_empty_summary">It seems that no app falls into this category</string>
+
+    <string name="main_click_dialog_title">Select Action</string>
+    <string-array name="main_click_dialog_options">
+        <item>Stop now</item>
+        <item>Open app settings</item>
+        <item>Remove from list</item>
+    </string-array>
+
+    <string name="toast_stopped">Stopped selected app</string>
+    <string name="toast_stopped_all">Stopped selected apps</string>
+
+    <string name="adding">Add applications</string>
+    <string name="adding_user">User Applications</string>
+    <string name="adding_system">System Applications</string>
+
+    <string name="prefs">Settings</string>
+    <string name="pref_auto_stop">Automatically stop</string>
+    <string name="pref_auto_stop_summary">Automatically stop apps after the screen turns off</string>
+    <string name="pref_auto_stop_delay">Auto stop delay</string>
+    <string name="pref_aggressive_doze">Aggressive doze</string>
+    <string name="pref_aggressive_doze_summary">Enter doze mode after the screen turns off</string>
+    <string name="pref_aggressive_doze_delay">Aggressive doze delay</string>
+    <string name="pref_theme">Change theme</string>
+    <string name="pref_theme_summary">Changes the look of the app</string>
+
+    <string name="pref_int_failed">This value cannot be used</string>
+
+    <string-array name="pref_theme_array">
+        <item>Light theme</item>
+        <item>Dark theme</item>
+        <item>Black theme</item>
+        <item>Follow system theme</item>
+    </string-array>
+    <string-array name="pref_theme_array_values" translatable="false">
+        <item>light</item>
+        <item>dark</item>
+        <item>black</item>
+        <item>auto</item>
+    </string-array>
+
+    <string name="about">About</string>
+    <string name="about_summary">About the app</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_github">There may be newer versions available on <a href="https://github.com/Domi04151309/BatteryTool">GitHub</a>. This app is and always will be free software. Do not pay for this app.</string>
+    <string name="about_license">This app is distributed under the terms and conditions of the <a href="https://github.com/Domi04151309/BatteryTool/blob/master/LICENSE">GNU General Public License v3.0</a></string>
+    <string name="about_damage">I am not responsible for any damage to your device.</string>
+    <string name="about_icons">Icons by <a href="https://icons8.com/">Icons8</a> and <a href="https://material.io/resources/icons/">Google</a>.</string>
+</resources>

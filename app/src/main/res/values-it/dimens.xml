@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bottom_app_bar_start">0dp</dimen>
+    <dimen name="bottom_app_bar_end">128dp</dimen>
+    <dimen name="bottom_app_bar_vertical">8dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_margin_2">32dp</dimen>
+
+    <dimen name="pref_icon_height">128dp</dimen>
+
+    <dimen name="about_item_margin">16dp</dimen>
+    <dimen name="about_divider_margin">32dp</dimen>
+    <dimen name="header_icon_height">48dp</dimen>
+</resources>
