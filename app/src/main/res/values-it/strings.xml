@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">Battery Tool</string>
+    <string name="app_by">Battery Tool di Domi04151309</string>
+    <string name="shortcut">Chiudi ora</string>
+
+    <string name="service_text">Battery Tool è in esecuzione in background</string>
+    <string name="service_channel">Canale di servizio</string>
+
+    <string name="setup_title">Chiudi automaticamente le app in esecuzione in background.</string>
+    <string name="setup_summary">Per fare ciò questa app ha bisogno dei permessi di root. Basta consentirli dopo aver fatto clic su continua.</string>
+    <string name="setup_button">Continua</string>
+
+    <string name="action_failed">Azione non riuscita</string>
+    <string name="action_failed_summary">Il root è necessario per far funzionare questa app. Si prega di abilitare l\'accesso root.</string>
+
+    <string name="str_security">Sicurezza</string>
+
+    <string name="main_stopped_soon">L\'app verrà chiusa a breve</string>
+    <string name="main_stopped_unnecessary">Non è necessario chiudere l\'app</string>
+    <string name="main_stopped">Chiusa</string>
+    <string name="main_empty">Nessun risultato da mostrare qui</string>
+    <string name="main_empty_summary">Sembra che nessuna app rientri in questa categoria</string>
+
+    <string name="main_click_dialog_title">Seleziona azione</string>
+    <string-array name="main_click_dialog_options">
+        <item>Chiudi ora</item>
+        <item>Apri impostazioni app</item>
+        <item>Rimuovi dalla lista</item>
+    </string-array>
+
+    <string name="toast_stopped">L\'app selezionata è stata chiusa</string>
+    <string name="toast_stopped_all">Le app selezionate sono state chiuse</string>
+
+    <string name="adding">Aggiungi applicazioni</string>
+    <string name="adding_user">Applicazioni utente</string>
+    <string name="adding_system">Applicazioni di sistema</string>
+
+    <string name="prefs">Impostazioni</string>
+    <string name="pref_auto_stop">Chiudi automaticamente</string>
+    <string name="pref_auto_stop_summary">Chiudi automaticamente le app dopo lo spegnimento dello schermo</string>
+    <string name="pref_auto_stop_delay">Ritardo chiusura automatica</string>
+    <string name="pref_aggressive_doze">Aggressive doze</string>
+    <string name="pref_aggressive_doze_summary">Entra in modalità doze dopo lo spegnimento dello schermo</string>
+    <string name="pref_aggressive_doze_delay">Ritardo aggressive doze</string>
+    <string name="pref_theme">Modifica tema</string>
+    <string name="pref_theme_summary">Cambia l\'aspetto dell\'app</string>
+
+    <string name="pref_int_failed">Questo valore non può essere utilizzato</string>
+
+    <string-array name="pref_theme_array">
+        <item>Tema chiaro</item>
+        <item>Tema scuro</item>
+        <item>Tema nero</item>
+        <item>Mantieni il tema di sistema</item>
+    </string-array>
+    <string-array name="pref_theme_array_values" translatable="false">
+        <item>chiaro</item>
+        <item>scuro</item>
+        <item>nero</item>
+        <item>automatico</item>
+    </string-array>
+
+    <string name="about">Informazioni</string>
+    <string name="about_summary">Maggiori informazioni sull\'app</string>
+    <string name="about_version">Versione %1$s</string>
+    <string name="about_github">Potrebbero essere disponibili versioni più recenti su <a href="https://github.com/Domi04151309/BatteryTool">GitHub</a>. Questa app è e sarà sempre un software gratuito. Non pagare per questa app.</string>
+    <string name="about_license">Questa app è distribuita secondo i termini e condizioni di <a href="https://github.com/Domi04151309/BatteryTool/blob/master/LICENSE">GNU General Public License v3.0</a></string>
+    <string name="about_damage">Non sono responsabile per eventuali danni al tuo dispositivo.</string>
+    <string name="about_icons">Icone di <a href="https://icons8.com/">Icons8</a>e <a href="https://material.io/resources/icons/">Google</a>.</string>
+</resources>
