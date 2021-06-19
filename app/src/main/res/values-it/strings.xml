@@ -16,7 +16,7 @@
     <string name="str_security">Sicurezza</string>
 
     <string name="main_stopped_soon">L\'app verrà chiusa a breve</string>
-    <string name="main_stopped_unnecessary">Non è necessario chiudere l'app</string>
+    <string name="main_stopped_unnecessary">Non è necessario chiudere l\'app</string>
     <string name="main_stopped">Chiusa</string>
     <string name="main_empty">Nessun risultato da mostrare qui</string>
     <string name="main_empty_summary">Sembra che nessuna app rientri in questa categoria</string>
