@@ -9,6 +9,8 @@
     <string name="setup_title">Automatically stop apps running in the background.</string>
     <string name="setup_summary">To do that this app needs root permissions. Just grant them after you have clicked continue.</string>
     <string name="setup_button">Continue</string>
+    <string name="setup_demo">Demo</string>
+    <string name="setup_demo_summary">You can use the demo mode to take a look at the application without any functionality. Enable root access for the app to work.</string>
 
     <string name="action_failed">Action failed</string>
     <string name="action_failed_summary">Root is needed for this app to work. Please enable root access.</string>

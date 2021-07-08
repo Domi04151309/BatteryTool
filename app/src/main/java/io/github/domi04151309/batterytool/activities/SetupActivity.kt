@@ -31,5 +31,16 @@ class SetupActivity : Activity() {
                     .show()
             }
         }
+
+        findViewById<Button>(R.id.demo).setOnClickListener {
+            AlertDialog.Builder(this, R.style.DialogThemeLight)
+                .setTitle(R.string.setup_demo)
+                .setMessage(R.string.setup_demo_summary)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
+                .show()
+        }
     }
 }
