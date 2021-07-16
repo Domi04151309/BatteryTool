@@ -1,0 +1,1 @@
+This release features an all new Italian translation thanks to Silvia & Bianca and fixes Android 11 compatibility.

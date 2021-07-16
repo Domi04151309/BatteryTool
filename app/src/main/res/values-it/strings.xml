@@ -9,6 +9,8 @@
     <string name="setup_title">Chiudi automaticamente le app in esecuzione in background.</string>
     <string name="setup_summary">Per fare ciò questa app ha bisogno dei permessi di root. Basta consentirli dopo aver fatto clic su continua.</string>
     <string name="setup_button">Continua</string>
+    <string name="setup_demo">Demo</string>
+    <string name="setup_demo_summary">Puoi usare la modalità demo per dare un\'occhiata all\'applicazione ma senza alcuna funzionalità. Abilita l\'accesso root per usare l\'app.</string>
 
     <string name="action_failed">Azione non riuscita</string>
     <string name="action_failed_summary">Il root è necessario per far funzionare questa app. Si prega di abilitare l\'accesso root.</string>
