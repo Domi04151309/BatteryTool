@@ -1,7 +1,12 @@
 package io.github.domi04151309.batterytool.activities
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.*
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -9,6 +14,8 @@ import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.custom.EditIntegerPreference
 import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Theme
+import io.github.domi04151309.batterytool.services.NotificationService
+
 
 class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -40,13 +47,14 @@ class SettingsActivity : AppCompatActivity(),
         return true
     }
 
-    class PreferenceFragment : PreferenceFragmentCompat() {
+    inner class PreferenceFragment : PreferenceFragmentCompat() {
 
         private val prefsChangedListener =
             SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
                 if (key == P.PREF_THEME) requireActivity().recreate()
                 if (key == P.PREF_AUTO_STOP_DELAY) updateAutoStopDelaySummary()
                 if (key == P.PREF_AGGRESSIVE_DOZE_DELAY) updateAggressiveDozeDelaySummary()
+                if (key == P.PREF_ALLOW_MUSIC) updateAllowMusicApps()
             }
 
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,6 +109,42 @@ class SettingsActivity : AppCompatActivity(),
                         P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT
                     )
                 )
+        }
+
+        private fun updateAllowMusicApps() {
+            val enabled = preferenceManager.sharedPreferences.getBoolean(
+                P.PREF_ALLOW_MUSIC,
+                P.PREF_ALLOW_MUSIC_DEFAULT
+            )
+            if (enabled) {
+                // we need to check if we have notifications permissions
+                val hasPermission = NotificationService.getInstance() != null;
+                if (!hasPermission) {
+                    AlertDialog.Builder(context, R.style.DialogThemeLight)
+                        .setTitle(R.string.notifications_permission)
+                        .setMessage(R.string.notifications_permission_explanation)
+                        .setPositiveButton(android.R.string.ok) { _, _ ->
+                            try {
+
+                                val getNotifSettings = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                                    Log.d("Settings", "getNotifSettings returned " + result.resultCode)
+
+                                    if (result.resultCode == Activity.RESULT_OK) {
+                                    } else {
+                                        preferenceManager.sharedPreferences.getBoolean(
+                                            P.PREF_ALLOW_MUSIC,
+                                            P.PREF_ALLOW_MUSIC_DEFAULT
+                                        )
+                                    }
+                                }
+                                getNotifSettings.launch(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+                            } catch (e: ActivityNotFoundException) {
+                            }
+                        }
+                        .show()
+                }
+
+            }
         }
     }
 }
