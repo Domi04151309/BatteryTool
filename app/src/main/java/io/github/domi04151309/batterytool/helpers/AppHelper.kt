@@ -3,6 +3,7 @@ package io.github.domi04151309.batterytool.helpers
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.services.NotificationService
@@ -39,19 +40,13 @@ object AppHelper {
         }
     }
 
-    internal fun hibernate(c: Context) {
+    internal fun hibernateApps(c: Context, playingMusicPackage: String?) {
         val appArray = JSONArray(
             PreferenceManager.getDefaultSharedPreferences(c)
                 .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
         )
-        val services = Root.getServices()
         val commandArray: ArrayList<String> = ArrayList(appArray.length() / 2)
-        val whitelistMusicApps = PreferenceManager.getDefaultSharedPreferences(c)
-            .getBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
-        var playingMusicPackage: String? = null
-        if (whitelistMusicApps) {
-            playingMusicPackage = NotificationService.getInstance()?.getPlayingPackageName()
-        }
+        val services = Root.getServices()
         for (i in 0 until appArray.length()) {
             try {
                 val packageName = appArray.getString(i);
@@ -68,5 +63,20 @@ object AppHelper {
             }
         }
         if (commandArray.isNotEmpty()) Root.shell(commandArray.toArray(arrayOf<String>()))
+    }
+
+    internal fun hibernate(c: Context) {
+        val whitelistMusicApps = PreferenceManager.getDefaultSharedPreferences(c)
+            .getBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
+        if (whitelistMusicApps) {
+            NotificationService.getInstance()?.getPlayingPackageName { packageName ->
+                hibernateApps(
+                    c,
+                    packageName
+                )
+            }
+        } else {
+            hibernateApps(c, null);
+        }
     }
 }
