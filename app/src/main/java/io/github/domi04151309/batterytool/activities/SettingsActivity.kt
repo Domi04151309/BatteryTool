@@ -1,15 +1,15 @@
 package io.github.domi04151309.batterytool.activities
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.*
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.custom.EditIntegerPreference
 import io.github.domi04151309.batterytool.helpers.P
@@ -17,7 +17,7 @@ import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.NotificationService
 
 
-class SettingsActivity : AppCompatActivity(),
+public class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +47,9 @@ class SettingsActivity : AppCompatActivity(),
         return true
     }
 
-    inner class PreferenceFragment : PreferenceFragmentCompat() {
+    class PreferenceFragment : PreferenceFragmentCompat() {
 
+        private lateinit var getNotifSettings: ActivityResultLauncher<Intent>
         private val prefsChangedListener =
             SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
                 if (key == P.PREF_THEME) requireActivity().recreate()
@@ -57,8 +58,31 @@ class SettingsActivity : AppCompatActivity(),
                 if (key == P.PREF_ALLOW_MUSIC) updateAllowMusicApps()
             }
 
+
+        private fun checkNotificationsPermission() {
+            var needsPermission = preferenceManager.sharedPreferences.getBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
+            if (!needsPermission) {
+                return
+            }
+            val hasPermission = NotificationService.getInstance() != null;
+            if (!hasPermission) {
+                val editor: SharedPreferences.Editor = preferenceManager.sharedPreferences.edit()
+                editor.putBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
+                editor.commit()
+                var checkBoxPreference = preferenceScreen.findPreference<Preference>(
+                    P.PREF_ALLOW_MUSIC
+                ) as SwitchPreference?
+                if (checkBoxPreference != null) {
+                    checkBoxPreference.setChecked(P.PREF_ALLOW_MUSIC_DEFAULT);
+                }
+            }
+        }
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
+            checkNotificationsPermission()
+            getNotifSettings = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                checkNotificationsPermission()
+            }
             preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(
                 prefsChangedListener
             )
@@ -120,23 +144,11 @@ class SettingsActivity : AppCompatActivity(),
                 // we need to check if we have notifications permissions
                 val hasPermission = NotificationService.getInstance() != null;
                 if (!hasPermission) {
-                    AlertDialog.Builder(context, R.style.DialogThemeLight)
+                    AlertDialog.Builder(context)
                         .setTitle(R.string.notifications_permission)
                         .setMessage(R.string.notifications_permission_explanation)
                         .setPositiveButton(android.R.string.ok) { _, _ ->
                             try {
-
-                                val getNotifSettings = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                                    Log.d("Settings", "getNotifSettings returned " + result.resultCode)
-
-                                    if (result.resultCode == Activity.RESULT_OK) {
-                                    } else {
-                                        preferenceManager.sharedPreferences.getBoolean(
-                                            P.PREF_ALLOW_MUSIC,
-                                            P.PREF_ALLOW_MUSIC_DEFAULT
-                                        )
-                                    }
-                                }
                                 getNotifSettings.launch(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
                             } catch (e: ActivityNotFoundException) {
                             }

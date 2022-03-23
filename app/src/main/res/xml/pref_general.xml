@@ -25,11 +25,11 @@
         android:summary="@string/pref_aggressive_doze_delay"
         android:title="@string/pref_aggressive_doze_delay" />
     <SwitchPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:icon="@drawable/ic_music"
         android:key="allow_music"
-        android:summary="@string/notifications_permission_explanation"
-        android:title="@string/notifications_permission" />
+        android:summary="@string/pref_allow_music_apps_summary"
+        android:title="@string/pref_allow_music_apps" />
     <ListPreference
         android:defaultValue="auto"
         android:entries="@array/pref_theme_array"

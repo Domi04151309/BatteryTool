@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
+import io.github.domi04151309.batterytool.services.NotificationService
 import org.json.JSONArray
 
 object AppHelper {
@@ -45,11 +46,17 @@ object AppHelper {
         )
         val services = Root.getServices()
         val commandArray: ArrayList<String> = ArrayList(appArray.length() / 2)
-
+        val whitelistMusicApps = PreferenceManager.getDefaultSharedPreferences(c)
+            .getBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
+        var playingMusicPackage: String? = null
+        if (whitelistMusicApps) {
+            playingMusicPackage = NotificationService.getInstance()?.getPlayingPackageName()
+        }
         for (i in 0 until appArray.length()) {
             try {
-                if (c.packageManager.getApplicationInfo(
-                        appArray.getString(i),
+                val packageName = appArray.getString(i);
+                if (!packageName.equals(playingMusicPackage) && c.packageManager.getApplicationInfo(
+                        packageName,
                         PackageManager.GET_META_DATA
                     ).flags and ApplicationInfo.FLAG_STOPPED == 0
                     && services.contains(appArray.getString(i))
