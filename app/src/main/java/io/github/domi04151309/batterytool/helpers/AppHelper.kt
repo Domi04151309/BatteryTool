@@ -3,7 +3,6 @@ package io.github.domi04151309.batterytool.helpers
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.services.NotificationService
@@ -40,7 +39,7 @@ object AppHelper {
         }
     }
 
-    internal fun hibernateApps(c: Context, playingMusicPackage: String?) {
+    private fun hibernateApps(c: Context, playingMusicPackage: String?) {
         val appArray = JSONArray(
             PreferenceManager.getDefaultSharedPreferences(c)
                 .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
@@ -49,7 +48,7 @@ object AppHelper {
         val services = Root.getServices()
         for (i in 0 until appArray.length()) {
             try {
-                val packageName = appArray.getString(i);
+                val packageName = appArray.getString(i)
                 if (!packageName.equals(playingMusicPackage) && c.packageManager.getApplicationInfo(
                         packageName,
                         PackageManager.GET_META_DATA
@@ -76,7 +75,7 @@ object AppHelper {
                 )
             }
         } else {
-            hibernateApps(c, null);
+            hibernateApps(c, null)
         }
     }
 }

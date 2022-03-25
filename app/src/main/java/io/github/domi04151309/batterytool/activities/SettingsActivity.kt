@@ -17,7 +17,7 @@ import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.NotificationService
 
 
-public class SettingsActivity : AppCompatActivity(),
+class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,29 +60,29 @@ public class SettingsActivity : AppCompatActivity(),
 
 
         private fun checkNotificationsPermission() {
-            var needsPermission = preferenceManager.sharedPreferences.getBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
-            if (!needsPermission) {
-                return
-            }
-            val hasPermission = NotificationService.getInstance() != null;
+            val needsPermission = preferenceManager.sharedPreferences.getBoolean(
+                P.PREF_ALLOW_MUSIC,
+                P.PREF_ALLOW_MUSIC_DEFAULT
+            )
+            if (!needsPermission) return
+            val hasPermission = NotificationService.getInstance() != null
             if (!hasPermission) {
                 val editor: SharedPreferences.Editor = preferenceManager.sharedPreferences.edit()
                 editor.putBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
-                editor.commit()
-                var checkBoxPreference = preferenceScreen.findPreference<Preference>(
+                editor.apply()
+                preferenceScreen.findPreference<SwitchPreference>(
                     P.PREF_ALLOW_MUSIC
-                ) as SwitchPreference?
-                if (checkBoxPreference != null) {
-                    checkBoxPreference.setChecked(P.PREF_ALLOW_MUSIC_DEFAULT);
-                }
+                )?.isChecked = P.PREF_ALLOW_MUSIC_DEFAULT
             }
         }
+
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             checkNotificationsPermission()
-            getNotifSettings = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                checkNotificationsPermission()
-            }
+            getNotifSettings =
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                    checkNotificationsPermission()
+                }
             preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(
                 prefsChangedListener
             )
@@ -142,14 +142,14 @@ public class SettingsActivity : AppCompatActivity(),
             )
             if (enabled) {
                 // we need to check if we have notifications permissions
-                val hasPermission = NotificationService.getInstance() != null;
+                val hasPermission = NotificationService.getInstance() != null
                 if (!hasPermission) {
                     AlertDialog.Builder(context)
                         .setTitle(R.string.notifications_permission)
                         .setMessage(R.string.notifications_permission_explanation)
                         .setPositiveButton(android.R.string.ok) { _, _ ->
                             try {
-                                getNotifSettings.launch(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+                                getNotifSettings.launch(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
                             } catch (e: ActivityNotFoundException) {
                             }
                         }
