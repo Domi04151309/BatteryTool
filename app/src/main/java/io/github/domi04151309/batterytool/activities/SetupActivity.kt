@@ -24,7 +24,7 @@ class SetupActivity : Activity() {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             } else {
-                AlertDialog.Builder(this, R.style.DialogThemeLight)
+                AlertDialog.Builder(this)
                     .setTitle(R.string.action_failed)
                     .setMessage(R.string.action_failed_summary)
                     .setPositiveButton(android.R.string.ok) { _, _ -> }
@@ -33,7 +33,7 @@ class SetupActivity : Activity() {
         }
 
         findViewById<Button>(R.id.demo).setOnClickListener {
-            AlertDialog.Builder(this, R.style.DialogThemeLight)
+            AlertDialog.Builder(this)
                 .setTitle(R.string.setup_demo)
                 .setMessage(R.string.setup_demo_summary)
                 .setPositiveButton(android.R.string.ok) { _, _ ->

@@ -35,7 +35,8 @@
 
         <activity
             android:name=".activities.SplashActivity"
-            android:theme="@style/AppThemeSplash">
+            android:theme="@style/AppThemeSplash"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -78,7 +79,8 @@
             android:name=".activities.StopActivity"
             android:label="@string/shortcut"
             android:taskAffinity=""
-            android:theme="@android:style/Theme.NoDisplay">
+            android:theme="@android:style/Theme.NoDisplay"
+            android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
@@ -89,7 +91,8 @@
             android:name=".services.QuickTileService"
             android:icon="@drawable/ic_spa"
             android:label="@string/shortcut"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
@@ -102,6 +105,14 @@
             android:name=".services.ForegroundService"
             android:enabled="true"
             android:exported="false" />
+        <service
+            android:name=".services.NotificationService"
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
