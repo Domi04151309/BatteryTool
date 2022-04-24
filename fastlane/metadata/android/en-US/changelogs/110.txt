@@ -1,0 +1,1 @@
+This release features a new setting to prevent the stopping of music apps.
