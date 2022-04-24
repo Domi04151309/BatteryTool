@@ -8,4 +8,8 @@
         <item quantity="one">Wait for %d second before entering doze mode</item>
         <item quantity="other">Wait for %d seconds before entering doze mode</item>
     </plurals>
+    <plurals name="about_contributions">
+        <item quantity="one">%1$d contribution</item>
+        <item quantity="other">%1$d contributions</item>
+    </plurals>
 </resources>

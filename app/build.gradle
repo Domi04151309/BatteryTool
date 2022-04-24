@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "io.github.domi04151309.batterytool"
         minSdkVersion 23
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 101
         versionName "1.0.1"
     }
@@ -30,6 +30,7 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.preference:preference-ktx:1.1.1'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.media2:media2-session:1.2.1'
+    implementation 'com.android.volley:volley:1.2.1'
 }

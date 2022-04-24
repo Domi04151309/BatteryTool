@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="io.github.domi04151309.batterytool">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -54,27 +55,25 @@
             android:name=".activities.SettingsActivity"
             android:label="@string/prefs"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
-        </activity>
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.AddingActivity"
             android:label="@string/adding"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
-        </activity>
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/about"
-            android:parentActivityName=".activities.SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.SettingsActivity" />
-        </activity>
+            android:parentActivityName=".activities.SettingsActivity" />
+        <activity
+            android:name=".activities.ContributorActivity"
+            android:label="@string/about_contributors"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.AboutActivity" />
+        <activity
+            android:name=".activities.LibraryActivity"
+            android:label="@string/about_libraries"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.AboutActivity" />
         <activity
             android:name=".activities.StopActivity"
             android:label="@string/shortcut"

@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Battery Tool</string>
-    <string name="app_by">Battery Tool di Domi04151309</string>
     <string name="shortcut">Chiudi ora</string>
 
     <string name="service_text">Battery Tool è in esecuzione in background</string>
