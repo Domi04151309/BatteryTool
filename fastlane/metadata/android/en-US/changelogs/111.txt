@@ -1,0 +1,1 @@
+This release removes some resources that caused issues on F-Droid.

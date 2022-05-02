@@ -63,9 +63,4 @@
 
     <string name="about">Informazioni</string>
     <string name="about_summary">Maggiori informazioni sull\'app</string>
-    <string name="about_version">Versione %1$s</string>
-    <string name="about_github">Potrebbero essere disponibili versioni più recenti su <a href="https://github.com/Domi04151309/BatteryTool">GitHub</a>. Questa app è e sarà sempre un software gratuito. Non pagare per questa app.</string>
-    <string name="about_license">Questa app è distribuita secondo i termini e condizioni di <a href="https://github.com/Domi04151309/BatteryTool/blob/master/LICENSE">GNU General Public License v3.0</a></string>
-    <string name="about_damage">Non sono responsabile per eventuali danni al tuo dispositivo.</string>
-    <string name="about_icons">Icone di <a href="https://icons8.com/">Icons8</a>e <a href="https://material.io/resources/icons/">Google</a>.</string>
 </resources>
