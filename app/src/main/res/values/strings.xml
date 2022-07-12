@@ -29,6 +29,8 @@
     <string name="notifications_permission_explanation">To detect Apps which are playing music this app needs to read currently showing notifications, and thus needs the permission</string>
 
     <string name="main_click_dialog_title">Select Action</string>
+    <string name="main_click_dialog_turn_on_always">Always stop this app</string>
+    <string name="main_click_dialog_turn_off_always">Do not always stop this app</string>
     <string-array name="main_click_dialog_options">
         <item>Stop now</item>
         <item>Open app settings</item>
