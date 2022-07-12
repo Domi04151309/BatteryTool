@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Handler
+import android.os.Looper
 import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.helpers.AppHelper
 import io.github.domi04151309.batterytool.helpers.P
@@ -22,14 +23,14 @@ class ScreenStateReceiver : BroadcastReceiver() {
         if (intent.action == Intent.ACTION_SCREEN_OFF) {
             isScreenOn = false
             if (getPrefs(c).getBoolean(P.PREF_AUTO_STOP, P.PREF_AUTO_STOP_DEFAULT)) {
-                Handler().postDelayed(
+                Handler(Looper.getMainLooper()).postDelayed(
                     { if (!isScreenOn) AppHelper.hibernate(c) },
                     getPrefs(c).getInt(P.PREF_AUTO_STOP_DELAY, P.PREF_AUTO_STOP_DELAY_DEFAULT)
                         .toLong() * 1000
                 )
             }
             if (getPrefs(c).getBoolean(P.PREF_AGGRESSIVE_DOZE, P.PREF_AGGRESSIVE_DOZE_DEFAULT)) {
-                Handler().postDelayed(
+                Handler(Looper.getMainLooper()).postDelayed(
                     {
                         if (!isScreenOn) {
                             isInDozeMode = true

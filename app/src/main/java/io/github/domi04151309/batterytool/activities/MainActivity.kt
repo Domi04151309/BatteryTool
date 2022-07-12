@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.widget.ImageView
 import android.widget.Toast
@@ -104,7 +105,7 @@ class MainActivity : AppCompatActivity(),
             activity?.findViewById<FloatingActionButton>(R.id.hibernate)?.setOnClickListener {
                 AppHelper.hibernate(c)
                 Toast.makeText(c, R.string.toast_stopped_all, Toast.LENGTH_SHORT).show()
-                Handler().postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     loadLists()
                 }, 1000)
             }
