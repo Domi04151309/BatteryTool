@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(),
     ): Boolean {
         val fragment = supportFragmentManager.fragmentFactory.instantiate(
             classLoader,
-            pref.fragment
+            pref.fragment ?: throw IllegalStateException()
         )
         fragment.arguments = pref.extras
         fragment.setTargetFragment(caller, 0)
@@ -186,7 +186,10 @@ class MainActivity : AppCompatActivity(),
             var isSoonEmpty = true
             var isUnnecessaryEmpty = true
             for (item in preferenceSoonArray.sortedWith(compareBy { it.title.toString() })) {
-                if (services.contains(item.summary)) {
+                if (
+                    item.summary != null
+                    && services.contains(item.summary ?: throw IllegalStateException())
+                ) {
                     categorySoon.addPreference(item)
                     isSoonEmpty = false
                 } else {

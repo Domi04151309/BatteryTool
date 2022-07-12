@@ -38,7 +38,7 @@ class AddingActivity : AppCompatActivity(),
     ): Boolean {
         val fragment = supportFragmentManager.fragmentFactory.instantiate(
             classLoader,
-            pref.fragment
+            pref.fragment ?: throw IllegalStateException()
         )
         fragment.arguments = pref.extras
         fragment.setTargetFragment(caller, 0)
@@ -87,8 +87,12 @@ class AddingActivity : AppCompatActivity(),
                                         )
                                     )
                                 )
-                                addingArray.add(it.summary)
-                                addingArrayDisplay.add(it.title)
+                                if (it.summary != null) addingArray.add(
+                                    it.summary ?: throw IllegalStateException()
+                                )
+                                if (it.summary != null) addingArrayDisplay.add(
+                                    it.title ?: throw IllegalStateException()
+                                )
                             }
                             bottomBar.text =
                                 addingArrayDisplay.sortedWith(compareBy { chars -> chars.toString() })

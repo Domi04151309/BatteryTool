@@ -36,7 +36,7 @@ class SettingsActivity : AppCompatActivity(),
     ): Boolean {
         val fragment = supportFragmentManager.fragmentFactory.instantiate(
             classLoader,
-            pref.fragment
+            pref.fragment ?: throw IllegalStateException()
         )
         fragment.arguments = pref.extras
         fragment.setTargetFragment(caller, 0)
@@ -60,16 +60,16 @@ class SettingsActivity : AppCompatActivity(),
 
 
         private fun checkNotificationsPermission() {
-            val needsPermission = preferenceManager.sharedPreferences.getBoolean(
+            val needsPermission = preferenceManager.sharedPreferences?.getBoolean(
                 P.PREF_ALLOW_MUSIC,
                 P.PREF_ALLOW_MUSIC_DEFAULT
-            )
+            ) ?: P.PREF_ALLOW_MUSIC_DEFAULT
             if (!needsPermission) return
             val hasPermission = NotificationService.getInstance() != null
             if (!hasPermission) {
-                val editor: SharedPreferences.Editor = preferenceManager.sharedPreferences.edit()
-                editor.putBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
-                editor.apply()
+                preferenceManager.sharedPreferences?.edit()
+                    ?.putBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
+                    ?.apply()
                 preferenceScreen.findPreference<SwitchPreference>(
                     P.PREF_ALLOW_MUSIC
                 )?.isChecked = P.PREF_ALLOW_MUSIC_DEFAULT
@@ -83,14 +83,14 @@ class SettingsActivity : AppCompatActivity(),
                 registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                     checkNotificationsPermission()
                 }
-            preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(
+            preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(
                 prefsChangedListener
             )
         }
 
         override fun onDestroy() {
             super.onDestroy()
-            preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(
+            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(
                 prefsChangedListener
             )
         }
@@ -109,11 +109,11 @@ class SettingsActivity : AppCompatActivity(),
             findPreference<EditIntegerPreference>(P.PREF_AUTO_STOP_DELAY)?.summary =
                 requireContext().resources.getQuantityString(
                     R.plurals.pref_auto_stop_delay_summary,
-                    preferenceManager.sharedPreferences.getInt(
+                    preferenceManager.sharedPreferences?.getInt(
                         P.PREF_AUTO_STOP_DELAY,
                         P.PREF_AUTO_STOP_DELAY_DEFAULT
-                    ),
-                    preferenceManager.sharedPreferences.getInt(
+                    ) ?: P.PREF_AUTO_STOP_DELAY_DEFAULT,
+                    preferenceManager.sharedPreferences?.getInt(
                         P.PREF_AUTO_STOP_DELAY,
                         P.PREF_AUTO_STOP_DELAY_DEFAULT
                     )
@@ -124,11 +124,11 @@ class SettingsActivity : AppCompatActivity(),
             findPreference<EditIntegerPreference>(P.PREF_AGGRESSIVE_DOZE_DELAY)?.summary =
                 requireContext().resources.getQuantityString(
                     R.plurals.pref_aggressive_doze_delay_summary,
-                    preferenceManager.sharedPreferences.getInt(
+                    preferenceManager.sharedPreferences?.getInt(
                         P.PREF_AGGRESSIVE_DOZE_DELAY,
                         P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT
-                    ),
-                    preferenceManager.sharedPreferences.getInt(
+                    ) ?: P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
+                    preferenceManager.sharedPreferences?.getInt(
                         P.PREF_AGGRESSIVE_DOZE_DELAY,
                         P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT
                     )
@@ -136,10 +136,10 @@ class SettingsActivity : AppCompatActivity(),
         }
 
         private fun updateAllowMusicApps() {
-            val enabled = preferenceManager.sharedPreferences.getBoolean(
+            val enabled = preferenceManager.sharedPreferences?.getBoolean(
                 P.PREF_ALLOW_MUSIC,
                 P.PREF_ALLOW_MUSIC_DEFAULT
-            )
+            ) ?: P.PREF_ALLOW_MUSIC_DEFAULT
             if (enabled) {
                 // we need to check if we have notifications permissions
                 val hasPermission = NotificationService.getInstance() != null
