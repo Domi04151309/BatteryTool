@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
+import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.services.NotificationService
 import org.json.JSONArray
 
@@ -12,7 +13,8 @@ object AppHelper {
 
     internal fun generatePreference(
         c: Context,
-        packageName: String
+        packageName: String,
+        forced: ForcedSet
     ): Preference {
         return Preference(c).let {
             it.icon = c.packageManager.getApplicationIcon(packageName)
@@ -23,6 +25,9 @@ object AppHelper {
                 )
             )
             it.summary = packageName
+            if (forced.contains(packageName)) it.title = it.title as String +
+                    " " +
+                    c.resources.getString(R.string.main_forced)
             it
         }
     }

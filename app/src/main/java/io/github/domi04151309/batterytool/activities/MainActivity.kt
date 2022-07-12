@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity(),
             var preference: Preference
             for (i in 0 until appArray.length()) {
                 preference = try {
-                    AppHelper.generatePreference(c, appArray.getString(i))
+                    AppHelper.generatePreference(c, appArray.getString(i), forcedSet)
                 } catch (e: Exception) {
                     continue
                 }
