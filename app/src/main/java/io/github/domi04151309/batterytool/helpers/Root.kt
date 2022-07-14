@@ -3,6 +3,7 @@ package io.github.domi04151309.batterytool.helpers
 import android.util.Log
 import java.io.DataOutputStream
 import java.util.*
+import kotlin.collections.HashSet
 
 internal object Root {
 
@@ -43,7 +44,7 @@ internal object Root {
         }
     }
 
-    fun getServices(): String {
+    fun getServices(): HashSet<String> {
         var result = ""
         try {
             Runtime.getRuntime().exec(
@@ -60,18 +61,21 @@ internal object Root {
         } catch (e: Exception) {
             Log.e("Superuser", e.toString())
         }
-        return simplifiedServices(result)
+        return parseServices(result)
     }
 
-    private fun simplifiedServices(services: String): String {
-        var formatted = ""
+    private fun parseServices(services: String): HashSet<String> {
+        val set = HashSet<String>()
+        var temp: String
         for (line in services.lines()) {
-            if (line.contains('*')) formatted += line.substring(
-                line.indexOf('{'),
-                line.lastIndexOf('}') + 1
-            )
-            else if (line.contains('#')) formatted += line
+            if (line.contains("* ServiceRecord")) {
+                temp = line.substring(line.indexOf('{') + 1, line.indexOf('/'))
+                for (i in 0 until 2) temp = temp.substring(temp.indexOf(' ') + 1)
+                set.add(temp)
+            } else if (line.contains('#') && line.contains(':')) {
+                set.add(line.substring(line.indexOf(": ") + 2))
+            }
         }
-        return formatted
+        return set
     }
 }
