@@ -1,0 +1,1 @@
+With this new release you can prevent stopping apps, that you are currently using. Furthermore, you can force some apps to always stop.
