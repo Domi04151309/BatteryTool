@@ -44,6 +44,32 @@ internal object Root {
         }
     }
 
+    fun getFocusedApps(): HashSet<String> {
+        var result = ""
+        try {
+            Runtime.getRuntime().exec(
+                arrayOf(
+                    "su",
+                    "-c",
+                    "dumpsys activity activities | grep mResumedActivity |  cut -d '{' -f2 | cut -d ' ' -f3 | cut -d '/' -f1"
+                )
+            ).inputStream.use { inputStream ->
+                Scanner(inputStream).useDelimiter("\\A").use { s ->
+                    result = if (s.hasNext()) s.next() else ""
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("Superuser", e.toString())
+        }
+        return parseFocusedApps(result)
+    }
+
+    private fun parseFocusedApps(services: String): HashSet<String> {
+        val set = HashSet<String>()
+        for (line in services.lines()) set.add(line)
+        return set
+    }
+
     fun getServices(): HashSet<String> {
         var result = ""
         try {

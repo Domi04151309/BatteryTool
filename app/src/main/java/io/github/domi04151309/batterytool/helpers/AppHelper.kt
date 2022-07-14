@@ -46,30 +46,35 @@ object AppHelper {
 
     private fun hibernateApps(c: Context, playingMusicPackage: String?) {
         val appArray = JSONArray(
-            PreferenceManager.getDefaultSharedPreferences(c)
-                .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
+            PreferenceManager.getDefaultSharedPreferences(c).getString(
+                P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT
+            )
         )
         val forcedSet = ForcedSet(PreferenceManager.getDefaultSharedPreferences(c))
         val commandArray: ArrayList<String> = ArrayList(appArray.length() / 2)
         val services = Root.getServices()
+        val focused = if (
+            PreferenceManager.getDefaultSharedPreferences(c).getBoolean(
+                P.PREF_IGNORE_FOCUSED_APPS, P.PREF_IGNORE_FOCUSED_APPS_DEFAULT
+            )
+        ) Root.getFocusedApps() else PseudoHashSet()
         for (i in 0 until appArray.length()) {
             try {
                 val packageName = appArray.getString(i)
                 if (
                     !packageName.equals(playingMusicPackage)
+                    && !focused.contains(packageName)
                     && (c.packageManager.getApplicationInfo(
                         packageName,
                         PackageManager.GET_META_DATA
                     ).flags and ApplicationInfo.FLAG_STOPPED == 0)
                     && (services.contains(packageName) || forcedSet.contains(packageName))
-                ) {
-                    commandArray.add("am force-stop $packageName")
-                }
+                ) commandArray.add("am force-stop $packageName")
             } catch (e: PackageManager.NameNotFoundException) {
                 continue
             }
         }
-        if (commandArray.isNotEmpty()) Root.shell(commandArray.toArray(arrayOf<String>()))
+        if (commandArray.isNotEmpty()) Root.shell(commandArray.toTypedArray())
     }
 
     internal fun hibernate(c: Context) {

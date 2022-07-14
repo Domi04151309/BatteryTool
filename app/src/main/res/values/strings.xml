@@ -24,7 +24,7 @@
     <string name="main_empty_summary">It seems that no app falls into this category</string>
     <string name="main_forced">(forced)</string>
 
-    <string name="pref_allow_music_apps">Whitelist music app</string>
+    <string name="pref_allow_music_apps">Ignore music app</string>
     <string name="pref_allow_music_apps_summary">Don\'t stop currently playing music app</string>
     <string name="notifications_permission">Notifications Permission</string>
     <string name="notifications_permission_explanation">To detect Apps which are playing music this app needs to read currently showing notifications, and thus needs the permission</string>
@@ -52,6 +52,8 @@
     <string name="pref_aggressive_doze">Aggressive doze</string>
     <string name="pref_aggressive_doze_summary">Enter doze mode after the screen turns off</string>
     <string name="pref_aggressive_doze_delay">Aggressive doze delay</string>
+    <string name="pref_ignore_focused_app">Ignore focused apps</string>
+    <string name="pref_ignore_focused_app_summary">Don\'t stop currently focused apps</string>
     <string name="pref_theme">Change theme</string>
     <string name="pref_theme_summary">Changes the look of the app</string>
 

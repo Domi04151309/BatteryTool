@@ -26,6 +26,12 @@
         android:title="@string/pref_aggressive_doze_delay" />
     <SwitchPreference
         android:defaultValue="false"
+        android:icon="@drawable/ic_focus"
+        android:key="ignore_focused_apps"
+        android:summary="@string/pref_ignore_focused_app_summary"
+        android:title="@string/pref_ignore_focused_app" />
+    <SwitchPreference
+        android:defaultValue="false"
         android:icon="@drawable/ic_music"
         android:key="allow_music"
         android:summary="@string/pref_allow_music_apps_summary"
