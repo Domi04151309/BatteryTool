@@ -20,6 +20,13 @@ I am not responsible for any damage to your device!
   height="80"/>
 </a>
 
+## Donate
+Support the development by donating.
+
+<a href="https://www.paypal.com/donate/?hosted_button_id=487FTCX52P9WA">
+	<img src="https://img.shields.io/badge/-Donate-black?style=for-the-badge&logo=paypal" alt="Donate">
+</a>
+
 ## Previews
 <img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="18%" /><img src="https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="18%" />
 
