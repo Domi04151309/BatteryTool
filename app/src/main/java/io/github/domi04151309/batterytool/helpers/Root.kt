@@ -51,7 +51,7 @@ internal object Root {
                 arrayOf(
                     "su",
                     "-c",
-                    "dumpsys activity activities | grep mResumedActivity |  cut -d '{' -f2 | cut -d ' ' -f3 | cut -d '/' -f1"
+                    "dumpsys activity activities | grep -E 'CurrentFocus|ResumedActivity|FocusedApp' |  cut -d '{' -f2 | cut -d ' ' -f3 | cut -d '/' -f1"
                 )
             ).inputStream.use { inputStream ->
                 Scanner(inputStream).useDelimiter("\\A").use { s ->
