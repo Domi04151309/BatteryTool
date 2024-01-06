@@ -37,8 +37,9 @@
         </receiver>
 
         <activity
-            android:name=".activities.SplashActivity"
-            android:theme="@style/AppThemeSplash"
+            android:name=".activities.MainActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,10 +50,6 @@
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-        <activity
-            android:name=".activities.MainActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/prefs"

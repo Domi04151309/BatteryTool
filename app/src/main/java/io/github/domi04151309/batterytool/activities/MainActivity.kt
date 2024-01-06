@@ -54,6 +54,12 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.content, PreferenceFragment())
             .commit()
 
+        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setup_complete", false)) {
+            startActivity(Intent(this, SetupActivity::class.java))
+            finish()
+            return
+        }
+
         ContextCompat.startForegroundService(this, Intent(this, ForegroundService::class.java))
 
         findViewById<ImageView>(R.id.settings_icon).setOnClickListener {

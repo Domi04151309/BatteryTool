@@ -1,9 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppThemeSplash" parent="Theme.MaterialComponents">
-        <item name="android:windowBackground">@drawable/splash</item>
-    </style>
-
     <style name="AppTheme27" parent="AppThemeLight">
         <item name="android:navigationBarColor">@color/colorPrimaryBlack</item>
     </style>
