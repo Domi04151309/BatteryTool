@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.*
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.custom.EditIntegerPreference
+import io.github.domi04151309.batterytool.helpers.Global
 import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.NotificationService
@@ -151,6 +153,7 @@ class SettingsActivity : AppCompatActivity(),
                             try {
                                 getNotifSettings.launch(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
                             } catch (e: ActivityNotFoundException) {
+                                Log.w(Global.LOG_TAG, e)
                             }
                         }
                         .show()

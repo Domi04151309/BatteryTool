@@ -1,4 +1,4 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -6,6 +6,7 @@
     tools:context="io.github.domi04151309.batterytool.activities.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/top_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -34,42 +35,37 @@
                 android:gravity="center"
                 android:text="@string/app_name"
                 android:textSize="20sp" />
-
         </RelativeLayout>
-
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_app_bar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_above="@id/hibernate"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
         android:contentDescription="@string/adding"
         app:tint="?android:attr/colorAccent"
         app:backgroundTint="?android:attr/colorPrimary"
-        app:layout_anchor="@id/space"
-        app:layout_anchorGravity="top|end"
         app:borderWidth="0dp"
         app:srcCompat="@drawable/ic_add" />
-
-    <View
-        android:id="@+id/space"
-        android:layout_width="@dimen/fab_margin_2"
-        android:layout_height="@dimen/fab_margin_2"
-        app:layout_anchor="@id/hibernate"
-        app:layout_anchorGravity="top|end" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/hibernate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/fab_margin"
         android:contentDescription="@string/shortcut"
         app:srcCompat="@drawable/ic_spa"
         app:tint="@android:color/white" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

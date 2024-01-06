@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.widget.Toast
 import io.github.domi04151309.batterytool.R
 
+@Suppress("unused")
 class EditIntegerPreference : EditTextPreference {
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(

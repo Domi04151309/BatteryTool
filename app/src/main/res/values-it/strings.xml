@@ -12,12 +12,12 @@
     <string name="setup_demo_summary">Puoi usare la modalità demo per dare un\'occhiata all\'applicazione ma senza alcuna funzionalità. Abilita l\'accesso root per usare l\'app.</string>
 
     <string name="action_failed">Azione non riuscita</string>
-    <string name="action_failed_summary">Il root è necessario per far funzionare questa app. Si prega di abilitare l\'accesso root.</string>
+    <string name="action_failed_summary">Il root è necessario per far funzionare questa app. Si prega di abilitare l\’accesso root.</string>
 
     <string name="str_security">Sicurezza</string>
 
-    <string name="main_stopped_soon">L\'app verrà chiusa a breve</string>
-    <string name="main_stopped_unnecessary">Non è necessario chiudere l\'app</string>
+    <string name="main_stopped_soon">L\’app verrà chiusa a breve</string>
+    <string name="main_stopped_unnecessary">Non è necessario chiudere l\’app</string>
     <string name="main_stopped">Chiusa</string>
     <string name="main_empty">Nessun risultato da mostrare qui</string>
     <string name="main_empty_summary">Sembra che nessuna app rientri in questa categoria</string>
@@ -29,7 +29,7 @@
         <item>Rimuovi dalla lista</item>
     </string-array>
 
-    <string name="toast_stopped">L\'app selezionata è stata chiusa</string>
+    <string name="toast_stopped">L\’app selezionata è stata chiusa</string>
     <string name="toast_stopped_all">Le app selezionate sono state chiuse</string>
 
     <string name="adding">Aggiungi applicazioni</string>
@@ -62,5 +62,5 @@
     </string-array>
 
     <string name="about">Informazioni</string>
-    <string name="about_summary">Maggiori informazioni sull\'app</string>
+    <string name="about_summary">Maggiori informazioni sull\’app</string>
 </resources>

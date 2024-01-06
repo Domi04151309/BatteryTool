@@ -1,4 +1,4 @@
-![App Icon](https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
+![App Icon](https://raw.githubusercontent.com/Domi04151309/BatteryTool/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp)
 # Battery Tool
 
 Battery Tool helps you save battery by stopping apps that are running in the background.
@@ -8,12 +8,6 @@ Additionally, you can activate aggressive doze mode to save even more battery.
 This app requires root access!
 I am not responsible for any damage to your device!
 
-
-<a href='https://play.google.com/store/apps/details?id=io.github.domi04151309.batterytool'>
-  <img src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'
-  alt='Get it on Google Play'
-  height="80"/>
-</a>
 <a href="https://f-droid.org/packages/io.github.domi04151309.batterytool">
   <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
   alt="Get it on F-Droid"

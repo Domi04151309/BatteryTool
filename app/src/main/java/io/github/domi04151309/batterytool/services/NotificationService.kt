@@ -10,7 +10,9 @@ import androidx.media2.common.SessionPlayer
 import androidx.media2.session.MediaController
 import android.media.session.MediaSession
 import android.support.v4.media.session.MediaSessionCompat
+import android.util.Log
 import androidx.media2.session.SessionCommandGroup
+import io.github.domi04151309.batterytool.helpers.Global
 import java.lang.ref.WeakReference
 import java.util.concurrent.Executors
 
@@ -60,6 +62,7 @@ class NotificationService : NotificationListenerService() {
                         try {
                             mediaController?.close()
                         } catch (e: Exception) {
+                            Log.w(Global.LOG_TAG, e)
                         }
                     }
 
