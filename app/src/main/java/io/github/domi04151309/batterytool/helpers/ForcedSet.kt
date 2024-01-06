@@ -1,43 +1,40 @@
 package io.github.domi04151309.batterytool.helpers
 
+import android.content.Context
 import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import org.json.JSONArray
 
-class ForcedSet(private val preferences: SharedPreferences) {
+class ForcedSet(private val preferences: SharedPreferences) : HashSet<String>() {
     companion object {
-        private var forcedSet: HashSet<String>? = null
-    }
+        @java.io.Serial
+        private const val serialVersionUID = 1L
 
-    init {
-        if (forcedSet == null) {
-            val forcedJson =
-                JSONArray(
-                    preferences.getString(P.PREF_FORCED_LIST, P.PREF_FORCED_LIST_DEFAULT),
-                )
-            forcedSet =
-                HashSet<String>(forcedJson.length()).apply {
-                    for (i in 0 until forcedJson.length()) {
-                        add(forcedJson.getString(i))
-                    }
+        @Volatile
+        private var instance: ForcedSet? = null
+
+        fun getInstance(context: Context): ForcedSet {
+            return instance ?: synchronized(this) {
+                instance ?: ForcedSet(PreferenceManager.getDefaultSharedPreferences(context)).also {
+                    instance = it
                 }
+            }
         }
     }
 
-    fun add(e: String) {
-        forcedSet?.add(e)
-    }
-
-    fun contains(e: String): Boolean {
-        return forcedSet?.contains(e) ?: false
-    }
-
-    fun remove(e: String) {
-        forcedSet?.remove(e)
+    init {
+        val forcedJson =
+            JSONArray(
+                preferences.getString(P.PREF_FORCED_LIST, P.PREF_FORCED_LIST_DEFAULT),
+            )
+        for (i in 0 until forcedJson.length()) {
+            add(forcedJson.getString(i))
+        }
     }
 
     fun save() {
         val json = JSONArray()
-        forcedSet?.forEach {
+        forEach {
             json.put(it)
         }
         preferences.edit().putString(P.PREF_FORCED_LIST, json.toString()).apply()

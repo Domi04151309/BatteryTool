@@ -19,9 +19,7 @@ import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Theme
 import org.json.JSONArray
 
-class AddingActivity :
-    AppCompatActivity(),
-    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+class AddingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.set(this)
         super.onCreate(savedInstanceState)
@@ -32,121 +30,122 @@ class AddingActivity :
             .commit()
     }
 
-    override fun onPreferenceStartFragment(
-        caller: PreferenceFragmentCompat,
-        pref: Preference,
-    ): Boolean {
-        val fragment =
-            supportFragmentManager.fragmentFactory.instantiate(
-                classLoader,
-                pref.fragment ?: throw IllegalStateException(),
-            )
-        fragment.arguments = pref.extras
-        fragment.setTargetFragment(caller, 0)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.content, fragment)
-            .addToBackStack(null)
-            .commit()
-        return true
-    }
-
     class PreferenceFragment : PreferenceFragmentCompat() {
+        private val appsToAdd: ArrayList<CharSequence> = arrayListOf()
+        private val appsToAddNames: ArrayList<CharSequence> = arrayListOf()
+        private lateinit var bottomBar: TextView
+
         override fun onCreatePreferences(
             savedInstanceState: Bundle?,
             rootKey: String?,
         ) {
-            val c = requireContext()
-            val prefs = PreferenceManager.getDefaultSharedPreferences(c)
-            val pm: PackageManager = c.packageManager
-            val addingArray: ArrayList<CharSequence> = arrayListOf()
-            val addingArrayDisplay: ArrayList<CharSequence> = arrayListOf()
-            val bottomBar = requireActivity().findViewById<TextView>(R.id.bottom_title)
+            addPreferencesFromResource(R.xml.pref_adding)
+            bottomBar = requireActivity().findViewById(R.id.bottom_title)
 
+            loadApps()
+
+            requireActivity().findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
+                onAddClicked()
+            }
+        }
+
+        private fun loadApps() =
             Thread {
-                val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
-                val arrayList: ArrayList<Preference> = ArrayList(packages.size)
-                val arrayListSystem: ArrayList<Preference> = ArrayList(packages.size)
+                val packageManager: PackageManager = requireContext().packageManager
+                val packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+                val userApps: ArrayList<Preference> = ArrayList(packages.size)
+                val systemApps: ArrayList<Preference> = ArrayList(packages.size)
                 for (packageInfo in packages) {
-                    if (pm.getLaunchIntentForPackage(packageInfo.packageName) != null &&
-                        prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
+                    if (packageManager.getLaunchIntentForPackage(packageInfo.packageName) != null &&
+                        PreferenceManager.getDefaultSharedPreferences(requireContext())
+                            .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
                             ?.contains(packageInfo.packageName) != true &&
-                        packageInfo.packageName != c.packageName
+                        packageInfo.packageName != requireContext().packageName
                     ) {
-                        val preference = AppHelper.generatePreference(c, packageInfo)
+                        val preference = AppHelper.generatePreference(requireContext(), packageInfo)
                         preference.setOnPreferenceClickListener {
-                            if (addingArray.contains(it.summary)) {
-                                it.icon = pm.getApplicationIcon(it.summary.toString())
-                                addingArray.remove(it.summary)
-                                addingArrayDisplay.remove(it.title)
+                            if (appsToAdd.contains(it.summary)) {
+                                it.icon = packageManager.getApplicationIcon(it.summary.toString())
+                                appsToAdd.remove(it.summary)
+                                appsToAddNames.remove(it.title)
                             } else {
                                 it.icon =
                                     LayerDrawable(
                                         arrayOf(
-                                            pm.getApplicationIcon(
+                                            packageManager.getApplicationIcon(
                                                 it.summary.toString(),
                                             ),
                                             ContextCompat.getDrawable(
-                                                c,
+                                                requireContext(),
                                                 R.drawable.overlay_icon,
                                             ),
                                         ),
                                     )
                                 if (it.summary != null) {
-                                    addingArray.add(
-                                        it.summary ?: throw IllegalStateException(),
+                                    appsToAdd.add(
+                                        it.summary ?: error("Impossible state."),
                                     )
                                 }
                                 if (it.summary != null) {
-                                    addingArrayDisplay.add(
-                                        it.title ?: throw IllegalStateException(),
+                                    appsToAddNames.add(
+                                        it.title ?: error("Impossible state."),
                                     )
                                 }
                             }
                             bottomBar.text =
-                                addingArrayDisplay.sortedWith(compareBy { chars -> chars.toString() })
+                                appsToAddNames.sortedWith(compareBy { chars -> chars.toString() })
                                     .joinToString()
                             true
                         }
                         if (packageInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) {
-                            arrayListSystem.add(preference)
+                            systemApps.add(preference)
                         } else {
-                            arrayList.add(preference)
+                            userApps.add(preference)
                         }
                     }
                 }
 
                 Looper.prepare()
-                addPreferencesFromResource(R.xml.pref_adding)
-                val categoryUser =
-                    findPreference<PreferenceCategory>("user")
-                        ?: throw NullPointerException()
-                for (preference in arrayList.sortedWith(compareBy { it.title.toString() })) {
-                    categoryUser.addPreference(preference)
-                }
-                val categorySystem =
-                    findPreference<PreferenceCategory>("system")
-                        ?: throw NullPointerException()
-                for (preference in arrayListSystem.sortedWith(compareBy { it.title.toString() })) {
-                    categorySystem.addPreference(preference)
-                }
-                preferenceScreen.addPreference(
-                    Preference(c).let {
-                        it.layoutResource = R.layout.preference_divider
-                        it.isSelectable = false
-                        it
-                    },
-                )
+                displayApps(userApps, systemApps)
             }.start()
 
-            requireActivity().findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
-                val currentList =
-                    JSONArray(
-                        prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT),
-                    )
-                for (item in addingArray) currentList.put(item)
-                prefs.edit().putString(P.PREF_APP_LIST, currentList.toString()).apply()
-                requireActivity().finish()
+        private fun displayApps(
+            userApps: List<Preference>,
+            systemApps: List<Preference>,
+        ) {
+            val categoryUser =
+                findPreference<PreferenceCategory>("user")
+                    ?: error("Invalid layout.")
+            for (preference in userApps.sortedWith(compareBy { it.title.toString() })) {
+                categoryUser.addPreference(preference)
             }
+            val categorySystem =
+                findPreference<PreferenceCategory>("system")
+                    ?: error("Invalid layout.")
+            for (preference in systemApps.sortedWith(compareBy { it.title.toString() })) {
+                categorySystem.addPreference(preference)
+            }
+            preferenceScreen.addPreference(
+                Preference(requireContext()).let {
+                    it.layoutResource = R.layout.preference_divider
+                    it.isSelectable = false
+                    it
+                },
+            )
+        }
+
+        private fun onAddClicked() {
+            val currentList =
+                JSONArray(
+                    PreferenceManager.getDefaultSharedPreferences(requireContext())
+                        .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT),
+                )
+            for (item in appsToAdd) currentList.put(item)
+            PreferenceManager.getDefaultSharedPreferences(requireContext())
+                .edit()
+                .putString(P.PREF_APP_LIST, currentList.toString())
+                .apply()
+            requireActivity().finish()
         }
     }
 }

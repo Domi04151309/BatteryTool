@@ -2,6 +2,7 @@ package io.github.domi04151309.batterytool.helpers
 
 import android.util.Log
 import java.io.DataOutputStream
+import java.io.IOException
 import java.util.Scanner
 import kotlin.collections.HashSet
 
@@ -15,7 +16,8 @@ internal object Root {
             os.writeBytes("exit\n")
             os.flush()
             true
-        } catch (e: Exception) {
+        } catch (e: IOException) {
+            Log.w("Superuser", e)
             false
         }
     }
@@ -26,8 +28,8 @@ internal object Root {
                 Runtime.getRuntime()
                     .exec(arrayOf("su", "-c", command))
             p.waitFor()
-        } catch (e: Exception) {
-            Log.e("Superuser", e.toString())
+        } catch (e: IOException) {
+            Log.w("Superuser", e)
         }
     }
 
@@ -39,7 +41,7 @@ internal object Root {
             for (command in commands) os.writeBytes("$command\n")
             os.writeBytes("exit\n")
             os.flush()
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             Log.e("Superuser", e.toString())
         }
     }
@@ -47,22 +49,22 @@ internal object Root {
     fun getFocusedApps(): HashSet<String> {
         var result = ""
         try {
-            Runtime.getRuntime().exec(
-                arrayOf(
-                    "su",
-                    "-c",
-                    "dumpsys activity activities | " +
-                        "grep -E 'CurrentFocus|ResumedActivity|FocusedApp' |  " +
-                        "cut -d '{' -f2 | " +
-                        "cut -d ' ' -f3 | " +
-                        "cut -d '/' -f1",
-                ),
-            ).inputStream.use { inputStream ->
-                Scanner(inputStream).useDelimiter("\\A").use { s ->
-                    result = if (s.hasNext()) s.next() else ""
-                }
+            val inputStream =
+                Runtime.getRuntime().exec(
+                    arrayOf(
+                        "su",
+                        "-c",
+                        "dumpsys activity activities | " +
+                            "grep -E 'CurrentFocus|ResumedActivity|FocusedApp' |  " +
+                            "cut -d '{' -f2 | " +
+                            "cut -d ' ' -f3 | " +
+                            "cut -d '/' -f1",
+                    ),
+                ).inputStream
+            Scanner(inputStream).useDelimiter("\\A").use { s ->
+                result = if (s.hasNext()) s.next() else ""
             }
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             Log.e("Superuser", e.toString())
         }
         return parseFocusedApps(result)
@@ -77,18 +79,18 @@ internal object Root {
     fun getServices(): HashSet<String> {
         var result = ""
         try {
-            Runtime.getRuntime().exec(
-                arrayOf(
-                    "su",
-                    "-c",
-                    "dumpsys activity services",
-                ),
-            ).inputStream.use { inputStream ->
-                Scanner(inputStream).useDelimiter("\\A").use { s ->
-                    result = if (s.hasNext()) s.next() else ""
-                }
+            val inputStream =
+                Runtime.getRuntime().exec(
+                    arrayOf(
+                        "su",
+                        "-c",
+                        "dumpsys activity services",
+                    ),
+                ).inputStream
+            Scanner(inputStream).useDelimiter("\\A").use { s ->
+                result = if (s.hasNext()) s.next() else ""
             }
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             Log.e("Superuser", e.toString())
         }
         return parseServices(result)
@@ -100,7 +102,9 @@ internal object Root {
         for (line in services.lines()) {
             if (line.contains("* ServiceRecord")) {
                 temp = line.substring(line.indexOf('{') + 1, line.indexOf('/'))
-                for (i in 0 until 2) temp = temp.substring(temp.indexOf(' ') + 1)
+                repeat(2) {
+                    temp = temp.substring(temp.indexOf(' ') + 1)
+                }
                 set.add(temp)
             } else if (line.contains('#') && line.contains(':')) {
                 set.add(line.substring(line.indexOf(": ") + 2))

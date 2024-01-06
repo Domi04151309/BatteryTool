@@ -1,15 +1,15 @@
 package io.github.domi04151309.batterytool.activities
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -23,16 +23,22 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.helpers.AppHelper
 import io.github.domi04151309.batterytool.helpers.ForcedSet
+import io.github.domi04151309.batterytool.helpers.Global
 import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Root
 import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.ForegroundService
 import org.json.JSONArray
-import java.lang.Exception
 
-class MainActivity :
-    AppCompatActivity(),
-    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val HIBERNATE_UPDATE_DELAY = 1000L
+        private const val ITEM_STOP_NOW = 0
+        private const val ITEM_OPEN_SETTINGS = 1
+        private const val ITEM_ALWAYS_STOP = 2
+        private const val ITEM_REMOVE_FROM_LIST = 3
+    }
+
     private var themeId = ""
 
     private fun getThemeId(): String =
@@ -70,27 +76,7 @@ class MainActivity :
         }
     }
 
-    override fun onPreferenceStartFragment(
-        caller: PreferenceFragmentCompat,
-        pref: Preference,
-    ): Boolean {
-        val fragment =
-            supportFragmentManager.fragmentFactory.instantiate(
-                classLoader,
-                pref.fragment ?: throw IllegalStateException(),
-            )
-        fragment.arguments = pref.extras
-        fragment.setTargetFragment(caller, 0)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.content, fragment)
-            .addToBackStack(null)
-            .commit()
-        return true
-    }
-
     class PreferenceFragment : PreferenceFragmentCompat() {
-        private lateinit var c: Context
-        private lateinit var prefs: SharedPreferences
         private lateinit var categorySoon: PreferenceCategory
         private lateinit var categoryUnnecessary: PreferenceCategory
         private lateinit var categoryStopped: PreferenceCategory
@@ -101,18 +87,16 @@ class MainActivity :
         ) {
             addPreferencesFromResource(R.xml.pref_main)
 
-            c = requireContext()
-            prefs = PreferenceManager.getDefaultSharedPreferences(c)
-            categorySoon = findPreference("soon") ?: throw NullPointerException()
-            categoryUnnecessary = findPreference("unnecessary") ?: throw NullPointerException()
-            categoryStopped = findPreference("stopped") ?: throw NullPointerException()
+            categorySoon = findPreference("soon") ?: error("Invalid layout.")
+            categoryUnnecessary = findPreference("unnecessary") ?: error("Invalid layout.")
+            categoryStopped = findPreference("stopped") ?: error("Invalid layout.")
 
             activity?.findViewById<FloatingActionButton>(R.id.hibernate)?.setOnClickListener {
-                AppHelper.hibernate(c)
-                Toast.makeText(c, R.string.toast_stopped_all, Toast.LENGTH_SHORT).show()
+                AppHelper.hibernate(requireContext())
+                Toast.makeText(requireContext(), R.string.toast_stopped_all, Toast.LENGTH_SHORT).show()
                 Handler(Looper.getMainLooper()).postDelayed({
                     loadLists()
-                }, 1000)
+                }, HIBERNATE_UPDATE_DELAY)
             }
         }
 
@@ -122,141 +106,165 @@ class MainActivity :
         }
 
         private fun generateEmptyListIndicator(): Preference {
-            return Preference(c).let {
-                it.icon = ContextCompat.getDrawable(c, R.mipmap.ic_launcher)
-                it.title = c.getString(R.string.main_empty)
-                it.summary = c.getString(R.string.main_empty_summary)
+            return Preference(requireContext()).let {
+                it.icon = ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)
+                it.title = requireContext().getString(R.string.main_empty)
+                it.summary = requireContext().getString(R.string.main_empty_summary)
                 it.isSelectable = false
                 it
             }
         }
 
-        private fun loadLists() {
-            categorySoon.removeAll()
-            categoryUnnecessary.removeAll()
-            categoryStopped.removeAll()
-
-            val appArray = JSONArray(prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT))
-            val preferenceSoonArray: ArrayList<Preference> = ArrayList(appArray.length() / 2)
-            val preferenceStoppedArray: ArrayList<Preference> = ArrayList(appArray.length() / 2)
-            val services = Root.getServices()
-            val forcedSet = ForcedSet(prefs)
-
-            var preference: Preference
-            for (i in 0 until appArray.length()) {
-                preference =
-                    try {
-                        AppHelper.generatePreference(c, appArray.getString(i), forcedSet)
-                    } catch (e: Exception) {
-                        continue
+        private fun generatePreference(
+            appArray: JSONArray,
+            i: Int,
+            forcedSet: ForcedSet,
+        ): Preference? {
+            val preference =
+                try {
+                    AppHelper.generatePreference(requireContext(), appArray.getString(i), forcedSet)
+                } catch (e: NameNotFoundException) {
+                    Log.w(Global.LOG_TAG, e)
+                    return null
+                }
+            preference.setOnPreferenceClickListener {
+                val options =
+                    resources
+                        .getStringArray(R.array.main_click_dialog_options)
+                        .toMutableList()
+                options.add(
+                    2,
+                    resources.getString(
+                        if (forcedSet.contains(it.summary.toString())) {
+                            R.string.main_click_dialog_turn_off_always
+                        } else {
+                            R.string.main_click_dialog_turn_on_always
+                        },
+                    ),
+                )
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.main_click_dialog_title)
+                    .setItems(options.toTypedArray()) { _, which ->
+                        onDialogItemClicked(which, it.summary.toString(), appArray, forcedSet)
                     }
-                preference.setOnPreferenceClickListener {
-                    val options =
-                        resources
-                            .getStringArray(R.array.main_click_dialog_options)
-                            .toMutableList()
-                    val isForced = forcedSet.contains(it.summary.toString())
-                    options.add(
-                        2,
-                        resources.getString(
-                            if (isForced) {
-                                R.string.main_click_dialog_turn_off_always
-                            } else {
-                                R.string.main_click_dialog_turn_on_always
-                            },
-                        ),
-                    )
-                    AlertDialog.Builder(c)
-                        .setTitle(R.string.main_click_dialog_title)
-                        .setItems(options.toTypedArray()) { _, which ->
-                            when (which) {
-                                0 -> {
-                                    Root.shell("am force-stop ${it.summary}")
-                                    loadLists()
-                                    Toast.makeText(c, R.string.toast_stopped, Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                                1 -> {
-                                    startActivity(
-                                        Intent().apply {
-                                            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                                            data = Uri.fromParts("package", it.summary.toString(), null)
-                                        },
-                                    )
-                                }
-                                2 -> {
-                                    if (isForced) {
-                                        forcedSet.remove(it.summary.toString())
-                                    } else {
-                                        forcedSet.add(it.summary.toString())
-                                    }
-                                    forcedSet.save()
-                                    Toast.makeText(
-                                        context,
-                                        if (isForced) {
-                                            R.string.main_click_dialog_turn_off_always
-                                        } else {
-                                            R.string.main_click_dialog_turn_on_always
-                                        },
-                                        Toast.LENGTH_LONG,
-                                    ).show()
-                                    loadLists()
-                                }
-                                3 -> {
-                                    for (j in 0 until appArray.length()) {
-                                        if (appArray.getString(j) == it.summary) {
-                                            appArray.remove(j)
-                                            break
-                                        }
-                                    }
-                                    prefs.edit().putString(P.PREF_APP_LIST, appArray.toString())
-                                        .apply()
-                                    loadLists()
-                                }
-                            }
-                        }
-                        .setNegativeButton(android.R.string.cancel) { _, _ -> }
+                    .setNegativeButton(android.R.string.cancel) { _, _ -> }
+                    .show()
+                true
+            }
+            return preference
+        }
+
+        private fun onDialogItemClicked(
+            which: Int,
+            packageName: String,
+            appArray: JSONArray,
+            forcedSet: ForcedSet,
+        ) {
+            when (which) {
+                ITEM_STOP_NOW -> {
+                    Root.shell("am force-stop $packageName")
+                    loadLists()
+                    Toast.makeText(context, R.string.toast_stopped, Toast.LENGTH_SHORT)
                         .show()
-                    true
                 }
-                if (c.packageManager.getApplicationInfo(
-                        preference.summary.toString(),
-                        PackageManager.GET_META_DATA,
-                    ).flags and ApplicationInfo.FLAG_STOPPED != 0
-                ) {
-                    preferenceStoppedArray.add(preference)
-                } else {
-                    preferenceSoonArray.add(preference)
-                }
-            }
-            var isSoonEmpty = true
-            var isUnnecessaryEmpty = true
-            for (item in preferenceSoonArray.sortedWith(compareBy { it.title.toString() })) {
-                if (
-                    item.summary != null &&
-                    (
-                        services.contains(item.summary ?: throw IllegalStateException()) ||
-                            forcedSet.contains(item.summary.toString())
+                ITEM_OPEN_SETTINGS -> {
+                    startActivity(
+                        Intent().apply {
+                            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            data = Uri.fromParts("package", packageName, null)
+                        },
                     )
-                ) {
-                    categorySoon.addPreference(item)
-                    isSoonEmpty = false
-                } else {
-                    categoryUnnecessary.addPreference(item)
-                    isUnnecessaryEmpty = false
                 }
-            }
-
-            if (isSoonEmpty) categorySoon.addPreference(generateEmptyListIndicator())
-            if (isUnnecessaryEmpty) categoryUnnecessary.addPreference(generateEmptyListIndicator())
-
-            if (preferenceStoppedArray.isEmpty()) {
-                categoryStopped.addPreference(generateEmptyListIndicator())
-            } else {
-                for (item in preferenceStoppedArray.sortedWith(compareBy { it.title.toString() })) {
-                    categoryStopped.addPreference(item)
+                ITEM_ALWAYS_STOP -> {
+                    Toast.makeText(
+                        context,
+                        if (forcedSet.contains(packageName)) {
+                            forcedSet.remove(packageName)
+                            R.string.main_click_dialog_turn_off_always
+                        } else {
+                            forcedSet.add(packageName)
+                            R.string.main_click_dialog_turn_on_always
+                        },
+                        Toast.LENGTH_LONG,
+                    ).show()
+                    forcedSet.save()
+                    loadLists()
+                }
+                ITEM_REMOVE_FROM_LIST -> {
+                    for (appIndex in 0 until appArray.length()) {
+                        if (appArray.getString(appIndex) == packageName) {
+                            appArray.remove(appIndex)
+                            break
+                        }
+                    }
+                    PreferenceManager
+                        .getDefaultSharedPreferences(requireContext())
+                        .edit()
+                        .putString(P.PREF_APP_LIST, appArray.toString())
+                        .apply()
+                    loadLists()
                 }
             }
         }
+
+        private fun loadLists() =
+            Thread {
+                categorySoon.removeAll()
+                categoryUnnecessary.removeAll()
+                categoryStopped.removeAll()
+
+                val appArray =
+                    JSONArray(
+                        PreferenceManager
+                            .getDefaultSharedPreferences(requireContext())
+                            .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT),
+                    )
+                val preferenceSoonArray: ArrayList<Preference> = ArrayList(appArray.length() / 2)
+                val preferenceStoppedArray: ArrayList<Preference> = ArrayList(appArray.length() / 2)
+                val services = Root.getServices()
+                val forcedSet = ForcedSet.getInstance(requireContext())
+
+                var preference: Preference
+                for (i in 0 until appArray.length()) {
+                    preference = generatePreference(appArray, i, forcedSet) ?: continue
+                    if (requireContext().packageManager.getApplicationInfo(
+                            preference.summary.toString(),
+                            PackageManager.GET_META_DATA,
+                        ).flags and ApplicationInfo.FLAG_STOPPED != 0
+                    ) {
+                        preferenceStoppedArray.add(preference)
+                    } else {
+                        preferenceSoonArray.add(preference)
+                    }
+                }
+                var isSoonEmpty = true
+                var isUnnecessaryEmpty = true
+                for (item in preferenceSoonArray.sortedWith(compareBy { it.title.toString() })) {
+                    if (
+                        item.summary != null &&
+                        (
+                            services.contains(item.summary ?: error("Impossible state.")) ||
+                                forcedSet.contains(item.summary.toString())
+                        )
+                    ) {
+                        categorySoon.addPreference(item)
+                        isSoonEmpty = false
+                    } else {
+                        categoryUnnecessary.addPreference(item)
+                        isUnnecessaryEmpty = false
+                    }
+                }
+
+                if (isSoonEmpty) categorySoon.addPreference(generateEmptyListIndicator())
+                if (isUnnecessaryEmpty) categoryUnnecessary.addPreference(generateEmptyListIndicator())
+
+                if (preferenceStoppedArray.isEmpty()) {
+                    categoryStopped.addPreference(generateEmptyListIndicator())
+                } else {
+                    for (item in preferenceStoppedArray.sortedWith(compareBy { it.title.toString() })) {
+                        categoryStopped.addPreference(item)
+                    }
+                }
+            }.start()
     }
 }

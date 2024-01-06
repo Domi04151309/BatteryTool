@@ -12,6 +12,10 @@ import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Root
 
 class ScreenStateReceiver : BroadcastReceiver() {
+    companion object {
+        private const val SECONDS_TO_MILLIS = 1000L
+    }
+
     private var isScreenOn = true
     private var isInDozeMode = false
 
@@ -27,7 +31,7 @@ class ScreenStateReceiver : BroadcastReceiver() {
                 Handler(Looper.getMainLooper()).postDelayed(
                     { if (!isScreenOn) AppHelper.hibernate(c) },
                     getPrefs(c).getInt(P.PREF_AUTO_STOP_DELAY, P.PREF_AUTO_STOP_DELAY_DEFAULT)
-                        .toLong() * 1000,
+                        .toLong() * SECONDS_TO_MILLIS,
                 )
             }
             if (getPrefs(c).getBoolean(P.PREF_AGGRESSIVE_DOZE, P.PREF_AGGRESSIVE_DOZE_DEFAULT)) {
@@ -42,7 +46,7 @@ class ScreenStateReceiver : BroadcastReceiver() {
                         P.PREF_AGGRESSIVE_DOZE_DELAY,
                         P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
                     )
-                        .toLong() * 1000,
+                        .toLong() * SECONDS_TO_MILLIS,
                 )
             }
         } else if (intent.action == Intent.ACTION_SCREEN_ON) {

@@ -20,9 +20,7 @@ import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.NotificationService
 
-class SettingsActivity :
-    AppCompatActivity(),
-    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.set(this)
         super.onCreate(savedInstanceState)
@@ -31,24 +29,6 @@ class SettingsActivity :
             .beginTransaction()
             .replace(R.id.settings, PreferenceFragment())
             .commit()
-    }
-
-    override fun onPreferenceStartFragment(
-        caller: PreferenceFragmentCompat,
-        pref: Preference,
-    ): Boolean {
-        val fragment =
-            supportFragmentManager.fragmentFactory.instantiate(
-                classLoader,
-                pref.fragment ?: throw IllegalStateException(),
-            )
-        fragment.arguments = pref.extras
-        fragment.setTargetFragment(caller, 0)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.settings, fragment)
-            .addToBackStack(null)
-            .commit()
-        return true
     }
 
     class PreferenceFragment : PreferenceFragmentCompat() {

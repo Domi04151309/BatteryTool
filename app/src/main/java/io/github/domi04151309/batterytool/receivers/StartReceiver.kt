@@ -20,7 +20,7 @@ class StartReceiver : BroadcastReceiver() {
                 context,
                 Intent(context, ForegroundService::class.java),
             )
-            if (Build.VERSION.SDK_INT >= 24) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 TileService.requestListeningState(
                     context,
                     ComponentName(context, QuickTileService::class.java),

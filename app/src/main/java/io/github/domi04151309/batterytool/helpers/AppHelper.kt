@@ -3,6 +3,7 @@ package io.github.domi04151309.batterytool.helpers
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.R
@@ -57,7 +58,7 @@ object AppHelper {
                     P.PREF_APP_LIST_DEFAULT,
                 ),
             )
-        val forcedSet = ForcedSet(PreferenceManager.getDefaultSharedPreferences(c))
+        val forcedSet = ForcedSet.getInstance(c)
         val commandArray: ArrayList<String> = ArrayList(appArray.length() / 2)
         val services = Root.getServices()
         val focused =
@@ -74,6 +75,7 @@ object AppHelper {
         for (i in 0 until appArray.length()) {
             try {
                 val packageName = appArray.getString(i)
+                @Suppress("ComplexCondition")
                 if (
                     !packageName.equals(playingMusicPackage) &&
                     !focused.contains(packageName) &&
@@ -88,6 +90,7 @@ object AppHelper {
                     commandArray.add("am force-stop $packageName")
                 }
             } catch (e: PackageManager.NameNotFoundException) {
+                Log.w(Global.LOG_TAG, e)
                 continue
             }
         }

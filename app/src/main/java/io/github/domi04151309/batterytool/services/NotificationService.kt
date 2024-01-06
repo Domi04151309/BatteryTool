@@ -13,6 +13,7 @@ import androidx.media2.common.SessionPlayer
 import androidx.media2.session.MediaController
 import androidx.media2.session.SessionCommandGroup
 import io.github.domi04151309.batterytool.helpers.Global
+import java.io.IOException
 import java.lang.ref.WeakReference
 import java.util.concurrent.Executors
 
@@ -34,6 +35,7 @@ class NotificationService : NotificationListenerService() {
         return try {
             activeNotifications.sortedBy { it.postTime }
         } catch (e: SecurityException) {
+            Log.w(Global.LOG_TAG, e)
             emptyList()
         }
     }
@@ -42,7 +44,8 @@ class NotificationService : NotificationListenerService() {
         try {
             val notifications =
                 getNotifications().filter {
-                    it.notification.category == Notification.CATEGORY_TRANSPORT || it.notification.category == Notification.CATEGORY_SERVICE
+                    it.notification.category == Notification.CATEGORY_TRANSPORT ||
+                        it.notification.category == Notification.CATEGORY_SERVICE
                 }
             val notification =
                 notifications.findLast {
@@ -67,7 +70,7 @@ class NotificationService : NotificationListenerService() {
                             }
                             try {
                                 mediaController?.close()
-                            } catch (e: Exception) {
+                            } catch (e: IOException) {
                                 Log.w(Global.LOG_TAG, e)
                             }
                         }
@@ -84,6 +87,7 @@ class NotificationService : NotificationListenerService() {
                 callback(null)
             }
         } catch (e: SecurityException) {
+            Log.w(Global.LOG_TAG, e)
             callback(null)
         }
     }
