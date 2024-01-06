@@ -11,17 +11,19 @@ import io.github.domi04151309.batterytool.services.ForegroundService
 import io.github.domi04151309.batterytool.services.QuickTileService
 
 class StartReceiver : BroadcastReceiver() {
-
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
         if (intent.action == Intent.ACTION_MY_PACKAGE_REPLACED || intent.action == Intent.ACTION_BOOT_COMPLETED) {
             ContextCompat.startForegroundService(
                 context,
-                Intent(context, ForegroundService::class.java)
+                Intent(context, ForegroundService::class.java),
             )
             if (Build.VERSION.SDK_INT >= 24) {
                 TileService.requestListeningState(
                     context,
-                    ComponentName(context, QuickTileService::class.java)
+                    ComponentName(context, QuickTileService::class.java),
                 )
             }
         }

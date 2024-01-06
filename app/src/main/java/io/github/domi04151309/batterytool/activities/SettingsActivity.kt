@@ -1,7 +1,9 @@
 package io.github.domi04151309.batterytool.activities
 
 import android.app.AlertDialog
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -18,10 +20,9 @@ import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.NotificationService
 
-
-class SettingsActivity : AppCompatActivity(),
+class SettingsActivity :
+    AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.set(this)
         super.onCreate(savedInstanceState)
@@ -34,12 +35,13 @@ class SettingsActivity : AppCompatActivity(),
 
     override fun onPreferenceStartFragment(
         caller: PreferenceFragmentCompat,
-        pref: Preference
+        pref: Preference,
     ): Boolean {
-        val fragment = supportFragmentManager.fragmentFactory.instantiate(
-            classLoader,
-            pref.fragment ?: throw IllegalStateException()
-        )
+        val fragment =
+            supportFragmentManager.fragmentFactory.instantiate(
+                classLoader,
+                pref.fragment ?: throw IllegalStateException(),
+            )
         fragment.arguments = pref.extras
         fragment.setTargetFragment(caller, 0)
         supportFragmentManager.beginTransaction()
@@ -50,8 +52,7 @@ class SettingsActivity : AppCompatActivity(),
     }
 
     class PreferenceFragment : PreferenceFragmentCompat() {
-
-        private lateinit var getNotifSettings: ActivityResultLauncher<Intent>
+        private lateinit var notificationSettings: ActivityResultLauncher<Intent>
         private val prefsChangedListener =
             SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
                 if (key == P.PREF_THEME) requireActivity().recreate()
@@ -60,12 +61,12 @@ class SettingsActivity : AppCompatActivity(),
                 if (key == P.PREF_ALLOW_MUSIC) updateAllowMusicApps()
             }
 
-
         private fun checkNotificationsPermission() {
-            val needsPermission = preferenceManager.sharedPreferences?.getBoolean(
-                P.PREF_ALLOW_MUSIC,
-                P.PREF_ALLOW_MUSIC_DEFAULT
-            ) ?: P.PREF_ALLOW_MUSIC_DEFAULT
+            val needsPermission =
+                preferenceManager.sharedPreferences?.getBoolean(
+                    P.PREF_ALLOW_MUSIC,
+                    P.PREF_ALLOW_MUSIC_DEFAULT,
+                ) ?: P.PREF_ALLOW_MUSIC_DEFAULT
             if (!needsPermission) return
             val hasPermission = NotificationService.getInstance() != null
             if (!hasPermission) {
@@ -73,7 +74,7 @@ class SettingsActivity : AppCompatActivity(),
                     ?.putBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
                     ?.apply()
                 preferenceScreen.findPreference<SwitchPreference>(
-                    P.PREF_ALLOW_MUSIC
+                    P.PREF_ALLOW_MUSIC,
                 )?.isChecked = P.PREF_ALLOW_MUSIC_DEFAULT
             }
         }
@@ -81,23 +82,26 @@ class SettingsActivity : AppCompatActivity(),
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             checkNotificationsPermission()
-            getNotifSettings =
+            notificationSettings =
                 registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                     checkNotificationsPermission()
                 }
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(
-                prefsChangedListener
+                prefsChangedListener,
             )
         }
 
         override fun onDestroy() {
             super.onDestroy()
             preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(
-                prefsChangedListener
+                prefsChangedListener,
             )
         }
 
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        override fun onCreatePreferences(
+            savedInstanceState: Bundle?,
+            rootKey: String?,
+        ) {
             addPreferencesFromResource(R.xml.pref_general)
             updateAutoStopDelaySummary()
             updateAggressiveDozeDelaySummary()
@@ -113,12 +117,12 @@ class SettingsActivity : AppCompatActivity(),
                     R.plurals.pref_auto_stop_delay_summary,
                     preferenceManager.sharedPreferences?.getInt(
                         P.PREF_AUTO_STOP_DELAY,
-                        P.PREF_AUTO_STOP_DELAY_DEFAULT
+                        P.PREF_AUTO_STOP_DELAY_DEFAULT,
                     ) ?: P.PREF_AUTO_STOP_DELAY_DEFAULT,
                     preferenceManager.sharedPreferences?.getInt(
                         P.PREF_AUTO_STOP_DELAY,
-                        P.PREF_AUTO_STOP_DELAY_DEFAULT
-                    )
+                        P.PREF_AUTO_STOP_DELAY_DEFAULT,
+                    ),
                 )
         }
 
@@ -128,20 +132,21 @@ class SettingsActivity : AppCompatActivity(),
                     R.plurals.pref_aggressive_doze_delay_summary,
                     preferenceManager.sharedPreferences?.getInt(
                         P.PREF_AGGRESSIVE_DOZE_DELAY,
-                        P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT
+                        P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
                     ) ?: P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
                     preferenceManager.sharedPreferences?.getInt(
                         P.PREF_AGGRESSIVE_DOZE_DELAY,
-                        P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT
-                    )
+                        P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
+                    ),
                 )
         }
 
         private fun updateAllowMusicApps() {
-            val enabled = preferenceManager.sharedPreferences?.getBoolean(
-                P.PREF_ALLOW_MUSIC,
-                P.PREF_ALLOW_MUSIC_DEFAULT
-            ) ?: P.PREF_ALLOW_MUSIC_DEFAULT
+            val enabled =
+                preferenceManager.sharedPreferences?.getBoolean(
+                    P.PREF_ALLOW_MUSIC,
+                    P.PREF_ALLOW_MUSIC_DEFAULT,
+                ) ?: P.PREF_ALLOW_MUSIC_DEFAULT
             if (enabled) {
                 // we need to check if we have notifications permissions
                 val hasPermission = NotificationService.getInstance() != null
@@ -151,14 +156,13 @@ class SettingsActivity : AppCompatActivity(),
                         .setMessage(R.string.notifications_permission_explanation)
                         .setPositiveButton(android.R.string.ok) { _, _ ->
                             try {
-                                getNotifSettings.launch(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                                notificationSettings.launch(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
                             } catch (e: ActivityNotFoundException) {
                                 Log.w(Global.LOG_TAG, e)
                             }
                         }
                         .show()
                 }
-
             }
         }
     }

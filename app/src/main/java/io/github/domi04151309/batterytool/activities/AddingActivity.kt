@@ -19,9 +19,9 @@ import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Theme
 import org.json.JSONArray
 
-class AddingActivity : AppCompatActivity(),
+class AddingActivity :
+    AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.set(this)
         super.onCreate(savedInstanceState)
@@ -34,12 +34,13 @@ class AddingActivity : AppCompatActivity(),
 
     override fun onPreferenceStartFragment(
         caller: PreferenceFragmentCompat,
-        pref: Preference
+        pref: Preference,
     ): Boolean {
-        val fragment = supportFragmentManager.fragmentFactory.instantiate(
-            classLoader,
-            pref.fragment ?: throw IllegalStateException()
-        )
+        val fragment =
+            supportFragmentManager.fragmentFactory.instantiate(
+                classLoader,
+                pref.fragment ?: throw IllegalStateException(),
+            )
         fragment.arguments = pref.extras
         fragment.setTargetFragment(caller, 0)
         supportFragmentManager.beginTransaction()
@@ -50,8 +51,10 @@ class AddingActivity : AppCompatActivity(),
     }
 
     class PreferenceFragment : PreferenceFragmentCompat() {
-
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        override fun onCreatePreferences(
+            savedInstanceState: Bundle?,
+            rootKey: String?,
+        ) {
             val c = requireContext()
             val prefs = PreferenceManager.getDefaultSharedPreferences(c)
             val pm: PackageManager = c.packageManager
@@ -64,10 +67,10 @@ class AddingActivity : AppCompatActivity(),
                 val arrayList: ArrayList<Preference> = ArrayList(packages.size)
                 val arrayListSystem: ArrayList<Preference> = ArrayList(packages.size)
                 for (packageInfo in packages) {
-                    if (pm.getLaunchIntentForPackage(packageInfo.packageName) != null
-                        && prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
-                            ?.contains(packageInfo.packageName) != true
-                        && packageInfo.packageName != c.packageName
+                    if (pm.getLaunchIntentForPackage(packageInfo.packageName) != null &&
+                        prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
+                            ?.contains(packageInfo.packageName) != true &&
+                        packageInfo.packageName != c.packageName
                     ) {
                         val preference = AppHelper.generatePreference(c, packageInfo)
                         preference.setOnPreferenceClickListener {
@@ -76,23 +79,28 @@ class AddingActivity : AppCompatActivity(),
                                 addingArray.remove(it.summary)
                                 addingArrayDisplay.remove(it.title)
                             } else {
-                                it.icon = LayerDrawable(
-                                    arrayOf(
-                                        pm.getApplicationIcon(
-                                            it.summary.toString()
+                                it.icon =
+                                    LayerDrawable(
+                                        arrayOf(
+                                            pm.getApplicationIcon(
+                                                it.summary.toString(),
+                                            ),
+                                            ContextCompat.getDrawable(
+                                                c,
+                                                R.drawable.overlay_icon,
+                                            ),
                                         ),
-                                        ContextCompat.getDrawable(
-                                            c,
-                                            R.drawable.overlay_icon
-                                        )
                                     )
-                                )
-                                if (it.summary != null) addingArray.add(
-                                    it.summary ?: throw IllegalStateException()
-                                )
-                                if (it.summary != null) addingArrayDisplay.add(
-                                    it.title ?: throw IllegalStateException()
-                                )
+                                if (it.summary != null) {
+                                    addingArray.add(
+                                        it.summary ?: throw IllegalStateException(),
+                                    )
+                                }
+                                if (it.summary != null) {
+                                    addingArrayDisplay.add(
+                                        it.title ?: throw IllegalStateException(),
+                                    )
+                                }
                             }
                             bottomBar.text =
                                 addingArrayDisplay.sortedWith(compareBy { chars -> chars.toString() })
@@ -109,27 +117,32 @@ class AddingActivity : AppCompatActivity(),
 
                 Looper.prepare()
                 addPreferencesFromResource(R.xml.pref_adding)
-                val categoryUser = findPreference<PreferenceCategory>("user")
-                    ?: throw  NullPointerException()
+                val categoryUser =
+                    findPreference<PreferenceCategory>("user")
+                        ?: throw NullPointerException()
                 for (preference in arrayList.sortedWith(compareBy { it.title.toString() })) {
                     categoryUser.addPreference(preference)
                 }
-                val categorySystem = findPreference<PreferenceCategory>("system")
-                    ?: throw  NullPointerException()
+                val categorySystem =
+                    findPreference<PreferenceCategory>("system")
+                        ?: throw NullPointerException()
                 for (preference in arrayListSystem.sortedWith(compareBy { it.title.toString() })) {
                     categorySystem.addPreference(preference)
                 }
-                preferenceScreen.addPreference(Preference(c).let {
-                    it.layoutResource = R.layout.preference_divider
-                    it.isSelectable = false
-                    it
-                })
+                preferenceScreen.addPreference(
+                    Preference(c).let {
+                        it.layoutResource = R.layout.preference_divider
+                        it.isSelectable = false
+                        it
+                    },
+                )
             }.start()
 
             requireActivity().findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
-                val currentList = JSONArray(
-                    prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
-                )
+                val currentList =
+                    JSONArray(
+                        prefs.getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT),
+                    )
                 for (item in addingArray) currentList.put(item)
                 prefs.edit().putString(P.PREF_APP_LIST, currentList.toString()).apply()
                 requireActivity().finish()

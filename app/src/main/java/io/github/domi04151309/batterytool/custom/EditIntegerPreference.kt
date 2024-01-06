@@ -2,18 +2,17 @@ package io.github.domi04151309.batterytool.custom
 
 import android.content.Context
 import android.text.InputType
-import androidx.preference.EditTextPreference
 import android.util.AttributeSet
 import android.widget.Toast
+import androidx.preference.EditTextPreference
 import io.github.domi04151309.batterytool.R
 
 @Suppress("unused")
 class EditIntegerPreference : EditTextPreference {
-
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
         context,
         attrs,
-        defStyle
+        defStyle,
     ) {
         setOnBindEditTextListener {
             it.inputType = InputType.TYPE_CLASS_NUMBER

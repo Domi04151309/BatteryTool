@@ -4,21 +4,22 @@ import android.content.SharedPreferences
 import org.json.JSONArray
 
 class ForcedSet(private val preferences: SharedPreferences) {
-
     companion object {
         private var forcedSet: HashSet<String>? = null
     }
 
     init {
         if (forcedSet == null) {
-            val forcedJson = JSONArray(
-                preferences.getString(P.PREF_FORCED_LIST, P.PREF_FORCED_LIST_DEFAULT)
-            )
-            forcedSet = HashSet<String>(forcedJson.length()).apply {
-                for (i in 0 until forcedJson.length()) {
-                    add(forcedJson.getString(i))
+            val forcedJson =
+                JSONArray(
+                    preferences.getString(P.PREF_FORCED_LIST, P.PREF_FORCED_LIST_DEFAULT),
+                )
+            forcedSet =
+                HashSet<String>(forcedJson.length()).apply {
+                    for (i in 0 until forcedJson.length()) {
+                        add(forcedJson.getString(i))
+                    }
                 }
-            }
         }
     }
 
@@ -41,5 +42,4 @@ class ForcedSet(private val preferences: SharedPreferences) {
         }
         preferences.edit().putString(P.PREF_FORCED_LIST, json.toString()).apply()
     }
-
 }

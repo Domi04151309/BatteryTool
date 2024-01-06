@@ -21,17 +21,20 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.github.domi04151309.batterytool.R
-import io.github.domi04151309.batterytool.helpers.*
+import io.github.domi04151309.batterytool.helpers.AppHelper
+import io.github.domi04151309.batterytool.helpers.ForcedSet
+import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Root
 import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.ForegroundService
 import org.json.JSONArray
 import java.lang.Exception
 
-class MainActivity : AppCompatActivity(),
+class MainActivity :
+    AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
-
     private var themeId = ""
+
     private fun getThemeId(): String =
         PreferenceManager.getDefaultSharedPreferences(this)
             .getString(P.PREF_THEME, P.PREF_THEME_DEFAULT) ?: P.PREF_THEME_DEFAULT
@@ -69,12 +72,13 @@ class MainActivity : AppCompatActivity(),
 
     override fun onPreferenceStartFragment(
         caller: PreferenceFragmentCompat,
-        pref: Preference
+        pref: Preference,
     ): Boolean {
-        val fragment = supportFragmentManager.fragmentFactory.instantiate(
-            classLoader,
-            pref.fragment ?: throw IllegalStateException()
-        )
+        val fragment =
+            supportFragmentManager.fragmentFactory.instantiate(
+                classLoader,
+                pref.fragment ?: throw IllegalStateException(),
+            )
         fragment.arguments = pref.extras
         fragment.setTargetFragment(caller, 0)
         supportFragmentManager.beginTransaction()
@@ -85,14 +89,16 @@ class MainActivity : AppCompatActivity(),
     }
 
     class PreferenceFragment : PreferenceFragmentCompat() {
-
         private lateinit var c: Context
         private lateinit var prefs: SharedPreferences
         private lateinit var categorySoon: PreferenceCategory
         private lateinit var categoryUnnecessary: PreferenceCategory
         private lateinit var categoryStopped: PreferenceCategory
 
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        override fun onCreatePreferences(
+            savedInstanceState: Bundle?,
+            rootKey: String?,
+        ) {
             addPreferencesFromResource(R.xml.pref_main)
 
             c = requireContext()
@@ -138,22 +144,27 @@ class MainActivity : AppCompatActivity(),
 
             var preference: Preference
             for (i in 0 until appArray.length()) {
-                preference = try {
-                    AppHelper.generatePreference(c, appArray.getString(i), forcedSet)
-                } catch (e: Exception) {
-                    continue
-                }
+                preference =
+                    try {
+                        AppHelper.generatePreference(c, appArray.getString(i), forcedSet)
+                    } catch (e: Exception) {
+                        continue
+                    }
                 preference.setOnPreferenceClickListener {
-                    val options = resources
-                        .getStringArray(R.array.main_click_dialog_options)
-                        .toMutableList()
+                    val options =
+                        resources
+                            .getStringArray(R.array.main_click_dialog_options)
+                            .toMutableList()
                     val isForced = forcedSet.contains(it.summary.toString())
                     options.add(
                         2,
                         resources.getString(
-                            if (isForced) R.string.main_click_dialog_turn_off_always
-                            else R.string.main_click_dialog_turn_on_always
-                        )
+                            if (isForced) {
+                                R.string.main_click_dialog_turn_off_always
+                            } else {
+                                R.string.main_click_dialog_turn_on_always
+                            },
+                        ),
                     )
                     AlertDialog.Builder(c)
                         .setTitle(R.string.main_click_dialog_title)
@@ -166,20 +177,28 @@ class MainActivity : AppCompatActivity(),
                                         .show()
                                 }
                                 1 -> {
-                                    startActivity(Intent().apply {
-                                        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                                        data = Uri.fromParts("package", it.summary.toString(), null)
-                                    })
+                                    startActivity(
+                                        Intent().apply {
+                                            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                                            data = Uri.fromParts("package", it.summary.toString(), null)
+                                        },
+                                    )
                                 }
                                 2 -> {
-                                    if (isForced) forcedSet.remove(it.summary.toString())
-                                    else forcedSet.add(it.summary.toString())
+                                    if (isForced) {
+                                        forcedSet.remove(it.summary.toString())
+                                    } else {
+                                        forcedSet.add(it.summary.toString())
+                                    }
                                     forcedSet.save()
                                     Toast.makeText(
                                         context,
-                                        if (isForced) R.string.main_click_dialog_turn_off_always
-                                        else R.string.main_click_dialog_turn_on_always,
-                                        Toast.LENGTH_LONG
+                                        if (isForced) {
+                                            R.string.main_click_dialog_turn_off_always
+                                        } else {
+                                            R.string.main_click_dialog_turn_on_always
+                                        },
+                                        Toast.LENGTH_LONG,
                                     ).show()
                                     loadLists()
                                 }
@@ -202,18 +221,23 @@ class MainActivity : AppCompatActivity(),
                 }
                 if (c.packageManager.getApplicationInfo(
                         preference.summary.toString(),
-                        PackageManager.GET_META_DATA
+                        PackageManager.GET_META_DATA,
                     ).flags and ApplicationInfo.FLAG_STOPPED != 0
-                ) preferenceStoppedArray.add(preference)
-                else preferenceSoonArray.add(preference)
+                ) {
+                    preferenceStoppedArray.add(preference)
+                } else {
+                    preferenceSoonArray.add(preference)
+                }
             }
             var isSoonEmpty = true
             var isUnnecessaryEmpty = true
             for (item in preferenceSoonArray.sortedWith(compareBy { it.title.toString() })) {
                 if (
-                    item.summary != null
-                    && (services.contains(item.summary ?: throw IllegalStateException())
-                            || forcedSet.contains(item.summary.toString()))
+                    item.summary != null &&
+                    (
+                        services.contains(item.summary ?: throw IllegalStateException()) ||
+                            forcedSet.contains(item.summary.toString())
+                    )
                 ) {
                     categorySoon.addPreference(item)
                     isSoonEmpty = false

@@ -8,7 +8,6 @@ import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.helpers.AppHelper
 
 class StopActivity : Activity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (intent.action == Intent.ACTION_CREATE_SHORTCUT) {
@@ -27,8 +26,8 @@ class StopActivity : Activity() {
                 .putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.shortcut))
                 .putExtra(
                     Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-                    Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher)
-                )
+                    Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher),
+                ),
         )
     }
 }

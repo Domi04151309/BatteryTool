@@ -2,11 +2,10 @@ package io.github.domi04151309.batterytool.helpers
 
 import android.util.Log
 import java.io.DataOutputStream
-import java.util.*
+import java.util.Scanner
 import kotlin.collections.HashSet
 
 internal object Root {
-
     fun request(): Boolean {
         val p: Process
         return try {
@@ -23,8 +22,9 @@ internal object Root {
 
     fun shell(command: String) {
         try {
-            val p = Runtime.getRuntime()
-                .exec(arrayOf("su", "-c", command))
+            val p =
+                Runtime.getRuntime()
+                    .exec(arrayOf("su", "-c", command))
             p.waitFor()
         } catch (e: Exception) {
             Log.e("Superuser", e.toString())
@@ -51,8 +51,12 @@ internal object Root {
                 arrayOf(
                     "su",
                     "-c",
-                    "dumpsys activity activities | grep -E 'CurrentFocus|ResumedActivity|FocusedApp' |  cut -d '{' -f2 | cut -d ' ' -f3 | cut -d '/' -f1"
-                )
+                    "dumpsys activity activities | " +
+                        "grep -E 'CurrentFocus|ResumedActivity|FocusedApp' |  " +
+                        "cut -d '{' -f2 | " +
+                        "cut -d ' ' -f3 | " +
+                        "cut -d '/' -f1",
+                ),
             ).inputStream.use { inputStream ->
                 Scanner(inputStream).useDelimiter("\\A").use { s ->
                     result = if (s.hasNext()) s.next() else ""
@@ -77,8 +81,8 @@ internal object Root {
                 arrayOf(
                     "su",
                     "-c",
-                    "dumpsys activity services"
-                )
+                    "dumpsys activity services",
+                ),
             ).inputStream.use { inputStream ->
                 Scanner(inputStream).useDelimiter("\\A").use { s ->
                     result = if (s.hasNext()) s.next() else ""

@@ -10,10 +10,11 @@ import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.R
 
 internal object Theme {
-
     fun set(context: Context) {
-        when (PreferenceManager.getDefaultSharedPreferences(context)
-            .getString(P.PREF_THEME, P.PREF_THEME_DEFAULT)) {
+        when (
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(P.PREF_THEME, P.PREF_THEME_DEFAULT)
+        ) {
             "light" -> {
                 context.setTheme(R.style.AppTheme27)
                 recent(context, R.color.colorPrimary)
@@ -47,8 +48,10 @@ internal object Theme {
     }
 
     fun setNoActionBar(context: Context) {
-        when (PreferenceManager.getDefaultSharedPreferences(context)
-            .getString(P.PREF_THEME, P.PREF_THEME_DEFAULT)) {
+        when (
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(P.PREF_THEME, P.PREF_THEME_DEFAULT)
+        ) {
             "light" -> {
                 context.setTheme(R.style.AppTheme_NoActionBar)
                 recent(context, R.color.colorPrimary)
@@ -81,12 +84,16 @@ internal object Theme {
         context.setTheme(R.style.AppThemePatch)
     }
 
-    private fun recent(c: Context, color: Int) {
-        val taskDescription = ActivityManager.TaskDescription(
-            c.getString(R.string.app_name),
-            BitmapFactory.decodeResource(c.resources, R.mipmap.ic_launcher),
-            ContextCompat.getColor(c, color)
-        )
+    private fun recent(
+        c: Context,
+        color: Int,
+    ) {
+        val taskDescription =
+            ActivityManager.TaskDescription(
+                c.getString(R.string.app_name),
+                BitmapFactory.decodeResource(c.resources, R.mipmap.ic_launcher),
+                ContextCompat.getColor(c, color),
+            )
         (c as Activity).setTaskDescription(taskDescription)
     }
 }

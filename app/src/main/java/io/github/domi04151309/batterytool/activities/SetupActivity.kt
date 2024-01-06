@@ -11,7 +11,6 @@ import io.github.domi04151309.batterytool.helpers.Root
 import io.github.domi04151309.batterytool.helpers.Theme
 
 class SetupActivity : Activity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.set(this)
         super.onCreate(savedInstanceState)
