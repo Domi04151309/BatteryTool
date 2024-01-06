@@ -4,16 +4,4 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
-
-    <style name="BatteryBig">
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
-    </style>
-
-    <style name="BatterySmall">
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">?android:attr/textColorSecondary</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
-    </style>
 </resources>

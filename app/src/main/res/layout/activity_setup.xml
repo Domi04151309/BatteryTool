@@ -13,36 +13,35 @@
         android:src="@drawable/ic_security" />
 
     <TextView
-        style="@style/BatteryBig"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="?dialogPreferredPadding"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
         android:text="@string/setup_title" />
 
     <TextView
-        style="@style/BatterySmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="?dialogPreferredPadding"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
         android:text="@string/setup_summary" />
 
     <Button
-        style="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
+        style="@style/Widget.Material3.Button.TextButton"
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@null"
         android:text="@string/setup_button" />
 
     <Button
-        style="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
+        style="@style/Widget.Material3.Button.TextButton"
         android:id="@+id/demo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@null"
-        android:textColor="?android:textColorPrimary"
         android:alpha=".3"
         android:text="@string/setup_demo" />
 </LinearLayout>
