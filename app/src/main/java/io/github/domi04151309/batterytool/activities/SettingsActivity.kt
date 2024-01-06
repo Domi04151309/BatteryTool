@@ -1,6 +1,5 @@
 package io.github.domi04151309.batterytool.activities
 
-import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,20 +8,18 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.custom.EditIntegerPreference
 import io.github.domi04151309.batterytool.helpers.Global
 import io.github.domi04151309.batterytool.helpers.P
-import io.github.domi04151309.batterytool.helpers.Theme
 import io.github.domi04151309.batterytool.services.NotificationService
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        Theme.set(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         supportFragmentManager
@@ -131,7 +128,7 @@ class SettingsActivity : AppCompatActivity() {
                 // we need to check if we have notifications permissions
                 val hasPermission = NotificationService.getInstance() != null
                 if (!hasPermission) {
-                    AlertDialog.Builder(context)
+                    MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.notifications_permission)
                         .setMessage(R.string.notifications_permission_explanation)
                         .setPositiveButton(android.R.string.ok) { _, _ ->

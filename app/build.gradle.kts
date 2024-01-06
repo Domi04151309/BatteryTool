@@ -85,5 +85,4 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("androidx.media2:media2-session:1.2.1")
-    implementation("com.android.volley:volley:1.2.1")
 }

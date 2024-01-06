@@ -2,9 +2,9 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape
-            android:shape="oval"
-            android:tint="?attr/colorAccent">
-            <solid android:color="#80000000" />
+            android:shape="rectangle">
+            <solid android:color="?attr/colorPrimaryContainer" />
+            <corners android:radius="?dialogPreferredPadding" />
         </shape>
     </item>
     <item android:drawable="@drawable/ic_check_adding" />

@@ -8,34 +8,16 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/top_app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        app:elevation="0dp">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
-
-            <ImageView
-                android:id="@+id/settings_icon"
-                android:layout_width="50dp"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_settings"
-                android:alpha="0.6"
-                android:padding="13dp"
-                android:layout_centerVertical="true"
-                android:contentDescription="@null" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textColor="?android:attr/textColorPrimary"
-                android:alpha="0.6"
-                android:gravity="center"
-                android:text="@string/app_name"
-                android:textSize="20sp" />
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:title="@string/app_name"
+            app:titleCentered="true"
+            app:menu="@menu/top_app_bar" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
@@ -45,6 +27,7 @@
         android:layout_below="@id/top_app_bar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Widget.Material3.FloatingActionButton.Secondary"
         android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,9 +36,6 @@
         android:layout_marginHorizontal="@dimen/fab_margin"
         android:layout_marginTop="@dimen/fab_margin"
         android:contentDescription="@string/adding"
-        app:tint="?android:attr/colorAccent"
-        app:backgroundTint="?android:attr/colorPrimary"
-        app:borderWidth="0dp"
         app:srcCompat="@drawable/ic_add" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -66,6 +46,5 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/fab_margin"
         android:contentDescription="@string/shortcut"
-        app:srcCompat="@drawable/ic_spa"
-        app:tint="@android:color/white" />
+        app:srcCompat="@drawable/ic_spa" />
 </RelativeLayout>

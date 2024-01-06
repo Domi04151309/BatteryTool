@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:fabAlignmentMode="end"
-        style="@style/Widget.MaterialComponents.BottomAppBar">
+        style="@style/Widget.Material3.BottomAppBar">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -40,6 +40,5 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/adding"
         app:srcCompat="@drawable/ic_check"
-        app:tint="@android:color/white"
         app:layout_anchor="@id/bottom_app_bar" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

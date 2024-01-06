@@ -1,20 +1,20 @@
 package io.github.domi04151309.batterytool.activities
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.preference.PreferenceManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.elevation.SurfaceColors
 import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.helpers.Root
-import io.github.domi04151309.batterytool.helpers.Theme
 
-class SetupActivity : Activity() {
+class SetupActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        Theme.set(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setup)
+
+        window.statusBarColor = SurfaceColors.SURFACE_0.getColor(this)
 
         findViewById<Button>(R.id.button).setOnClickListener {
             if (Root.request()) {
@@ -23,7 +23,7 @@ class SetupActivity : Activity() {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             } else {
-                AlertDialog.Builder(this)
+                MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.action_failed)
                     .setMessage(R.string.action_failed_summary)
                     .setPositiveButton(android.R.string.ok) { _, _ -> }
@@ -32,7 +32,7 @@ class SetupActivity : Activity() {
         }
 
         findViewById<Button>(R.id.demo).setOnClickListener {
-            AlertDialog.Builder(this)
+            MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.setup_demo)
                 .setMessage(R.string.setup_demo_summary)
                 .setPositiveButton(android.R.string.ok) { _, _ ->

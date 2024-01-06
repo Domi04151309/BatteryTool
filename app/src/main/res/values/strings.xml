@@ -45,7 +45,7 @@
     <string name="adding_user">User Applications</string>
     <string name="adding_system">System Applications</string>
 
-    <string name="prefs">Settings</string>
+    <string name="pref">Settings</string>
     <string name="pref_auto_stop">Automatically stop</string>
     <string name="pref_auto_stop_summary">Automatically stop apps after the screen turns off</string>
     <string name="pref_auto_stop_delay">Auto stop delay</string>
@@ -54,23 +54,8 @@
     <string name="pref_aggressive_doze_delay">Aggressive doze delay</string>
     <string name="pref_ignore_focused_app">Ignore focused apps</string>
     <string name="pref_ignore_focused_app_summary">Don\’t stop currently focused apps</string>
-    <string name="pref_theme">Change theme</string>
-    <string name="pref_theme_summary">Changes the look of the app</string>
 
     <string name="pref_int_failed">This value cannot be used</string>
-
-    <string-array name="pref_theme_array">
-        <item>Light theme</item>
-        <item>Dark theme</item>
-        <item>Black theme</item>
-        <item>Follow system theme</item>
-    </string-array>
-    <string-array name="pref_theme_array_values" translatable="false">
-        <item>light</item>
-        <item>dark</item>
-        <item>black</item>
-        <item>auto</item>
-    </string-array>
 
     <string name="loading">Loading</string>
 
@@ -79,7 +64,7 @@
     <string name="about_app_version">App version</string>
     <string name="about_app_version_desc" translatable="false">%1$s (%2$d)</string>
     <string name="about_privacy">External Content</string>
-    <string name="about_privacy_desc">Contributors are loaded from GitHub. Read their privacy policy for further information.</string>
+    <string name="about_privacy_desc">External content will be loaded from GitHub. Read their privacy policy for further information.</string>
     <string name="about_privacy_policy">Privacy Policy</string>
     <string name="about_contributors">Contributors</string>
     <string name="about_contributors_desc">A list of the contributors</string>
@@ -93,11 +78,16 @@
     <string name="about_libraries_desc">A list of all used libraries</string>
 
     <string-array name="about_libraries" translatable="false">
-        <item>Android AppCompat Library</item>
         <item>Android Preferences KTX</item>
         <item>AndroidX Media2 Session Library</item>
+        <item>AppCompat</item>
         <item>Material Components For Android</item>
-        <item>Volley</item>
+    </string-array>
+    <string-array name="about_libraries_licenses" translatable="false">
+        <item>Apache 2.0</item>
+        <item>Apache 2.0</item>
+        <item>Apache 2.0</item>
+        <item>Apache 2.0</item>
     </string-array>
     <string-array name="about_icons_array" translatable="false">
         <item>Icons8</item>

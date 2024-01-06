@@ -36,14 +36,6 @@
         android:key="allow_music"
         android:summary="@string/pref_allow_music_apps_summary"
         android:title="@string/pref_allow_music_apps" />
-    <ListPreference
-        android:defaultValue="auto"
-        android:entries="@array/pref_theme_array"
-        android:entryValues="@array/pref_theme_array_values"
-        android:icon="@drawable/ic_style"
-        android:key="theme"
-        android:summary="@string/pref_theme_summary"
-        android:title="@string/pref_theme" />
     <Preference
         android:icon="@drawable/ic_info"
         android:key="about"
