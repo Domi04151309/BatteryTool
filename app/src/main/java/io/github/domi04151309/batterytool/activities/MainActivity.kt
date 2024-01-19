@@ -30,19 +30,12 @@ import io.github.domi04151309.batterytool.services.ForegroundService
 import org.json.JSONArray
 
 class MainActivity : BaseActivity() {
-    companion object {
-        private const val HIBERNATE_UPDATE_DELAY = 1000L
-        private const val ITEM_STOP_NOW = 0
-        private const val ITEM_OPEN_SETTINGS = 1
-        private const val ITEM_ALWAYS_STOP = 2
-        private const val ITEM_REMOVE_FROM_LIST = 3
-    }
-
     private var themeId = ""
 
     private fun getThemeId(): String =
         PreferenceManager.getDefaultSharedPreferences(this)
-            .getString(P.PREF_THEME, P.PREF_THEME_DEFAULT) ?: P.PREF_THEME_DEFAULT
+            .getString(P.PREF_THEME, P.PREF_THEME_DEFAULT)
+            ?: P.PREF_THEME_DEFAULT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,9 +93,9 @@ class MainActivity : BaseActivity() {
         ) {
             addPreferencesFromResource(R.xml.pref_main)
 
-            categorySoon = findPreference("soon") ?: error("Invalid layout.")
-            categoryUnnecessary = findPreference("unnecessary") ?: error("Invalid layout.")
-            categoryStopped = findPreference("stopped") ?: error("Invalid layout.")
+            categorySoon = findPreference("soon") ?: error(INVALID_LAYOUT)
+            categoryUnnecessary = findPreference("unnecessary") ?: error(INVALID_LAYOUT)
+            categoryStopped = findPreference("stopped") ?: error(INVALID_LAYOUT)
 
             activity?.findViewById<FloatingActionButton>(R.id.hibernate)?.setOnClickListener {
                 AppHelper.hibernate(requireContext())
@@ -118,15 +111,14 @@ class MainActivity : BaseActivity() {
             loadLists()
         }
 
-        private fun generateEmptyListIndicator(): Preference {
-            return Preference(requireContext()).let {
+        private fun generateEmptyListIndicator(): Preference =
+            Preference(requireContext()).let {
                 it.icon = ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)
                 it.title = requireContext().getString(R.string.main_empty)
                 it.summary = requireContext().getString(R.string.main_empty_summary)
                 it.isSelectable = false
                 it
             }
-        }
 
         private fun generatePreference(
             appArray: JSONArray,
@@ -279,5 +271,14 @@ class MainActivity : BaseActivity() {
                     }
                 }
             }.start()
+
+        companion object {
+            private const val INVALID_LAYOUT = "Invalid layout."
+            private const val HIBERNATE_UPDATE_DELAY = 1000L
+            private const val ITEM_STOP_NOW = 0
+            private const val ITEM_OPEN_SETTINGS = 1
+            private const val ITEM_ALWAYS_STOP = 2
+            private const val ITEM_REMOVE_FROM_LIST = 3
+        }
     }
 }

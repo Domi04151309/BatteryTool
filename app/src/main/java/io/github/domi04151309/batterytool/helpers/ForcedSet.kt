@@ -6,22 +6,6 @@ import androidx.preference.PreferenceManager
 import org.json.JSONArray
 
 class ForcedSet(private val preferences: SharedPreferences) : HashSet<String>() {
-    companion object {
-        @java.io.Serial
-        private const val serialVersionUID = 1L
-
-        @Volatile
-        private var instance: ForcedSet? = null
-
-        fun getInstance(context: Context): ForcedSet {
-            return instance ?: synchronized(this) {
-                instance ?: ForcedSet(PreferenceManager.getDefaultSharedPreferences(context)).also {
-                    instance = it
-                }
-            }
-        }
-    }
-
     init {
         val forcedJson =
             JSONArray(
@@ -38,5 +22,20 @@ class ForcedSet(private val preferences: SharedPreferences) : HashSet<String>() 
             json.put(it)
         }
         preferences.edit().putString(P.PREF_FORCED_LIST, json.toString()).apply()
+    }
+
+    companion object {
+        @java.io.Serial
+        private const val serialVersionUID = 1L
+
+        @Volatile
+        private var instance: ForcedSet? = null
+
+        fun getInstance(context: Context): ForcedSet =
+            instance ?: synchronized(this) {
+                instance ?: ForcedSet(PreferenceManager.getDefaultSharedPreferences(context)).also {
+                    instance = it
+                }
+            }
     }
 }

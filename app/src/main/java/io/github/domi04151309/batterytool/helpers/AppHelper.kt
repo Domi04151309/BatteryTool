@@ -15,8 +15,8 @@ object AppHelper {
         c: Context,
         packageName: String,
         forced: ForcedSet,
-    ): Preference {
-        return Preference(c).let {
+    ): Preference =
+        Preference(c).let {
             it.icon = c.packageManager.getApplicationIcon(packageName)
             it.title =
                 c.packageManager.getApplicationLabel(
@@ -33,19 +33,17 @@ object AppHelper {
             }
             it
         }
-    }
 
     internal fun generatePreference(
         c: Context,
         applicationInfo: ApplicationInfo,
-    ): Preference {
-        return Preference(c).let {
+    ): Preference =
+        Preference(c).let {
             it.icon = applicationInfo.loadIcon(c.packageManager)
             it.title = applicationInfo.loadLabel(c.packageManager)
             it.summary = applicationInfo.packageName
             it
         }
-    }
 
     private fun hibernateApps(
         c: Context,
@@ -79,12 +77,10 @@ object AppHelper {
                 if (
                     !packageName.equals(playingMusicPackage) &&
                     !focused.contains(packageName) &&
-                    (
-                        c.packageManager.getApplicationInfo(
-                            packageName,
-                            PackageManager.GET_META_DATA,
-                        ).flags and ApplicationInfo.FLAG_STOPPED == 0
-                    ) &&
+                    c.packageManager.getApplicationInfo(
+                        packageName,
+                        PackageManager.GET_META_DATA,
+                    ).flags and ApplicationInfo.FLAG_STOPPED == 0 &&
                     (services.contains(packageName) || forcedSet.contains(packageName))
                 ) {
                     commandArray.add("am force-stop $packageName")

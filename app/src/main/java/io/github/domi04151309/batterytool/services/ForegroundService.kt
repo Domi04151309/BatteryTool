@@ -26,9 +26,7 @@ class ForegroundService : Service() {
         unregisterReceiver(screenStateReceiver)
     }
 
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent): IBinder? = null
 
     override fun onStartCommand(
         intent: Intent,

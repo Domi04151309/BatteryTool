@@ -12,10 +12,6 @@ import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Root
 
 class ScreenStateReceiver : BroadcastReceiver() {
-    companion object {
-        private const val SECONDS_TO_MILLIS = 1000L
-    }
-
     private var isScreenOn = true
     private var isInDozeMode = false
 
@@ -56,5 +52,9 @@ class ScreenStateReceiver : BroadcastReceiver() {
                 isInDozeMode = false
             }
         }
+    }
+
+    companion object {
+        private const val SECONDS_TO_MILLIS = 1000L
     }
 }

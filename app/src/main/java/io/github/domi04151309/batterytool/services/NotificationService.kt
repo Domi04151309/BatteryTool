@@ -22,23 +22,20 @@ class NotificationService : NotificationListenerService() {
         intent: Intent?,
         flags: Int,
         startId: Int,
-    ): Int {
-        return Service.START_STICKY
-    }
+    ): Int = Service.START_STICKY
 
     override fun onListenerConnected() {
         super.onListenerConnected()
         instance = WeakReference(this)
     }
 
-    private fun getNotifications(): List<StatusBarNotification> {
-        return try {
+    private fun getNotifications(): List<StatusBarNotification> =
+        try {
             activeNotifications.sortedBy { it.postTime }
         } catch (e: SecurityException) {
             Log.w(Global.LOG_TAG, e)
             emptyList()
         }
-    }
 
     fun getPlayingPackageName(callback: (String?) -> Unit) {
         try {
@@ -53,7 +50,7 @@ class NotificationService : NotificationListenerService() {
                 }
             if (notification != null) {
                 val token =
-                    notification.notification.extras[NotificationCompat.EXTRA_MEDIA_SESSION] as MediaSession.Token?
+                    notification.notification.extras[NotificationCompat.EXTRA_MEDIA_SESSION] as? MediaSession.Token
                 var mediaController: MediaController? = null
                 val mediaSessionCallback =
                     object : MediaController.ControllerCallback() {
@@ -100,8 +97,6 @@ class NotificationService : NotificationListenerService() {
     companion object {
         private var instance: WeakReference<NotificationService>? = null
 
-        internal fun getInstance(): NotificationService? {
-            return instance?.get()
-        }
+        internal fun getInstance(): NotificationService? = instance?.get()
     }
 }

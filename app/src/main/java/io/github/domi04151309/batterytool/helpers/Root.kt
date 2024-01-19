@@ -7,6 +7,8 @@ import java.util.Scanner
 import kotlin.collections.HashSet
 
 internal object Root {
+    private const val LOG_TAG = "Superuser"
+
     fun request(): Boolean {
         val p: Process
         return try {
@@ -17,7 +19,7 @@ internal object Root {
             os.flush()
             true
         } catch (e: IOException) {
-            Log.w("Superuser", e)
+            Log.w(LOG_TAG, e)
             false
         }
     }
@@ -29,7 +31,7 @@ internal object Root {
                     .exec(arrayOf("su", "-c", command))
             p.waitFor()
         } catch (e: IOException) {
-            Log.w("Superuser", e)
+            Log.w(LOG_TAG, e)
         }
     }
 
@@ -42,7 +44,7 @@ internal object Root {
             os.writeBytes("exit\n")
             os.flush()
         } catch (e: IOException) {
-            Log.e("Superuser", e.toString())
+            Log.e(LOG_TAG, e.toString())
         }
     }
 
@@ -65,7 +67,7 @@ internal object Root {
                 result = if (s.hasNext()) s.next() else ""
             }
         } catch (e: IOException) {
-            Log.e("Superuser", e.toString())
+            Log.e(LOG_TAG, e.toString())
         }
         return parseFocusedApps(result)
     }
@@ -91,7 +93,7 @@ internal object Root {
                 result = if (s.hasNext()) s.next() else ""
             }
         } catch (e: IOException) {
-            Log.e("Superuser", e.toString())
+            Log.e(LOG_TAG, e.toString())
         }
         return parseServices(result)
     }

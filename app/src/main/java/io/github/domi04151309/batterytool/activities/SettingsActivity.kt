@@ -34,7 +34,7 @@ class SettingsActivity : BaseActivity() {
             SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
                 if (key == P.PREF_THEME) requireActivity().recreate()
                 if (key == P.PREF_AUTO_STOP_DELAY) updateAutoStopDelaySummary()
-                if (key == P.PREF_AGGRESSIVE_DOZE_DELAY) updateAggressiveDozeDelaySummary()
+                if (key == P.PREF_AGGRESSIVE_DOZE_DELAY) updateDozeDelaySummary()
                 if (key == P.PREF_ALLOW_MUSIC) updateAllowMusicApps()
             }
 
@@ -81,7 +81,7 @@ class SettingsActivity : BaseActivity() {
         ) {
             addPreferencesFromResource(R.xml.pref_general)
             updateAutoStopDelaySummary()
-            updateAggressiveDozeDelaySummary()
+            updateDozeDelaySummary()
             findPreference<Preference>("about")?.setOnPreferenceClickListener {
                 startActivity(Intent(context, AboutActivity::class.java))
                 true
@@ -103,7 +103,7 @@ class SettingsActivity : BaseActivity() {
                 )
         }
 
-        private fun updateAggressiveDozeDelaySummary() {
+        private fun updateDozeDelaySummary() {
             findPreference<EditIntegerPreference>(P.PREF_AGGRESSIVE_DOZE_DELAY)?.summary =
                 requireContext().resources.getQuantityString(
                     R.plurals.pref_aggressive_doze_delay_summary,
