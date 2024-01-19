@@ -24,6 +24,7 @@
 
         <activity
             android:name=".activities.SetupActivity"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar"
             android:launchMode="singleTop" />
 
         <receiver

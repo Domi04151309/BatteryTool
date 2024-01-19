@@ -37,10 +37,16 @@ class SetupActivity : BaseActivity() {
                 .setTitle(R.string.setup_demo)
                 .setMessage(R.string.setup_demo_summary)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
+                    demoMode = true
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }
                 .show()
         }
+    }
+
+    companion object {
+        var demoMode: Boolean = false
+            private set
     }
 }

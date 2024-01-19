@@ -48,7 +48,10 @@ class MainActivity : BaseActivity() {
             .replace(R.id.content, PreferenceFragment())
             .commit()
 
-        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setup_complete", false)) {
+        if (
+            !SetupActivity.demoMode &&
+            !PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setup_complete", false)
+        ) {
             startActivity(Intent(this, SetupActivity::class.java))
             finish()
             return
