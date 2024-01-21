@@ -31,7 +31,7 @@ class SettingsActivity : BaseActivity() {
     class PreferenceFragment : PreferenceFragmentCompat() {
         private lateinit var notificationSettings: ActivityResultLauncher<Intent>
         private val prefsChangedListener =
-            SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+            SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
                 if (key == P.PREF_THEME) requireActivity().recreate()
                 if (key == P.PREF_AUTO_STOP_DELAY) updateAutoStopDelaySummary()
                 if (key == P.PREF_AGGRESSIVE_DOZE_DELAY) updateDozeDelaySummary()
@@ -60,7 +60,7 @@ class SettingsActivity : BaseActivity() {
             super.onCreate(savedInstanceState)
             checkNotificationsPermission()
             notificationSettings =
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
                     checkNotificationsPermission()
                 }
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(

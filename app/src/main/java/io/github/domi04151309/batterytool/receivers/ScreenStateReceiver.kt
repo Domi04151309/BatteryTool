@@ -17,40 +17,48 @@ class ScreenStateReceiver : BroadcastReceiver() {
 
     private fun getPrefs(c: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(c)
 
+    private fun onScreenOff(context: Context) {
+        isScreenOn = false
+        if (getPrefs(context).getBoolean(P.PREF_AUTO_STOP, P.PREF_AUTO_STOP_DEFAULT)) {
+            Handler(Looper.getMainLooper()).postDelayed(
+                { if (!isScreenOn) AppHelper.hibernate(context) },
+                getPrefs(context).getInt(P.PREF_AUTO_STOP_DELAY, P.PREF_AUTO_STOP_DELAY_DEFAULT)
+                    .toLong() * SECONDS_TO_MILLIS,
+            )
+        }
+        if (getPrefs(context).getBoolean(P.PREF_AGGRESSIVE_DOZE, P.PREF_AGGRESSIVE_DOZE_DEFAULT)) {
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    if (!isScreenOn) {
+                        isInDozeMode = true
+                        Root.shell("dumpsys deviceidle force-idle")
+                    }
+                },
+                getPrefs(context).getInt(
+                    P.PREF_AGGRESSIVE_DOZE_DELAY,
+                    P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
+                )
+                    .toLong() * SECONDS_TO_MILLIS,
+            )
+        }
+    }
+
+    private fun onScreenOn() {
+        isScreenOn = true
+        if (isInDozeMode) {
+            Root.shell("dumpsys deviceidle unforce")
+            isInDozeMode = false
+        }
+    }
+
     override fun onReceive(
-        c: Context,
+        context: Context,
         intent: Intent,
     ) {
         if (intent.action == Intent.ACTION_SCREEN_OFF) {
-            isScreenOn = false
-            if (getPrefs(c).getBoolean(P.PREF_AUTO_STOP, P.PREF_AUTO_STOP_DEFAULT)) {
-                Handler(Looper.getMainLooper()).postDelayed(
-                    { if (!isScreenOn) AppHelper.hibernate(c) },
-                    getPrefs(c).getInt(P.PREF_AUTO_STOP_DELAY, P.PREF_AUTO_STOP_DELAY_DEFAULT)
-                        .toLong() * SECONDS_TO_MILLIS,
-                )
-            }
-            if (getPrefs(c).getBoolean(P.PREF_AGGRESSIVE_DOZE, P.PREF_AGGRESSIVE_DOZE_DEFAULT)) {
-                Handler(Looper.getMainLooper()).postDelayed(
-                    {
-                        if (!isScreenOn) {
-                            isInDozeMode = true
-                            Root.shell("dumpsys deviceidle force-idle")
-                        }
-                    },
-                    getPrefs(c).getInt(
-                        P.PREF_AGGRESSIVE_DOZE_DELAY,
-                        P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
-                    )
-                        .toLong() * SECONDS_TO_MILLIS,
-                )
-            }
+            onScreenOff(context)
         } else if (intent.action == Intent.ACTION_SCREEN_ON) {
-            isScreenOn = true
-            if (isInDozeMode) {
-                Root.shell("dumpsys deviceidle unforce")
-                isInDozeMode = false
-            }
+            onScreenOn()
         }
     }
 

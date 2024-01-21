@@ -61,38 +61,7 @@ class AddingActivity : BaseActivity() {
                     ) {
                         val preference = AppHelper.generatePreference(requireContext(), packageInfo)
                         preference.setOnPreferenceClickListener {
-                            if (appsToAdd.contains(it.summary)) {
-                                it.icon = packageManager.getApplicationIcon(it.summary.toString())
-                                appsToAdd.remove(it.summary)
-                                appsToAddNames.remove(it.title)
-                            } else {
-                                it.icon =
-                                    LayerDrawable(
-                                        arrayOf(
-                                            packageManager.getApplicationIcon(
-                                                it.summary.toString(),
-                                            ),
-                                            ContextCompat.getDrawable(
-                                                requireContext(),
-                                                R.drawable.overlay_icon,
-                                            ),
-                                        ),
-                                    )
-                                if (it.summary != null) {
-                                    appsToAdd.add(
-                                        it.summary ?: error("Impossible state."),
-                                    )
-                                }
-                                if (it.summary != null) {
-                                    appsToAddNames.add(
-                                        it.title ?: error("Impossible state."),
-                                    )
-                                }
-                            }
-                            bottomBar.text =
-                                appsToAddNames.sortedWith(compareBy { chars -> chars.toString() })
-                                    .joinToString()
-                            true
+                            onPreferenceClicked(it, packageManager)
                         }
                         if (packageInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) {
                             systemApps.add(preference)
@@ -129,6 +98,42 @@ class AddingActivity : BaseActivity() {
                     it
                 },
             )
+        }
+
+        private fun onPreferenceClicked(
+            preference: Preference,
+            packageManager: PackageManager,
+        ): Boolean {
+            if (appsToAdd.contains(preference.summary)) {
+                preference.icon = packageManager.getApplicationIcon(preference.summary.toString())
+                appsToAdd.remove(preference.summary)
+                appsToAddNames.remove(preference.title)
+            } else {
+                preference.icon =
+                    LayerDrawable(
+                        arrayOf(
+                            packageManager.getApplicationIcon(
+                                preference.summary.toString(),
+                            ),
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.overlay_icon,
+                            ),
+                        ),
+                    )
+                if (preference.summary != null) {
+                    appsToAdd.add(
+                        preference.summary ?: error("Impossible state."),
+                    )
+                    appsToAddNames.add(
+                        preference.title ?: error("Impossible state."),
+                    )
+                }
+            }
+            bottomBar.text =
+                appsToAddNames.sortedWith(compareBy { chars -> chars.toString() })
+                    .joinToString()
+            return true
         }
 
         private fun onAddClicked() {

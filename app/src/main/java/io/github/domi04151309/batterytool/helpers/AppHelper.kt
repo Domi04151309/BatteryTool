@@ -12,56 +12,54 @@ import org.json.JSONArray
 
 object AppHelper {
     internal fun generatePreference(
-        c: Context,
+        context: Context,
         packageName: String,
-        forced: ForcedSet,
     ): Preference =
-        Preference(c).let {
-            it.icon = c.packageManager.getApplicationIcon(packageName)
+        Preference(context).let {
+            it.icon = context.packageManager.getApplicationIcon(packageName)
             it.title =
-                c.packageManager.getApplicationLabel(
-                    c.packageManager.getApplicationInfo(
+                context.packageManager.getApplicationLabel(
+                    context.packageManager.getApplicationInfo(
                         packageName,
                         PackageManager.GET_META_DATA,
                     ),
                 )
             it.summary = packageName
-            if (forced.contains(packageName)) {
+            if (ForcedSet.getInstance(context).contains(packageName)) {
                 it.title = it.title as String +
                     " " +
-                    c.resources.getString(R.string.main_forced)
+                    context.resources.getString(R.string.main_forced)
             }
             it
         }
 
     internal fun generatePreference(
-        c: Context,
+        context: Context,
         applicationInfo: ApplicationInfo,
     ): Preference =
-        Preference(c).let {
-            it.icon = applicationInfo.loadIcon(c.packageManager)
-            it.title = applicationInfo.loadLabel(c.packageManager)
+        Preference(context).let {
+            it.icon = applicationInfo.loadIcon(context.packageManager)
+            it.title = applicationInfo.loadLabel(context.packageManager)
             it.summary = applicationInfo.packageName
             it
         }
 
     private fun hibernateApps(
-        c: Context,
+        context: Context,
         playingMusicPackage: String?,
     ) {
         val appArray =
             JSONArray(
-                PreferenceManager.getDefaultSharedPreferences(c).getString(
+                PreferenceManager.getDefaultSharedPreferences(context).getString(
                     P.PREF_APP_LIST,
                     P.PREF_APP_LIST_DEFAULT,
                 ),
             )
-        val forcedSet = ForcedSet.getInstance(c)
         val commandArray: ArrayList<String> = ArrayList(appArray.length() / 2)
         val services = Root.getServices()
         val focused =
             if (
-                PreferenceManager.getDefaultSharedPreferences(c).getBoolean(
+                PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
                     P.PREF_IGNORE_FOCUSED_APPS,
                     P.PREF_IGNORE_FOCUSED_APPS_DEFAULT,
                 )
@@ -77,11 +75,11 @@ object AppHelper {
                 if (
                     !packageName.equals(playingMusicPackage) &&
                     !focused.contains(packageName) &&
-                    c.packageManager.getApplicationInfo(
+                    context.packageManager.getApplicationInfo(
                         packageName,
                         PackageManager.GET_META_DATA,
                     ).flags and ApplicationInfo.FLAG_STOPPED == 0 &&
-                    (services.contains(packageName) || forcedSet.contains(packageName))
+                    (services.contains(packageName) || ForcedSet.getInstance(context).contains(packageName))
                 ) {
                     commandArray.add("am force-stop $packageName")
                 }

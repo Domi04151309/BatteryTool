@@ -126,11 +126,10 @@ class MainActivity : BaseActivity() {
         private fun generatePreference(
             appArray: JSONArray,
             i: Int,
-            forcedSet: ForcedSet,
         ): Preference? {
             val preference =
                 try {
-                    AppHelper.generatePreference(requireContext(), appArray.getString(i), forcedSet)
+                    AppHelper.generatePreference(requireContext(), appArray.getString(i))
                 } catch (e: NameNotFoundException) {
                     Log.w(Global.LOG_TAG, e)
                     return null
@@ -143,7 +142,7 @@ class MainActivity : BaseActivity() {
                 options.add(
                     2,
                     resources.getString(
-                        if (forcedSet.contains(it.summary.toString())) {
+                        if (ForcedSet.getInstance(requireContext()).contains(it.summary.toString())) {
                             R.string.main_click_dialog_turn_off_always
                         } else {
                             R.string.main_click_dialog_turn_on_always
@@ -153,7 +152,7 @@ class MainActivity : BaseActivity() {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.main_click_dialog_title)
                     .setItems(options.toTypedArray()) { _, which ->
-                        onDialogItemClicked(which, it.summary.toString(), appArray, forcedSet)
+                        onDialogItemClicked(which, it.summary.toString(), appArray)
                     }
                     .setNegativeButton(android.R.string.cancel) { _, _ -> }
                     .show()
@@ -166,8 +165,8 @@ class MainActivity : BaseActivity() {
             which: Int,
             packageName: String,
             appArray: JSONArray,
-            forcedSet: ForcedSet,
         ) {
+            val forcedSet = ForcedSet.getInstance(requireContext())
             when (which) {
                 ITEM_STOP_NOW -> {
                     Root.shell("am force-stop $packageName")
@@ -230,11 +229,10 @@ class MainActivity : BaseActivity() {
                 val preferenceSoonArray: ArrayList<Preference> = ArrayList(appArray.length() / 2)
                 val preferenceStoppedArray: ArrayList<Preference> = ArrayList(appArray.length() / 2)
                 val services = Root.getServices()
-                val forcedSet = ForcedSet.getInstance(requireContext())
 
                 var preference: Preference
                 for (i in 0 until appArray.length()) {
-                    preference = generatePreference(appArray, i, forcedSet) ?: continue
+                    preference = generatePreference(appArray, i) ?: continue
                     if (requireContext().packageManager.getApplicationInfo(
                             preference.summary.toString(),
                             PackageManager.GET_META_DATA,
@@ -245,35 +243,44 @@ class MainActivity : BaseActivity() {
                         preferenceSoonArray.add(preference)
                     }
                 }
-                var isSoonEmpty = true
-                var isUnnecessaryEmpty = true
-                for (item in preferenceSoonArray.sortedWith(compareBy { it.title.toString() })) {
-                    if (
-                        item.summary != null &&
-                        (
-                            services.contains(item.summary ?: error("Impossible state.")) ||
-                                forcedSet.contains(item.summary.toString())
-                        )
-                    ) {
-                        categorySoon.addPreference(item)
-                        isSoonEmpty = false
-                    } else {
-                        categoryUnnecessary.addPreference(item)
-                        isUnnecessaryEmpty = false
-                    }
-                }
-
-                if (isSoonEmpty) categorySoon.addPreference(generateEmptyListIndicator())
-                if (isUnnecessaryEmpty) categoryUnnecessary.addPreference(generateEmptyListIndicator())
-
-                if (preferenceStoppedArray.isEmpty()) {
-                    categoryStopped.addPreference(generateEmptyListIndicator())
-                } else {
-                    for (item in preferenceStoppedArray.sortedWith(compareBy { it.title.toString() })) {
-                        categoryStopped.addPreference(item)
-                    }
-                }
+                fillLists(preferenceSoonArray, services, preferenceStoppedArray)
             }.start()
+
+        private fun fillLists(
+            preferenceSoonArray: ArrayList<Preference>,
+            services: HashSet<String>,
+            preferenceStoppedArray: ArrayList<Preference>,
+        ) {
+            var isSoonEmpty = true
+            var isUnnecessaryEmpty = true
+            for (item in preferenceSoonArray.sortedWith(compareBy { it.title.toString() })) {
+                if (
+                    item.summary != null &&
+                    (
+                        services.contains(item.summary ?: error("Impossible state.")) ||
+                            ForcedSet.getInstance(requireContext())
+                                .contains(item.summary.toString())
+                    )
+                ) {
+                    categorySoon.addPreference(item)
+                    isSoonEmpty = false
+                } else {
+                    categoryUnnecessary.addPreference(item)
+                    isUnnecessaryEmpty = false
+                }
+            }
+
+            if (isSoonEmpty) categorySoon.addPreference(generateEmptyListIndicator())
+            if (isUnnecessaryEmpty) categoryUnnecessary.addPreference(generateEmptyListIndicator())
+
+            if (preferenceStoppedArray.isEmpty()) {
+                categoryStopped.addPreference(generateEmptyListIndicator())
+            } else {
+                for (item in preferenceStoppedArray.sortedWith(compareBy { it.title.toString() })) {
+                    categoryStopped.addPreference(item)
+                }
+            }
+        }
 
         companion object {
             private const val INVALID_LAYOUT = "Invalid layout."
