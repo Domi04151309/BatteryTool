@@ -62,7 +62,6 @@
     <string name="about">Относно</string>
     <string name="about_summary">Относно приложението</string>
     <string name="about_app_version">Издание</string>
-    <string name="about_app_version_desc" translatable="false">%1$s (%2$d)</string>
     <string name="about_privacy">Външно съдържание</string>
     <string name="about_privacy_desc">От Гитхъб ще бъде зареждано външно съръджание. За повече информация прочетете тяхната политика за защита на личната информация.</string>
     <string name="about_privacy_policy">Защита на личата информация</string>
@@ -71,26 +70,8 @@
     <string name="about_general">Общи</string>
     <string name="about_github">Хранилище в Гитхъб</string>
     <string name="about_license">Лиценз</string>
-    <string name="about_license_desc" translatable="false">GPL-3.0</string>
     <string name="about_icons">Символи</string>
     <string name="about_icons_desc">Символи от Икони8 и Гугъл</string>
     <string name="about_libraries">Библиотеки</string>
     <string name="about_libraries_desc">Списък на използваните библиотеки</string>
-
-    <string-array name="about_libraries" translatable="false">
-        <item>Android Preferences KTX</item>
-        <item>AndroidX Media2 Session Library</item>
-        <item>AppCompat</item>
-        <item>Material Components For Android</item>
-    </string-array>
-    <string-array name="about_libraries_licenses" translatable="false">
-        <item>Apache 2.0</item>
-        <item>Apache 2.0</item>
-        <item>Apache 2.0</item>
-        <item>Apache 2.0</item>
-    </string-array>
-    <string-array name="about_icons_array" translatable="false">
-        <item>Icons8</item>
-        <item>Google</item>
-    </string-array>
 </resources>
