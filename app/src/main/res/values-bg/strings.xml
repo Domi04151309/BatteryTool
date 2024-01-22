@@ -1,0 +1,96 @@
+<resources>
+    <string name="app_name">Battery Tool</string>
+    <string name="app_description">Автоматично спира приложения, работещи във фонов режим</string>
+    <string name="shortcut">Спиране</string>
+
+    <string name="service_text">Battery Tool работи във фонов режим</string>
+    <string name="service_channel">Сервизен канал</string>
+
+    <string name="setup_title">Автоматично спира приложения, работещи във фонов режим.</string>
+    <string name="setup_summary">За целта е необходим достъп до правата на суперпотребителя. На следващата стъпка, дайте достъп то тези права.</string>
+    <string name="setup_button">Напред</string>
+    <string name="setup_demo">Демонстрация</string>
+    <string name="setup_demo_summary">За да разгледате приложението без да работи наистина, можете да използвате демонстрационния режим. За да работи му дадйте достъп до правата на суперпотребителя.</string>
+
+    <string name="action_failed">Действието е неуспешно</string>
+    <string name="action_failed_summary">За да работи приложението е необходим достъп до правата на суперпотребителя.</string>
+
+    <string name="str_security">Сигурност</string>
+
+    <string name="main_stopped_soon">Скоро ще бъдат спрени</string>
+    <string name="main_stopped_unnecessary">Няма нужда да бъдат спирани</string>
+    <string name="main_stopped">Спряни</string>
+    <string name="main_empty">Тук няма нищо</string>
+    <string name="main_empty_summary">Изглежда, че в тази категория няма приложения</string>
+    <string name="main_forced">(принудително)</string>
+
+    <string name="pref_allow_music_apps">Пренебрегване на музикални приложения</string>
+    <string name="pref_allow_music_apps_summary">Да не бъде спирано работещото приложение за музика</string>
+    <string name="notifications_permission">Праза за известия</string>
+    <string name="notifications_permission_explanation">За да разпознава работещите приложения за музика, това приложение се нуждае от достъп до известията</string>
+
+    <string name="main_click_dialog_title">Изберете действие</string>
+    <string name="main_click_dialog_turn_on_always">Да бъде спирано винаги</string>
+    <string name="main_click_dialog_turn_off_always">Да не бъде спирано винаги</string>
+    <string-array name="main_click_dialog_options">
+        <item>Спиране</item>
+        <item>Настройки на приложението</item>
+        <item>Премахване от списъка</item>
+    </string-array>
+
+    <string name="toast_stopped">Спряно е приложение</string>
+    <string name="toast_stopped_all">Спрени са приложения</string>
+
+    <string name="adding">Добавяне на приложения</string>
+    <string name="adding_user">Потребителски приложения</string>
+    <string name="adding_system">Системни приложения</string>
+
+    <string name="pref">Настройки</string>
+    <string name="pref_auto_stop">Автоматично спиране</string>
+    <string name="pref_auto_stop_summary">Автоматично спира приложенията при изгасване на екрана</string>
+    <string name="pref_auto_stop_delay">Изчакване преди автоматично спиране</string>
+    <string name="pref_aggressive_doze">Повишено енергоспестяване</string>
+    <string name="pref_aggressive_doze_summary">Влиза в режим на повишено пестене на батерия след изгасване на екрана</string>
+    <string name="pref_aggressive_doze_delay">Изчакване преди повишено енергостестяване</string>
+    <string name="pref_ignore_focused_app">Пренебрегване на активни приложения</string>
+    <string name="pref_ignore_focused_app_summary">Да не бъдат спирани активните приложения</string>
+
+    <string name="pref_int_failed">Тази стойност не може да бъде използвана</string>
+
+    <string name="loading">Зареждане</string>
+
+    <string name="about">Относно</string>
+    <string name="about_summary">Относно приложението</string>
+    <string name="about_app_version">Издание</string>
+    <string name="about_app_version_desc" translatable="false">%1$s (%2$d)</string>
+    <string name="about_privacy">Външно съдържание</string>
+    <string name="about_privacy_desc">От Гитхъб ще бъде зареждано външно съръджание. За повече информация прочетете тяхната политика за защита на личната информация.</string>
+    <string name="about_privacy_policy">Защита на личата информация</string>
+    <string name="about_contributors">Сътрудници</string>
+    <string name="about_contributors_desc">Списък на сътрудниците</string>
+    <string name="about_general">Общи</string>
+    <string name="about_github">Хранилище в Гитхъб</string>
+    <string name="about_license">Лиценз</string>
+    <string name="about_license_desc" translatable="false">GPL-3.0</string>
+    <string name="about_icons">Символи</string>
+    <string name="about_icons_desc">Символи от Икони8 и Гугъл</string>
+    <string name="about_libraries">Библиотеки</string>
+    <string name="about_libraries_desc">Списък на използваните библиотеки</string>
+
+    <string-array name="about_libraries" translatable="false">
+        <item>Android Preferences KTX</item>
+        <item>AndroidX Media2 Session Library</item>
+        <item>AppCompat</item>
+        <item>Material Components For Android</item>
+    </string-array>
+    <string-array name="about_libraries_licenses" translatable="false">
+        <item>Apache 2.0</item>
+        <item>Apache 2.0</item>
+        <item>Apache 2.0</item>
+        <item>Apache 2.0</item>
+    </string-array>
+    <string-array name="about_icons_array" translatable="false">
+        <item>Icons8</item>
+        <item>Google</item>
+    </string-array>
+</resources>

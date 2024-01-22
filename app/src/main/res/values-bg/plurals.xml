@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="pref_auto_stop_delay_summary">
+        <item quantity="one">Изчаква %d секунда преди да спира</item>
+        <item quantity="other">Изчаква %d секунди преди да спира</item>
+    </plurals>
+    <plurals name="pref_aggressive_doze_delay_summary">
+        <item quantity="one">Изчаква %d секунда преди да повишава енергоспестяването</item>
+        <item quantity="other">Изчаква %d секунди преди да повишава енергоспестяването</item>
+    </plurals>
+</resources>
