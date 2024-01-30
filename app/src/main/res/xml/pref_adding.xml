@@ -8,4 +8,7 @@
         android:key="system"
         android:title="@string/adding_system" />
 
+    <PreferenceCategory
+        android:key="internal"
+        android:title="@string/adding_internal" />
 </PreferenceScreen>

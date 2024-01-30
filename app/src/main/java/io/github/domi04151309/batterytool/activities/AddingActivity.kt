@@ -46,18 +46,23 @@ class AddingActivity : BaseActivity() {
             }
         }
 
+        @Suppress("CognitiveComplexMethod")
         private fun loadApps() =
             Thread {
                 val packageManager: PackageManager = requireContext().packageManager
                 val packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
                 val userApps: ArrayList<Preference> = ArrayList(packages.size)
                 val systemApps: ArrayList<Preference> = ArrayList(packages.size)
+                val internalApps: ArrayList<Preference> = ArrayList(packages.size)
                 for (packageInfo in packages) {
-                    if (packageManager.getLaunchIntentForPackage(packageInfo.packageName) != null &&
+                    @Suppress("ComplexCondition")
+                    if (
+                        packageInfo.flags and ApplicationInfo.FLAG_INSTALLED != 0 &&
+                        packageInfo.flags and ApplicationInfo.FLAG_HAS_CODE != 0 &&
+                        packageInfo.packageName != requireContext().packageName &&
                         PreferenceManager.getDefaultSharedPreferences(requireContext())
                             .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
-                            ?.contains(packageInfo.packageName) != true &&
-                        packageInfo.packageName != requireContext().packageName
+                            ?.contains(packageInfo.packageName) != true
                     ) {
                         val preference =
                             AppHelper.generatePreference(requireContext(), packageInfo).apply {
@@ -65,8 +70,13 @@ class AddingActivity : BaseActivity() {
                                     onPreferenceClicked(it, packageManager)
                                 }
                             }
+                        if (preference.title == preference.summary) continue
                         if (packageInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) {
-                            systemApps.add(preference)
+                            if (packageManager.getLaunchIntentForPackage(packageInfo.packageName) != null) {
+                                systemApps.add(preference)
+                            } else {
+                                internalApps.add(preference)
+                            }
                         } else {
                             userApps.add(preference)
                         }
@@ -74,24 +84,31 @@ class AddingActivity : BaseActivity() {
                 }
 
                 Looper.prepare()
-                displayApps(userApps, systemApps)
+                displayApps(userApps, systemApps, internalApps)
             }.start()
 
         private fun displayApps(
             userApps: List<Preference>,
             systemApps: List<Preference>,
+            internalApps: List<Preference>,
         ) {
             val categoryUser =
                 findPreference<PreferenceCategory>("user")
-                    ?: error("Invalid layout.")
-            for (preference in userApps.sortedWith(compareBy { it.title.toString() })) {
-                categoryUser.addPreference(preference)
-            }
+                    ?: error(INVALID_LAYOUT)
             val categorySystem =
                 findPreference<PreferenceCategory>("system")
-                    ?: error("Invalid layout.")
-            for (preference in systemApps.sortedWith(compareBy { it.title.toString() })) {
+                    ?: error(INVALID_LAYOUT)
+            val categoryInternal =
+                findPreference<PreferenceCategory>("internal")
+                    ?: error(INVALID_LAYOUT)
+            for (preference in userApps.sortedBy { it.title.toString() }) {
+                categoryUser.addPreference(preference)
+            }
+            for (preference in systemApps.sortedBy { it.title.toString() }) {
                 categorySystem.addPreference(preference)
+            }
+            for (preference in internalApps.sortedBy { it.title.toString() }) {
+                categoryInternal.addPreference(preference)
             }
             preferenceScreen.addPreference(
                 Preference(requireContext()).apply {
@@ -124,10 +141,10 @@ class AddingActivity : BaseActivity() {
                     )
                 if (preference.summary != null) {
                     appsToAdd.add(
-                        preference.summary ?: error("Impossible state."),
+                        preference.summary ?: error(IMPOSSIBLE_STATE),
                     )
                     appsToAddNames.add(
-                        preference.title ?: error("Impossible state."),
+                        preference.title ?: error(IMPOSSIBLE_STATE),
                     )
                 }
             }
@@ -148,5 +165,10 @@ class AddingActivity : BaseActivity() {
                 .apply()
             requireActivity().finish()
         }
+    }
+
+    companion object {
+        private const val INVALID_LAYOUT = "Invalid layout."
+        private const val IMPOSSIBLE_STATE = "Impossible state."
     }
 }

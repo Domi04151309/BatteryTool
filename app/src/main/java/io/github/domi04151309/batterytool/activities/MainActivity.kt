@@ -238,7 +238,7 @@ class MainActivity : BaseActivity() {
         ) {
             var isSoonEmpty = true
             var isUnnecessaryEmpty = true
-            for (item in soon.sortedWith(compareBy { it.title.toString() })) {
+            for (item in soon.sortedBy { it.title.toString() }) {
                 if (
                     item.summary != null &&
                     (
@@ -261,7 +261,7 @@ class MainActivity : BaseActivity() {
             if (stopped.isEmpty()) {
                 categoryStopped.addPreference(generateEmptyListIndicator())
             } else {
-                for (item in stopped.sortedWith(compareBy { it.title.toString() })) {
+                for (item in stopped.sortedBy { it.title.toString() }) {
                     categoryStopped.addPreference(item)
                 }
             }
