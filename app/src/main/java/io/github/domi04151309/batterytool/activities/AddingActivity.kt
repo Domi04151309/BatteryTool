@@ -59,10 +59,12 @@ class AddingActivity : BaseActivity() {
                             ?.contains(packageInfo.packageName) != true &&
                         packageInfo.packageName != requireContext().packageName
                     ) {
-                        val preference = AppHelper.generatePreference(requireContext(), packageInfo)
-                        preference.setOnPreferenceClickListener {
-                            onPreferenceClicked(it, packageManager)
-                        }
+                        val preference =
+                            AppHelper.generatePreference(requireContext(), packageInfo).apply {
+                                setOnPreferenceClickListener {
+                                    onPreferenceClicked(it, packageManager)
+                                }
+                            }
                         if (packageInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) {
                             systemApps.add(preference)
                         } else {
@@ -92,10 +94,9 @@ class AddingActivity : BaseActivity() {
                 categorySystem.addPreference(preference)
             }
             preferenceScreen.addPreference(
-                Preference(requireContext()).let {
-                    it.layoutResource = R.layout.preference_divider
-                    it.isSelectable = false
-                    it
+                Preference(requireContext()).apply {
+                    layoutResource = R.layout.preference_divider
+                    isSelectable = false
                 },
             )
         }
@@ -130,9 +131,7 @@ class AddingActivity : BaseActivity() {
                     )
                 }
             }
-            bottomBar.text =
-                appsToAddNames.sortedWith(compareBy { chars -> chars.toString() })
-                    .joinToString()
+            bottomBar.text = appsToAddNames.sortedBy { it.toString() }.joinToString()
             return true
         }
 

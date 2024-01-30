@@ -16,9 +16,12 @@ class ForegroundService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
-        filter.addAction(Intent.ACTION_SCREEN_OFF)
-        registerReceiver(screenStateReceiver, filter)
+        registerReceiver(
+            screenStateReceiver,
+            IntentFilter(Intent.ACTION_SCREEN_ON).apply {
+                addAction(Intent.ACTION_SCREEN_OFF)
+            },
+        )
     }
 
     override fun onDestroy() {

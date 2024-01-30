@@ -15,18 +15,20 @@ class ScreenStateReceiver : BroadcastReceiver() {
     private var isScreenOn = true
     private var isInDozeMode = false
 
-    private fun getPrefs(c: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(c)
+    private fun getPreferences(context: Context): SharedPreferences =
+        PreferenceManager
+            .getDefaultSharedPreferences(context)
 
     private fun onScreenOff(context: Context) {
         isScreenOn = false
-        if (getPrefs(context).getBoolean(P.PREF_AUTO_STOP, P.PREF_AUTO_STOP_DEFAULT)) {
+        if (getPreferences(context).getBoolean(P.PREF_AUTO_STOP, P.PREF_AUTO_STOP_DEFAULT)) {
             Handler(Looper.getMainLooper()).postDelayed(
                 { if (!isScreenOn) AppHelper.hibernate(context) },
-                getPrefs(context).getInt(P.PREF_AUTO_STOP_DELAY, P.PREF_AUTO_STOP_DELAY_DEFAULT)
+                getPreferences(context).getInt(P.PREF_AUTO_STOP_DELAY, P.PREF_AUTO_STOP_DELAY_DEFAULT)
                     .toLong() * SECONDS_TO_MILLIS,
             )
         }
-        if (getPrefs(context).getBoolean(P.PREF_AGGRESSIVE_DOZE, P.PREF_AGGRESSIVE_DOZE_DEFAULT)) {
+        if (getPreferences(context).getBoolean(P.PREF_AGGRESSIVE_DOZE, P.PREF_AGGRESSIVE_DOZE_DEFAULT)) {
             Handler(Looper.getMainLooper()).postDelayed(
                 {
                     if (!isScreenOn) {
@@ -34,7 +36,7 @@ class ScreenStateReceiver : BroadcastReceiver() {
                         Root.shell("dumpsys deviceidle force-idle")
                     }
                 },
-                getPrefs(context).getInt(
+                getPreferences(context).getInt(
                     P.PREF_AGGRESSIVE_DOZE_DELAY,
                     P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
                 )

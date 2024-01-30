@@ -15,47 +15,46 @@ object AppHelper {
         context: Context,
         packageName: String,
     ): Preference =
-        Preference(context).let {
-            it.icon = context.packageManager.getApplicationIcon(packageName)
-            it.title =
+        Preference(context).apply {
+            val label =
                 context.packageManager.getApplicationLabel(
                     context.packageManager.getApplicationInfo(
                         packageName,
                         PackageManager.GET_META_DATA,
                     ),
-                )
-            it.summary = packageName
-            if (ForcedSet.getInstance(context).contains(packageName)) {
-                it.title = it.title as String +
-                    " " +
+                ).toString()
+            icon = context.packageManager.getApplicationIcon(packageName)
+            title = "$label " +
+                if (ForcedSet.getInstance(context).contains(packageName)) {
                     context.resources.getString(R.string.main_forced)
-            }
-            it
+                } else {
+                    ""
+                }
+            summary = packageName
         }
 
     internal fun generatePreference(
         context: Context,
         applicationInfo: ApplicationInfo,
     ): Preference =
-        Preference(context).let {
-            it.icon = applicationInfo.loadIcon(context.packageManager)
-            it.title = applicationInfo.loadLabel(context.packageManager)
-            it.summary = applicationInfo.packageName
-            it
+        Preference(context).apply {
+            icon = applicationInfo.loadIcon(context.packageManager)
+            title = applicationInfo.loadLabel(context.packageManager)
+            summary = applicationInfo.packageName
         }
 
     private fun hibernateApps(
         context: Context,
         playingMusicPackage: String?,
     ) {
-        val appArray =
+        val apps =
             JSONArray(
                 PreferenceManager.getDefaultSharedPreferences(context).getString(
                     P.PREF_APP_LIST,
                     P.PREF_APP_LIST_DEFAULT,
                 ),
             )
-        val commandArray: ArrayList<String> = ArrayList(appArray.length() / 2)
+        val commands: ArrayList<String> = ArrayList(apps.length() / 2)
         val services = Root.getServices()
         val focused =
             if (
@@ -68,9 +67,9 @@ object AppHelper {
             } else {
                 PseudoHashSet()
             }
-        for (i in 0 until appArray.length()) {
+        for (i in 0 until apps.length()) {
             try {
-                val packageName = appArray.getString(i)
+                val packageName = apps.getString(i)
                 @Suppress("ComplexCondition")
                 if (
                     !packageName.equals(playingMusicPackage) &&
@@ -81,29 +80,28 @@ object AppHelper {
                     ).flags and ApplicationInfo.FLAG_STOPPED == 0 &&
                     (services.contains(packageName) || ForcedSet.getInstance(context).contains(packageName))
                 ) {
-                    commandArray.add("am force-stop $packageName")
+                    commands.add("am force-stop $packageName")
                 }
-            } catch (e: PackageManager.NameNotFoundException) {
-                Log.w(Global.LOG_TAG, e)
+            } catch (exception: PackageManager.NameNotFoundException) {
+                Log.w(Global.LOG_TAG, exception)
                 continue
             }
         }
-        if (commandArray.isNotEmpty()) Root.shell(commandArray.toTypedArray())
+        if (commands.isNotEmpty()) Root.shell(commands.toTypedArray())
     }
 
-    internal fun hibernate(c: Context) {
-        val whitelistMusicApps =
-            PreferenceManager.getDefaultSharedPreferences(c)
+    internal fun hibernate(context: Context) {
+        if (PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
-        if (whitelistMusicApps) {
+        ) {
             NotificationService.getInstance()?.getPlayingPackageName { packageName ->
                 hibernateApps(
-                    c,
+                    context,
                     packageName,
                 )
             }
         } else {
-            hibernateApps(c, null)
+            hibernateApps(context, null)
         }
     }
 }

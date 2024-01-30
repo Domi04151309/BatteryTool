@@ -43,9 +43,8 @@ class SettingsActivity : BaseActivity() {
                     P.PREF_ALLOW_MUSIC,
                     P.PREF_ALLOW_MUSIC_DEFAULT,
                 ) ?: P.PREF_ALLOW_MUSIC_DEFAULT
-            if (!needsPermission) return
             val hasPermission = NotificationService.getInstance() != null
-            if (!hasPermission) {
+            if (needsPermission && !hasPermission) {
                 preferenceManager.sharedPreferences?.edit()
                     ?.putBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
                     ?.apply()
@@ -118,13 +117,11 @@ class SettingsActivity : BaseActivity() {
         }
 
         private fun updateAllowMusicApps() {
-            val enabled =
-                preferenceManager.sharedPreferences?.getBoolean(
+            if (preferenceManager.sharedPreferences?.getBoolean(
                     P.PREF_ALLOW_MUSIC,
                     P.PREF_ALLOW_MUSIC_DEFAULT,
                 ) ?: P.PREF_ALLOW_MUSIC_DEFAULT
-            if (enabled) {
-                // we need to check if we have notifications permissions
+            ) {
                 val hasPermission = NotificationService.getInstance() != null
                 if (!hasPermission) {
                     MaterialAlertDialogBuilder(requireContext())
@@ -133,8 +130,8 @@ class SettingsActivity : BaseActivity() {
                         .setPositiveButton(android.R.string.ok) { _, _ ->
                             try {
                                 notificationSettings.launch(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
-                            } catch (e: ActivityNotFoundException) {
-                                Log.w(Global.LOG_TAG, e)
+                            } catch (exception: ActivityNotFoundException) {
+                                Log.w(Global.LOG_TAG, exception)
                             }
                         }
                         .show()

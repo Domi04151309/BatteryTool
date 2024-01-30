@@ -17,11 +17,7 @@ class ForcedSet(private val preferences: SharedPreferences) : HashSet<String>() 
     }
 
     fun save() {
-        val json = JSONArray()
-        forEach {
-            json.put(it)
-        }
-        preferences.edit().putString(P.PREF_FORCED_LIST, json.toString()).apply()
+        preferences.edit().putString(P.PREF_FORCED_LIST, JSONArray(this).toString()).apply()
     }
 
     companion object {
