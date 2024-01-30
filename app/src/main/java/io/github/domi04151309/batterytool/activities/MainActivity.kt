@@ -97,58 +97,60 @@ class MainActivity : BaseActivity() {
         }
 
         private fun generateEmptyListIndicator(): Preference =
-            Preference(requireContext()).let {
-                it.icon = ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)
-                it.title = requireContext().getString(R.string.main_empty)
-                it.summary = requireContext().getString(R.string.main_empty_summary)
-                it.isSelectable = false
-                it
+            Preference(requireContext()).apply {
+                icon = ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)
+                title = requireContext().getString(R.string.main_empty)
+                summary = requireContext().getString(R.string.main_empty_summary)
+                isSelectable = false
             }
 
         private fun generatePreference(
-            appArray: JSONArray,
-            i: Int,
+            apps: JSONArray,
+            index: Int,
         ): Preference? {
-            val preference =
-                try {
-                    AppHelper.generatePreference(requireContext(), appArray.getString(i))
-                } catch (e: NameNotFoundException) {
-                    Log.w(Global.LOG_TAG, e)
-                    return null
-                }
-            preference.setOnPreferenceClickListener {
-                val options =
-                    resources
-                        .getStringArray(R.array.main_click_dialog_options)
-                        .toMutableList()
-                options.add(
-                    2,
-                    resources.getString(
-                        if (ForcedSet.getInstance(requireContext()).contains(it.summary.toString())) {
-                            R.string.main_click_dialog_turn_off_always
-                        } else {
-                            R.string.main_click_dialog_turn_on_always
-                        },
-                    ),
-                )
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.main_click_dialog_title)
-                    .setItems(options.toTypedArray()) { _, which ->
-                        onDialogItemClicked(which, it.summary.toString(), appArray)
+            try {
+                return AppHelper.generatePreference(requireContext(), apps.getString(index)).apply {
+                    setOnPreferenceClickListener {
+                        val options =
+                            resources
+                                .getStringArray(R.array.main_click_dialog_options)
+                                .toMutableList()
+                                .apply {
+                                    add(
+                                        2,
+                                        resources.getString(
+                                            if (
+                                                ForcedSet.getInstance(requireContext()).contains(it.summary.toString())
+                                            ) {
+                                                R.string.main_click_dialog_turn_off_always
+                                            } else {
+                                                R.string.main_click_dialog_turn_on_always
+                                            },
+                                        ),
+                                    )
+                                }
+                                .toTypedArray()
+                        MaterialAlertDialogBuilder(requireContext())
+                            .setTitle(R.string.main_click_dialog_title)
+                            .setItems(options) { _, which ->
+                                onDialogItemClicked(which, it.summary.toString(), apps)
+                            }
+                            .setNegativeButton(android.R.string.cancel) { _, _ -> }
+                            .show()
+                        true
                     }
-                    .setNegativeButton(android.R.string.cancel) { _, _ -> }
-                    .show()
-                true
+                }
+            } catch (exception: NameNotFoundException) {
+                Log.w(Global.LOG_TAG, exception)
+                return null
             }
-            return preference
         }
 
         private fun onDialogItemClicked(
             which: Int,
             packageName: String,
-            appArray: JSONArray,
+            apps: JSONArray,
         ) {
-            val forcedSet = ForcedSet.getInstance(requireContext())
             when (which) {
                 ITEM_STOP_NOW -> {
                     Root.shell("am force-stop $packageName")
@@ -165,6 +167,7 @@ class MainActivity : BaseActivity() {
                     )
                 }
                 ITEM_ALWAYS_STOP -> {
+                    val forcedSet = ForcedSet.getInstance(requireContext())
                     Toast.makeText(
                         context,
                         if (forcedSet.contains(packageName)) {
@@ -180,16 +183,16 @@ class MainActivity : BaseActivity() {
                     loadLists()
                 }
                 ITEM_REMOVE_FROM_LIST -> {
-                    for (appIndex in 0 until appArray.length()) {
-                        if (appArray.getString(appIndex) == packageName) {
-                            appArray.remove(appIndex)
+                    for (appIndex in 0 until apps.length()) {
+                        if (apps.getString(appIndex) == packageName) {
+                            apps.remove(appIndex)
                             break
                         }
                     }
                     PreferenceManager
                         .getDefaultSharedPreferences(requireContext())
                         .edit()
-                        .putString(P.PREF_APP_LIST, appArray.toString())
+                        .putString(P.PREF_APP_LIST, apps.toString())
                         .apply()
                     loadLists()
                 }
@@ -202,40 +205,40 @@ class MainActivity : BaseActivity() {
                 categoryUnnecessary.removeAll()
                 categoryStopped.removeAll()
 
-                val appArray =
+                val apps =
                     JSONArray(
                         PreferenceManager
                             .getDefaultSharedPreferences(requireContext())
                             .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT),
                     )
-                val preferenceSoonArray: ArrayList<Preference> = ArrayList(appArray.length() / 2)
-                val preferenceStoppedArray: ArrayList<Preference> = ArrayList(appArray.length() / 2)
+                val soonApps: ArrayList<Preference> = ArrayList(apps.length() / 2)
+                val stoppedApps: ArrayList<Preference> = ArrayList(apps.length() / 2)
                 val services = Root.getServices()
 
                 var preference: Preference
-                for (i in 0 until appArray.length()) {
-                    preference = generatePreference(appArray, i) ?: continue
+                for (index in 0 until apps.length()) {
+                    preference = generatePreference(apps, index) ?: continue
                     if (requireContext().packageManager.getApplicationInfo(
                             preference.summary.toString(),
                             PackageManager.GET_META_DATA,
                         ).flags and ApplicationInfo.FLAG_STOPPED != 0
                     ) {
-                        preferenceStoppedArray.add(preference)
+                        stoppedApps.add(preference)
                     } else {
-                        preferenceSoonArray.add(preference)
+                        soonApps.add(preference)
                     }
                 }
-                fillLists(preferenceSoonArray, services, preferenceStoppedArray)
+                fillLists(soonApps, services, stoppedApps)
             }.start()
 
         private fun fillLists(
-            preferenceSoonArray: ArrayList<Preference>,
+            soon: ArrayList<Preference>,
             services: HashSet<String>,
-            preferenceStoppedArray: ArrayList<Preference>,
+            stopped: ArrayList<Preference>,
         ) {
             var isSoonEmpty = true
             var isUnnecessaryEmpty = true
-            for (item in preferenceSoonArray.sortedWith(compareBy { it.title.toString() })) {
+            for (item in soon.sortedWith(compareBy { it.title.toString() })) {
                 if (
                     item.summary != null &&
                     (
@@ -255,10 +258,10 @@ class MainActivity : BaseActivity() {
             if (isSoonEmpty) categorySoon.addPreference(generateEmptyListIndicator())
             if (isUnnecessaryEmpty) categoryUnnecessary.addPreference(generateEmptyListIndicator())
 
-            if (preferenceStoppedArray.isEmpty()) {
+            if (stopped.isEmpty()) {
                 categoryStopped.addPreference(generateEmptyListIndicator())
             } else {
-                for (item in preferenceStoppedArray.sortedWith(compareBy { it.title.toString() })) {
+                for (item in stopped.sortedWith(compareBy { it.title.toString() })) {
                     categoryStopped.addPreference(item)
                 }
             }
