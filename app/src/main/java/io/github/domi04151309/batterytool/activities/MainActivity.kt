@@ -30,13 +30,6 @@ import io.github.domi04151309.batterytool.services.ForegroundService
 import org.json.JSONArray
 
 class MainActivity : BaseActivity() {
-    private var themeId = ""
-
-    private fun getThemeId(): String =
-        PreferenceManager.getDefaultSharedPreferences(this)
-            .getString(P.PREF_THEME, P.PREF_THEME_DEFAULT)
-            ?: P.PREF_THEME_DEFAULT
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -71,17 +64,6 @@ class MainActivity : BaseActivity() {
 
         findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
             startActivity(Intent(this, AddingActivity::class.java))
-        }
-
-        themeId = getThemeId()
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        if (getThemeId() != themeId) {
-            themeId = getThemeId()
-            recreate()
         }
     }
 

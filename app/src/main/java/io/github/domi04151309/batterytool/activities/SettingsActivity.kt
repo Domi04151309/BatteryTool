@@ -30,9 +30,8 @@ class SettingsActivity : BaseActivity() {
 
     class PreferenceFragment : PreferenceFragmentCompat() {
         private lateinit var notificationSettings: ActivityResultLauncher<Intent>
-        private val prefsChangedListener =
+        private val preferenceChangeListener =
             SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-                if (key == P.PREF_THEME) requireActivity().recreate()
                 if (key == P.PREF_AUTO_STOP_DELAY) updateAutoStopDelaySummary()
                 if (key == P.PREF_AGGRESSIVE_DOZE_DELAY) updateDozeDelaySummary()
                 if (key == P.PREF_ALLOW_MUSIC) updateAllowMusicApps()
@@ -64,14 +63,14 @@ class SettingsActivity : BaseActivity() {
                     checkNotificationsPermission()
                 }
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(
-                prefsChangedListener,
+                preferenceChangeListener,
             )
         }
 
         override fun onDestroy() {
             super.onDestroy()
             preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(
-                prefsChangedListener,
+                preferenceChangeListener,
             )
         }
 
