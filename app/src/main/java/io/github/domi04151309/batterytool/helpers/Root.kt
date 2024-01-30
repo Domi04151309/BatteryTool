@@ -5,51 +5,44 @@ import java.io.DataOutputStream
 import java.io.IOException
 import java.util.Scanner
 import kotlin.collections.HashSet
+import kotlin.text.StringBuilder
 
 internal object Root {
-    private const val LOG_TAG = "Superuser"
-
-    fun request(): Boolean {
-        val p: Process
-        return try {
-            p = Runtime.getRuntime().exec("su")
-            val os = DataOutputStream(p.outputStream)
-            os.writeBytes("echo access granted\n")
-            os.writeBytes("exit\n")
-            os.flush()
+    fun request(): Boolean =
+        try {
+            val process = Runtime.getRuntime().exec("su")
+            val output = DataOutputStream(process.outputStream)
+            output.writeBytes("echo access granted\n")
+            output.writeBytes("exit\n")
+            output.flush()
             true
-        } catch (e: IOException) {
-            Log.w(LOG_TAG, e)
+        } catch (exception: IOException) {
+            Log.w(this::class.simpleName, exception)
             false
         }
-    }
 
     fun shell(command: String) {
         try {
-            val p =
-                Runtime.getRuntime()
-                    .exec(arrayOf("su", "-c", command))
-            p.waitFor()
-        } catch (e: IOException) {
-            Log.w(LOG_TAG, e)
+            Runtime.getRuntime().exec(arrayOf("su", "-c", command)).waitFor()
+        } catch (exception: IOException) {
+            Log.w(this::class.simpleName, exception)
         }
     }
 
     fun shell(commands: Array<String>) {
-        val p: Process
         try {
-            p = Runtime.getRuntime().exec("su")
-            val os = DataOutputStream(p.outputStream)
-            for (command in commands) os.writeBytes("$command\n")
-            os.writeBytes("exit\n")
-            os.flush()
-        } catch (e: IOException) {
-            Log.e(LOG_TAG, e.toString())
+            val process = Runtime.getRuntime().exec("su")
+            val output = DataOutputStream(process.outputStream)
+            for (command in commands) output.writeBytes("$command\n")
+            output.writeBytes("exit\n")
+            output.flush()
+        } catch (exception: IOException) {
+            Log.e(this::class.simpleName, exception.toString())
         }
     }
 
     fun getFocusedApps(): HashSet<String> {
-        var result = ""
+        val services = StringBuilder()
         try {
             val inputStream =
                 Runtime.getRuntime().exec(
@@ -63,23 +56,17 @@ internal object Root {
                             "cut -d '/' -f1",
                     ),
                 ).inputStream
-            Scanner(inputStream).useDelimiter("\\A").use { s ->
-                result = if (s.hasNext()) s.next() else ""
+            Scanner(inputStream).useDelimiter("\\A").use { scanner ->
+                services.append(if (scanner.hasNext()) scanner.next() else "")
             }
-        } catch (e: IOException) {
-            Log.e(LOG_TAG, e.toString())
+        } catch (exception: IOException) {
+            Log.e(this::class.simpleName, exception.toString())
         }
-        return parseFocusedApps(result)
-    }
-
-    private fun parseFocusedApps(services: String): HashSet<String> {
-        val set = HashSet<String>()
-        for (line in services.lines()) set.add(line)
-        return set
+        return HashSet(services.lines())
     }
 
     fun getServices(): HashSet<String> {
-        var result = ""
+        val services = StringBuilder()
         try {
             val inputStream =
                 Runtime.getRuntime().exec(
@@ -89,13 +76,13 @@ internal object Root {
                         "dumpsys activity services",
                     ),
                 ).inputStream
-            Scanner(inputStream).useDelimiter("\\A").use { s ->
-                result = if (s.hasNext()) s.next() else ""
+            Scanner(inputStream).useDelimiter("\\A").use { scanner ->
+                services.append(if (scanner.hasNext()) scanner.next() else "")
             }
-        } catch (e: IOException) {
-            Log.e(LOG_TAG, e.toString())
+        } catch (exception: IOException) {
+            Log.e(this::class.simpleName, exception.toString())
         }
-        return parseServices(result)
+        return parseServices(services.toString())
     }
 
     private fun parseServices(services: String): HashSet<String> {
