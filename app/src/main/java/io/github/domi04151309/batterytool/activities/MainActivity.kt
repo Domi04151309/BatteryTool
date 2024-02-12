@@ -23,7 +23,6 @@ import io.github.domi04151309.batterytool.adapters.LoadingAdapter
 import io.github.domi04151309.batterytool.adapters.SimpleListAdapter
 import io.github.domi04151309.batterytool.data.SimpleListItem
 import io.github.domi04151309.batterytool.helpers.AppHelper
-import io.github.domi04151309.batterytool.helpers.ForcedSet
 import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Root
 import io.github.domi04151309.batterytool.interfaces.RecyclerViewHelperInterface
@@ -104,7 +103,7 @@ class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
                     continue
                 }
                 if (
-                    services.contains(listItem.summary) || ForcedSet.getInstance(this).contains(listItem.summary)
+                    services.contains(listItem.summary) || P.getForced(this).contains(listItem.summary)
                 ) {
                     soonApps.add(listItem)
                     continue
@@ -152,7 +151,7 @@ class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
                         2,
                         resources.getString(
                             if (
-                                ForcedSet.getInstance(this@MainActivity).contains(listItems[position].summary)
+                                P.getForced(this@MainActivity).contains(listItems[position].summary)
                             ) {
                                 R.string.main_click_dialog_turn_off_always
                             } else {
@@ -190,7 +189,7 @@ class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
                 )
             }
             ITEM_ALWAYS_STOP -> {
-                val forcedSet = ForcedSet.getInstance(this)
+                val forcedSet = P.getForcedMutable(this)
                 Toast.makeText(
                     this,
                     if (forcedSet.contains(packageName)) {
@@ -202,7 +201,7 @@ class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
                     },
                     Toast.LENGTH_LONG,
                 ).show()
-                forcedSet.save()
+                P.setForced(this, forcedSet)
                 loadApps()
             }
             ITEM_REMOVE_FROM_LIST -> {

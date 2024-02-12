@@ -21,7 +21,7 @@ object AppHelper {
                     PackageManager.GET_META_DATA,
                 ),
             ).toString() +
-                if (ForcedSet.getInstance(context).contains(packageName)) {
+                if (P.getForced(context).contains(packageName)) {
                     " " + context.resources.getString(R.string.main_forced)
                 } else {
                     ""
@@ -69,7 +69,7 @@ object AppHelper {
                         packageName,
                         PackageManager.GET_META_DATA,
                     ).flags and ApplicationInfo.FLAG_STOPPED == 0 &&
-                    (services.contains(packageName) || ForcedSet.getInstance(context).contains(packageName))
+                    (services.contains(packageName) || P.getForced(context).contains(packageName))
                 ) {
                     commands.add("am force-stop $packageName")
                 }
