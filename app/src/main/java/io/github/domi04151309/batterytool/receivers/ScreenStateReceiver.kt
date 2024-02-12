@@ -3,10 +3,8 @@ package io.github.domi04151309.batterytool.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
-import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.helpers.AppHelper
 import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Root
@@ -15,20 +13,16 @@ class ScreenStateReceiver : BroadcastReceiver() {
     private var isScreenOn = true
     private var isInDozeMode = false
 
-    private fun getPreferences(context: Context): SharedPreferences =
-        PreferenceManager
-            .getDefaultSharedPreferences(context)
-
     private fun onScreenOff(context: Context) {
         isScreenOn = false
-        if (getPreferences(context).getBoolean(P.AUTO_STOP, P.AUTO_STOP_DEFAULT)) {
+        if (P.getPreferences(context).getBoolean(P.AUTO_STOP, P.AUTO_STOP_DEFAULT)) {
             Handler(Looper.getMainLooper()).postDelayed(
                 { if (!isScreenOn) AppHelper.hibernate(context) },
-                getPreferences(context).getInt(P.AUTO_STOP_DELAY, P.AUTO_STOP_DELAY_DEFAULT)
+                P.getPreferences(context).getInt(P.AUTO_STOP_DELAY, P.AUTO_STOP_DELAY_DEFAULT)
                     .toLong() * SECONDS_TO_MILLIS,
             )
         }
-        if (getPreferences(context).getBoolean(P.AGGRESSIVE_DOZE, P.AGGRESSIVE_DOZE_DEFAULT)) {
+        if (P.getPreferences(context).getBoolean(P.AGGRESSIVE_DOZE, P.AGGRESSIVE_DOZE_DEFAULT)) {
             Handler(Looper.getMainLooper()).postDelayed(
                 {
                     if (!isScreenOn) {
@@ -36,7 +30,7 @@ class ScreenStateReceiver : BroadcastReceiver() {
                         Root.shell("dumpsys deviceidle force-idle")
                     }
                 },
-                getPreferences(context).getInt(
+                P.getPreferences(context).getInt(
                     P.AGGRESSIVE_DOZE_DELAY,
                     P.AGGRESSIVE_DOZE_DELAY_DEFAULT,
                 )

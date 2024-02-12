@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.util.Log
-import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.data.SimpleListItem
 import io.github.domi04151309.batterytool.services.NotificationService
@@ -49,7 +48,7 @@ object AppHelper {
         val commands: ArrayList<String> = ArrayList(apps.size / 2)
         val focused =
             if (
-                PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+                P.getPreferences(context).getBoolean(
                     P.IGNORE_FOCUSED_APPS,
                     P.IGNORE_FOCUSED_APPS_DEFAULT,
                 )
@@ -81,9 +80,7 @@ object AppHelper {
     }
 
     internal fun hibernate(context: Context) {
-        if (PreferenceManager.getDefaultSharedPreferences(context)
-                .getBoolean(P.ALLOW_MUSIC, P.ALLOW_MUSIC_DEFAULT)
-        ) {
+        if (P.getPreferences(context).getBoolean(P.ALLOW_MUSIC, P.ALLOW_MUSIC_DEFAULT)) {
             NotificationService.getInstance()?.getPlayingPackageName { packageName ->
                 hibernateApps(
                     context,

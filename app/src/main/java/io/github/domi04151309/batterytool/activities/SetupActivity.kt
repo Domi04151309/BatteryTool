@@ -3,7 +3,6 @@ package io.github.domi04151309.batterytool.activities
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.SurfaceColors
 import io.github.domi04151309.batterytool.R
@@ -19,7 +18,8 @@ class SetupActivity : BaseActivity() {
 
         findViewById<Button>(R.id.button).setOnClickListener {
             if (Root.request()) {
-                PreferenceManager.getDefaultSharedPreferences(this).edit()
+                P.getPreferences(this)
+                    .edit()
                     .putBoolean(P.SETUP_COMPLETE, true)
                     .apply()
                 startActivity(Intent(this, MainActivity::class.java))

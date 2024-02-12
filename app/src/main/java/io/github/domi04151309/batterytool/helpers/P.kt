@@ -1,6 +1,7 @@
 package io.github.domi04151309.batterytool.helpers
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 
 object P {
@@ -23,8 +24,13 @@ object P {
     internal const val ALLOW_MUSIC_DEFAULT: Boolean = false
     internal const val AGGRESSIVE_DOZE_DELAY_DEFAULT: Int = 60 * 10
 
+    internal fun getPreferences(context: Context): SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(
+            context,
+        )
+
     internal fun getBlacklist(context: Context): Set<String> =
-        PreferenceManager.getDefaultSharedPreferences(context).getStringSet(
+        getPreferences(context).getStringSet(
             APP_SET,
             APP_SET_DEFAULT,
         ) ?: APP_SET_DEFAULT
@@ -35,14 +41,14 @@ object P {
         context: Context,
         forced: Set<String>,
     ) {
-        PreferenceManager.getDefaultSharedPreferences(context)
+        getPreferences(context)
             .edit()
             .putStringSet(APP_SET, forced)
             .apply()
     }
 
     internal fun getForced(context: Context): Set<String> =
-        PreferenceManager.getDefaultSharedPreferences(context).getStringSet(
+        getPreferences(context).getStringSet(
             FORCED_SET,
             FORCED_SET_DEFAULT,
         ) ?: FORCED_SET_DEFAULT
@@ -53,7 +59,7 @@ object P {
         context: Context,
         forced: Set<String>,
     ) {
-        PreferenceManager.getDefaultSharedPreferences(context)
+        getPreferences(context)
             .edit()
             .putStringSet(FORCED_SET, forced)
             .apply()

@@ -11,7 +11,6 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
@@ -38,7 +37,7 @@ class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
 
         if (
             !SetupActivity.demoMode &&
-            !PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+            !P.getPreferences(this).getBoolean(
                 P.SETUP_COMPLETE,
                 P.SETUP_COMPLETE_DEFAULT,
             )
