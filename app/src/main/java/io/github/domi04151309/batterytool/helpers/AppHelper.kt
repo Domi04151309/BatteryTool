@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.util.Log
-import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.data.SimpleListItem
@@ -12,27 +11,25 @@ import io.github.domi04151309.batterytool.services.NotificationService
 import org.json.JSONArray
 
 object AppHelper {
-    internal fun generatePreference(
+    fun generateListItem(
         context: Context,
         packageName: String,
-    ): Preference =
-        Preference(context).apply {
-            val label =
-                context.packageManager.getApplicationLabel(
-                    context.packageManager.getApplicationInfo(
-                        packageName,
-                        PackageManager.GET_META_DATA,
-                    ),
-                ).toString()
-            icon = context.packageManager.getApplicationIcon(packageName)
-            title = "$label " +
+    ): SimpleListItem =
+        SimpleListItem(
+            context.packageManager.getApplicationLabel(
+                context.packageManager.getApplicationInfo(
+                    packageName,
+                    PackageManager.GET_META_DATA,
+                ),
+            ).toString() +
                 if (ForcedSet.getInstance(context).contains(packageName)) {
-                    context.resources.getString(R.string.main_forced)
+                    " " + context.resources.getString(R.string.main_forced)
                 } else {
                     ""
-                }
-            summary = packageName
-        }
+                },
+            packageName,
+            context.packageManager.getApplicationIcon(packageName),
+        )
 
     fun generateListItem(
         context: Context,

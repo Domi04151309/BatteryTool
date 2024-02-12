@@ -7,6 +7,7 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.SurfaceColors
 import io.github.domi04151309.batterytool.R
+import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Root
 
 class SetupActivity : BaseActivity() {
@@ -19,7 +20,7 @@ class SetupActivity : BaseActivity() {
         findViewById<Button>(R.id.button).setOnClickListener {
             if (Root.request()) {
                 PreferenceManager.getDefaultSharedPreferences(this).edit()
-                    .putBoolean("setup_complete", true)
+                    .putBoolean(P.PREF_SETUP_COMPLETE, true)
                     .apply()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()

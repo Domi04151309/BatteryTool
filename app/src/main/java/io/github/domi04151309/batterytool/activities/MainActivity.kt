@@ -3,47 +3,47 @@ package io.github.domi04151309.batterytool.activities
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.content.pm.PackageManager.NameNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
-import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.github.domi04151309.batterytool.R
+import io.github.domi04151309.batterytool.adapters.LoadingAdapter
+import io.github.domi04151309.batterytool.adapters.SimpleListAdapter
+import io.github.domi04151309.batterytool.data.SimpleListItem
 import io.github.domi04151309.batterytool.helpers.AppHelper
 import io.github.domi04151309.batterytool.helpers.ForcedSet
-import io.github.domi04151309.batterytool.helpers.Global
 import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Root
+import io.github.domi04151309.batterytool.interfaces.RecyclerViewHelperInterface
 import io.github.domi04151309.batterytool.services.ForegroundService
 import org.json.JSONArray
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
+    private val listItems: MutableList<SimpleListItem> = arrayListOf()
+    private lateinit var recyclerView: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        window.statusBarColor = SurfaceColors.SURFACE_0.getColor(this)
-
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.content, PreferenceFragment())
-            .commit()
-
         if (
             !SetupActivity.demoMode &&
-            !PreferenceManager.getDefaultSharedPreferences(this).getBoolean("setup_complete", false)
+            !PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+                P.PREF_SETUP_COMPLETE,
+                P.PREF_SETUP_COMPLETE_DEFAULT,
+            )
         ) {
             startActivity(Intent(this, SetupActivity::class.java))
             finish()
@@ -51,6 +51,12 @@ class MainActivity : BaseActivity() {
         }
 
         ContextCompat.startForegroundService(this, Intent(this, ForegroundService::class.java))
+
+        window.statusBarColor = SurfaceColors.SURFACE_0.getColor(this)
+
+        recyclerView = findViewById(R.id.list)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = LoadingAdapter()
 
         findViewById<MaterialToolbar>(R.id.toolbar).setOnMenuItemClickListener {
             startActivity(
@@ -65,215 +71,173 @@ class MainActivity : BaseActivity() {
         findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
             startActivity(Intent(this, AddingActivity::class.java))
         }
+
+        findViewById<FloatingActionButton>(R.id.hibernate)?.setOnClickListener {
+            AppHelper.hibernate(this)
+            Toast.makeText(this, R.string.toast_stopped_all, Toast.LENGTH_SHORT).show()
+            Handler(Looper.getMainLooper()).postDelayed({ loadApps() }, HIBERNATE_UPDATE_DELAY)
+        }
     }
 
-    class PreferenceFragment : PreferenceFragmentCompat() {
-        private lateinit var categorySoon: PreferenceCategory
-        private lateinit var categoryUnnecessary: PreferenceCategory
-        private lateinit var categoryStopped: PreferenceCategory
+    override fun onStart() {
+        super.onStart()
+        loadApps()
+    }
 
-        override fun onCreatePreferences(
-            savedInstanceState: Bundle?,
-            rootKey: String?,
-        ) {
-            addPreferencesFromResource(R.xml.pref_main)
+    private fun loadApps() =
+        Thread {
+            val blacklist =
+                JSONArray(
+                    PreferenceManager
+                        .getDefaultSharedPreferences(this)
+                        .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT),
+                )
+            val soonApps: MutableList<SimpleListItem> = ArrayList(blacklist.length() / 2)
+            val unnecessaryApps: MutableList<SimpleListItem> = ArrayList(blacklist.length() / 2)
+            val stoppedApps: MutableList<SimpleListItem> = ArrayList(blacklist.length() / 2)
+            val services = Root.getServices()
 
-            categorySoon = findPreference("soon") ?: error(INVALID_LAYOUT)
-            categoryUnnecessary = findPreference("unnecessary") ?: error(INVALID_LAYOUT)
-            categoryStopped = findPreference("stopped") ?: error(INVALID_LAYOUT)
-
-            activity?.findViewById<FloatingActionButton>(R.id.hibernate)?.setOnClickListener {
-                AppHelper.hibernate(requireContext())
-                Toast.makeText(requireContext(), R.string.toast_stopped_all, Toast.LENGTH_SHORT).show()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    loadLists()
-                }, HIBERNATE_UPDATE_DELAY)
-            }
-        }
-
-        override fun onStart() {
-            super.onStart()
-            loadLists()
-        }
-
-        private fun generateEmptyListIndicator(): Preference =
-            Preference(requireContext()).apply {
-                icon = ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)
-                title = requireContext().getString(R.string.main_empty)
-                summary = requireContext().getString(R.string.main_empty_summary)
-                isSelectable = false
-            }
-
-        private fun generatePreference(
-            apps: JSONArray,
-            index: Int,
-        ): Preference? {
-            try {
-                return AppHelper.generatePreference(requireContext(), apps.getString(index)).apply {
-                    setOnPreferenceClickListener {
-                        val options =
-                            resources
-                                .getStringArray(R.array.main_click_dialog_options)
-                                .toMutableList()
-                                .apply {
-                                    add(
-                                        2,
-                                        resources.getString(
-                                            if (
-                                                ForcedSet.getInstance(requireContext()).contains(it.summary.toString())
-                                            ) {
-                                                R.string.main_click_dialog_turn_off_always
-                                            } else {
-                                                R.string.main_click_dialog_turn_on_always
-                                            },
-                                        ),
-                                    )
-                                }
-                                .toTypedArray()
-                        MaterialAlertDialogBuilder(requireContext())
-                            .setTitle(R.string.main_click_dialog_title)
-                            .setItems(options) { _, which ->
-                                onDialogItemClicked(which, it.summary.toString(), apps)
-                            }
-                            .setNegativeButton(android.R.string.cancel) { _, _ -> }
-                            .show()
-                        true
-                    }
+            @Suppress("LoopWithTooManyJumpStatements")
+            for (appIndex in 0 until blacklist.length()) {
+                val listItem = AppHelper.generateListItem(this, blacklist.getString(appIndex))
+                if (
+                    packageManager.getApplicationInfo(
+                        listItem.summary,
+                        PackageManager.GET_META_DATA,
+                    ).flags and ApplicationInfo.FLAG_STOPPED != 0
+                ) {
+                    stoppedApps.add(listItem)
+                    continue
                 }
-            } catch (exception: NameNotFoundException) {
-                Log.w(Global.LOG_TAG, exception)
-                return null
+                if (
+                    services.contains(listItem.summary) || ForcedSet.getInstance(this).contains(listItem.summary)
+                ) {
+                    soonApps.add(listItem)
+                    continue
+                }
+                unnecessaryApps.add(listItem)
             }
+
+            val emptyList =
+                listOf(
+                    SimpleListItem(
+                        resources.getString(R.string.main_empty),
+                        resources.getString(R.string.main_empty_summary),
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_empty, theme),
+                    ),
+                )
+
+            listItems.clear()
+            listItems.add(SimpleListItem(summary = resources.getString(R.string.main_stopped_soon)))
+            listItems.addAll(soonApps.ifEmpty { emptyList })
+            listItems.add(SimpleListItem(summary = resources.getString(R.string.main_stopped_unnecessary)))
+            listItems.addAll(unnecessaryApps.ifEmpty { emptyList })
+            listItems.add(SimpleListItem(summary = resources.getString(R.string.main_stopped)))
+            listItems.addAll(stoppedApps.ifEmpty { emptyList })
+
+            Looper.prepare()
+            runOnUiThread {
+                recyclerView.adapter = SimpleListAdapter(listItems, this)
+            }
+        }.start()
+
+    override fun onItemClicked(position: Int) {
+        if (
+            listItems[position].title.isBlank() ||
+            listItems[position].title == resources.getString(R.string.main_empty)
+        ) {
+            return
         }
 
-        private fun onDialogItemClicked(
-            which: Int,
-            packageName: String,
-            apps: JSONArray,
-        ) {
-            when (which) {
-                ITEM_STOP_NOW -> {
-                    Root.shell("am force-stop $packageName")
-                    loadLists()
-                    Toast.makeText(context, R.string.toast_stopped, Toast.LENGTH_SHORT)
-                        .show()
-                }
-                ITEM_OPEN_SETTINGS -> {
-                    startActivity(
-                        Intent().apply {
-                            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                            data = Uri.fromParts("package", packageName, null)
-                        },
+        val options =
+            resources
+                .getStringArray(R.array.main_click_dialog_options)
+                .toMutableList()
+                .apply {
+                    add(
+                        2,
+                        resources.getString(
+                            if (
+                                ForcedSet.getInstance(this@MainActivity).contains(listItems[position].summary)
+                            ) {
+                                R.string.main_click_dialog_turn_off_always
+                            } else {
+                                R.string.main_click_dialog_turn_on_always
+                            },
+                        ),
                     )
                 }
-                ITEM_ALWAYS_STOP -> {
-                    val forcedSet = ForcedSet.getInstance(requireContext())
-                    Toast.makeText(
-                        context,
-                        if (forcedSet.contains(packageName)) {
-                            forcedSet.remove(packageName)
-                            R.string.main_click_dialog_turn_off_always
-                        } else {
-                            forcedSet.add(packageName)
-                            R.string.main_click_dialog_turn_on_always
-                        },
-                        Toast.LENGTH_LONG,
-                    ).show()
-                    forcedSet.save()
-                    loadLists()
-                }
-                ITEM_REMOVE_FROM_LIST -> {
-                    for (appIndex in 0 until apps.length()) {
-                        if (apps.getString(appIndex) == packageName) {
-                            apps.remove(appIndex)
-                            break
-                        }
-                    }
-                    PreferenceManager
-                        .getDefaultSharedPreferences(requireContext())
-                        .edit()
-                        .putString(P.PREF_APP_LIST, apps.toString())
-                        .apply()
-                    loadLists()
-                }
+                .toTypedArray()
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.main_click_dialog_title)
+            .setItems(options) { _, which ->
+                onDialogItemClicked(which, listItems[position].summary)
             }
-        }
+            .setNegativeButton(android.R.string.cancel) { _, _ -> }
+            .show()
+    }
 
-        private fun loadLists() =
-            Thread {
-                categorySoon.removeAll()
-                categoryUnnecessary.removeAll()
-                categoryStopped.removeAll()
-
+    private fun onDialogItemClicked(
+        which: Int,
+        packageName: String,
+    ) {
+        when (which) {
+            ITEM_STOP_NOW -> {
+                Root.shell("am force-stop $packageName")
+                loadApps()
+                Toast.makeText(this, R.string.toast_stopped, Toast.LENGTH_SHORT).show()
+            }
+            ITEM_OPEN_SETTINGS -> {
+                startActivity(
+                    Intent().apply {
+                        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                        data = Uri.fromParts("package", packageName, null)
+                    },
+                )
+            }
+            ITEM_ALWAYS_STOP -> {
+                val forcedSet = ForcedSet.getInstance(this)
+                Toast.makeText(
+                    this,
+                    if (forcedSet.contains(packageName)) {
+                        forcedSet.remove(packageName)
+                        R.string.main_click_dialog_turn_off_always
+                    } else {
+                        forcedSet.add(packageName)
+                        R.string.main_click_dialog_turn_on_always
+                    },
+                    Toast.LENGTH_LONG,
+                ).show()
+                forcedSet.save()
+                loadApps()
+            }
+            ITEM_REMOVE_FROM_LIST -> {
                 val apps =
                     JSONArray(
-                        PreferenceManager
-                            .getDefaultSharedPreferences(requireContext())
+                        PreferenceManager.getDefaultSharedPreferences(this)
                             .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT),
                     )
-                val soonApps: ArrayList<Preference> = ArrayList(apps.length() / 2)
-                val stoppedApps: ArrayList<Preference> = ArrayList(apps.length() / 2)
-                val services = Root.getServices()
-
-                var preference: Preference
-                for (index in 0 until apps.length()) {
-                    preference = generatePreference(apps, index) ?: continue
-                    if (requireContext().packageManager.getApplicationInfo(
-                            preference.summary.toString(),
-                            PackageManager.GET_META_DATA,
-                        ).flags and ApplicationInfo.FLAG_STOPPED != 0
-                    ) {
-                        stoppedApps.add(preference)
-                    } else {
-                        soonApps.add(preference)
+                for (appIndex in 0 until apps.length()) {
+                    if (apps.getString(appIndex) == packageName) {
+                        apps.remove(appIndex)
+                        break
                     }
                 }
-                fillLists(soonApps, services, stoppedApps)
-            }.start()
-
-        private fun fillLists(
-            soon: ArrayList<Preference>,
-            services: HashSet<String>,
-            stopped: ArrayList<Preference>,
-        ) {
-            var isSoonEmpty = true
-            var isUnnecessaryEmpty = true
-            for (item in soon.sortedBy { it.title.toString() }) {
-                if (
-                    item.summary != null &&
-                    (
-                        services.contains(item.summary ?: error("Impossible state.")) ||
-                            ForcedSet.getInstance(requireContext())
-                                .contains(item.summary.toString())
-                    )
-                ) {
-                    categorySoon.addPreference(item)
-                    isSoonEmpty = false
-                } else {
-                    categoryUnnecessary.addPreference(item)
-                    isUnnecessaryEmpty = false
-                }
-            }
-
-            if (isSoonEmpty) categorySoon.addPreference(generateEmptyListIndicator())
-            if (isUnnecessaryEmpty) categoryUnnecessary.addPreference(generateEmptyListIndicator())
-
-            if (stopped.isEmpty()) {
-                categoryStopped.addPreference(generateEmptyListIndicator())
-            } else {
-                for (item in stopped.sortedBy { it.title.toString() }) {
-                    categoryStopped.addPreference(item)
-                }
+                PreferenceManager
+                    .getDefaultSharedPreferences(this)
+                    .edit()
+                    .putString(P.PREF_APP_LIST, apps.toString())
+                    .apply()
+                loadApps()
             }
         }
+    }
 
-        companion object {
-            private const val INVALID_LAYOUT = "Invalid layout."
-            private const val HIBERNATE_UPDATE_DELAY = 1000L
-            private const val ITEM_STOP_NOW = 0
-            private const val ITEM_OPEN_SETTINGS = 1
-            private const val ITEM_ALWAYS_STOP = 2
-            private const val ITEM_REMOVE_FROM_LIST = 3
-        }
+    companion object {
+        private const val HIBERNATE_UPDATE_DELAY = 1000L
+        private const val ITEM_STOP_NOW = 0
+        private const val ITEM_OPEN_SETTINGS = 1
+        private const val ITEM_ALWAYS_STOP = 2
+        private const val ITEM_REMOVE_FROM_LIST = 3
     }
 }

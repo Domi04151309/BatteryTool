@@ -1,6 +1,7 @@
 package io.github.domi04151309.batterytool.helpers
 
 object P {
+    internal const val PREF_SETUP_COMPLETE: String = "setup_complete"
     internal const val PREF_APP_LIST: String = "app_list"
     internal const val PREF_FORCED_LIST: String = "forced_list"
     internal const val PREF_AUTO_STOP: String = "auto_stop"
@@ -9,6 +10,7 @@ object P {
     internal const val PREF_AGGRESSIVE_DOZE_DELAY: String = "aggressive_doze_delay"
     internal const val PREF_IGNORE_FOCUSED_APPS: String = "ignore_focused_apps"
     internal const val PREF_ALLOW_MUSIC: String = "allow_music"
+    internal const val PREF_SETUP_COMPLETE_DEFAULT: Boolean = false
     internal const val PREF_APP_LIST_DEFAULT: String = "[]"
     internal const val PREF_FORCED_LIST_DEFAULT: String = "[]"
     internal const val PREF_AUTO_STOP_DEFAULT: Boolean = true
