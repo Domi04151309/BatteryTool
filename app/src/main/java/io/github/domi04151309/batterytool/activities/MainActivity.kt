@@ -28,7 +28,6 @@ import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.helpers.Root
 import io.github.domi04151309.batterytool.interfaces.RecyclerViewHelperInterface
 import io.github.domi04151309.batterytool.services.ForegroundService
-import org.json.JSONArray
 
 class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
     private val listItems: MutableList<SimpleListItem> = arrayListOf()
@@ -86,12 +85,7 @@ class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
 
     private fun loadApps() =
         Thread {
-            val blacklist =
-                JSONArray(
-                    PreferenceManager
-                        .getDefaultSharedPreferences(this)
-                        .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT),
-                )
+            val blacklist = P.getBlacklist(this)
             val soonApps: MutableList<SimpleListItem> = ArrayList(blacklist.length() / 2)
             val unnecessaryApps: MutableList<SimpleListItem> = ArrayList(blacklist.length() / 2)
             val stoppedApps: MutableList<SimpleListItem> = ArrayList(blacklist.length() / 2)
@@ -212,22 +206,14 @@ class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
                 loadApps()
             }
             ITEM_REMOVE_FROM_LIST -> {
-                val apps =
-                    JSONArray(
-                        PreferenceManager.getDefaultSharedPreferences(this)
-                            .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT),
-                    )
+                val apps = P.getBlacklist(this)
                 for (appIndex in 0 until apps.length()) {
                     if (apps.getString(appIndex) == packageName) {
                         apps.remove(appIndex)
                         break
                     }
                 }
-                PreferenceManager
-                    .getDefaultSharedPreferences(this)
-                    .edit()
-                    .putString(P.PREF_APP_LIST, apps.toString())
-                    .apply()
+                P.setBlacklist(this, apps)
                 loadApps()
             }
         }

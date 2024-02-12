@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Looper
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -17,7 +16,6 @@ import io.github.domi04151309.batterytool.data.SimpleListItem
 import io.github.domi04151309.batterytool.helpers.AppHelper
 import io.github.domi04151309.batterytool.helpers.P
 import io.github.domi04151309.batterytool.interfaces.RecyclerViewHelperInterface
-import org.json.JSONArray
 
 class AddingActivity : BaseActivity(), RecyclerViewHelperInterface {
     private val listItems: MutableList<SimpleListItem> = arrayListOf()
@@ -45,9 +43,7 @@ class AddingActivity : BaseActivity(), RecyclerViewHelperInterface {
         applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED != 0 &&
             applicationInfo.flags and ApplicationInfo.FLAG_HAS_CODE != 0 &&
             applicationInfo.packageName != packageName &&
-            PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
-                ?.contains(applicationInfo.packageName) != true
+            !P.getBlacklist(this).toString().contains(applicationInfo.packageName)
 
     @Suppress("CognitiveComplexMethod")
     private fun loadApps() =
@@ -88,18 +84,12 @@ class AddingActivity : BaseActivity(), RecyclerViewHelperInterface {
         }.start()
 
     private fun onAddClicked() {
-        PreferenceManager.getDefaultSharedPreferences(this)
-            .edit()
-            .putString(
-                P.PREF_APP_LIST,
-                JSONArray(
-                    PreferenceManager.getDefaultSharedPreferences(this)
-                        .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT),
-                ).apply {
-                    for (app in appsToAdd) put(app.summary)
-                }.toString(),
-            )
-            .apply()
+        P.setBlacklist(
+            this,
+            P.getBlacklist(this).apply {
+                for (app in appsToAdd) put(app.summary)
+            },
+        )
         finish()
     }
 

@@ -8,7 +8,6 @@ import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.R
 import io.github.domi04151309.batterytool.data.SimpleListItem
 import io.github.domi04151309.batterytool.services.NotificationService
-import org.json.JSONArray
 
 object AppHelper {
     fun generateListItem(
@@ -45,13 +44,7 @@ object AppHelper {
         context: Context,
         playingMusicPackage: String?,
     ) {
-        val apps =
-            JSONArray(
-                PreferenceManager.getDefaultSharedPreferences(context).getString(
-                    P.PREF_APP_LIST,
-                    P.PREF_APP_LIST_DEFAULT,
-                ),
-            )
+        val apps = P.getBlacklist(context)
         val commands: ArrayList<String> = ArrayList(apps.length() / 2)
         val services = Root.getServices()
         val focused =
