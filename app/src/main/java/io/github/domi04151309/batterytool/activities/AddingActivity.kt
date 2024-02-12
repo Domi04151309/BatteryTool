@@ -2,173 +2,119 @@ package io.github.domi04151309.batterytool.activities
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.os.Looper
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.github.domi04151309.batterytool.R
+import io.github.domi04151309.batterytool.adapters.LoadingAdapter
+import io.github.domi04151309.batterytool.adapters.SimpleListAdapter
+import io.github.domi04151309.batterytool.data.SimpleListItem
 import io.github.domi04151309.batterytool.helpers.AppHelper
 import io.github.domi04151309.batterytool.helpers.P
+import io.github.domi04151309.batterytool.interfaces.RecyclerViewHelperInterface
 import org.json.JSONArray
 
-class AddingActivity : BaseActivity() {
+class AddingActivity : BaseActivity(), RecyclerViewHelperInterface {
+    private val listItems: MutableList<SimpleListItem> = arrayListOf()
+    private val appsToAdd: MutableList<SimpleListItem> = arrayListOf()
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var addingList: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adding)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.content, PreferenceFragment())
-            .commit()
+
+        addingList = findViewById(R.id.adding_list)
+        recyclerView = findViewById(R.id.list)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = LoadingAdapter()
+
+        loadApps()
+
+        findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
+            onAddClicked()
+        }
     }
 
-    class PreferenceFragment : PreferenceFragmentCompat() {
-        private val appsToAdd: ArrayList<CharSequence> = arrayListOf()
-        private val appsToAddNames: ArrayList<CharSequence> = arrayListOf()
-        private lateinit var bottomBar: TextView
+    private fun isNewValidApp(applicationInfo: ApplicationInfo): Boolean =
+        applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED != 0 &&
+            applicationInfo.flags and ApplicationInfo.FLAG_HAS_CODE != 0 &&
+            applicationInfo.packageName != packageName &&
+            PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
+                ?.contains(applicationInfo.packageName) != true
 
-        override fun onCreatePreferences(
-            savedInstanceState: Bundle?,
-            rootKey: String?,
-        ) {
-            addPreferencesFromResource(R.xml.pref_adding)
-            bottomBar = requireActivity().findViewById(R.id.bottom_title)
+    @Suppress("CognitiveComplexMethod")
+    private fun loadApps() =
+        Thread {
+            val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+            val userApps: MutableList<SimpleListItem> = ArrayList(installedApps.size)
+            val systemApps: MutableList<SimpleListItem> = ArrayList(installedApps.size)
+            val internalApps: MutableList<SimpleListItem> = ArrayList(installedApps.size)
 
-            loadApps()
-
-            requireActivity().findViewById<FloatingActionButton>(R.id.add).setOnClickListener {
-                onAddClicked()
-            }
-        }
-
-        @Suppress("CognitiveComplexMethod")
-        private fun loadApps() =
-            Thread {
-                val packageManager: PackageManager = requireContext().packageManager
-                val packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-                val userApps: ArrayList<Preference> = ArrayList(packages.size)
-                val systemApps: ArrayList<Preference> = ArrayList(packages.size)
-                val internalApps: ArrayList<Preference> = ArrayList(packages.size)
-                for (packageInfo in packages) {
-                    @Suppress("ComplexCondition")
-                    if (
-                        packageInfo.flags and ApplicationInfo.FLAG_INSTALLED != 0 &&
-                        packageInfo.flags and ApplicationInfo.FLAG_HAS_CODE != 0 &&
-                        packageInfo.packageName != requireContext().packageName &&
-                        PreferenceManager.getDefaultSharedPreferences(requireContext())
-                            .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT)
-                            ?.contains(packageInfo.packageName) != true
-                    ) {
-                        val preference =
-                            AppHelper.generatePreference(requireContext(), packageInfo).apply {
-                                setOnPreferenceClickListener {
-                                    onPreferenceClicked(it, packageManager)
-                                }
-                            }
-                        if (preference.title == preference.summary) continue
-                        if (packageInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) {
-                            if (packageManager.getLaunchIntentForPackage(packageInfo.packageName) != null) {
-                                systemApps.add(preference)
-                            } else {
-                                internalApps.add(preference)
-                            }
-                        } else {
-                            userApps.add(preference)
-                        }
+            @Suppress("LoopWithTooManyJumpStatements")
+            for (app in installedApps) {
+                if (isNewValidApp(app)) {
+                    val listItem = AppHelper.generateListItem(this, app)
+                    if (listItem.title == listItem.summary) continue
+                    if (app.flags and ApplicationInfo.FLAG_SYSTEM == 0) {
+                        userApps.add(listItem)
+                        continue
                     }
-                }
-
-                Looper.prepare()
-                displayApps(userApps, systemApps, internalApps)
-            }.start()
-
-        private fun displayApps(
-            userApps: List<Preference>,
-            systemApps: List<Preference>,
-            internalApps: List<Preference>,
-        ) {
-            val categoryUser =
-                findPreference<PreferenceCategory>("user")
-                    ?: error(INVALID_LAYOUT)
-            val categorySystem =
-                findPreference<PreferenceCategory>("system")
-                    ?: error(INVALID_LAYOUT)
-            val categoryInternal =
-                findPreference<PreferenceCategory>("internal")
-                    ?: error(INVALID_LAYOUT)
-            for (preference in userApps.sortedBy { it.title.toString() }) {
-                categoryUser.addPreference(preference)
-            }
-            for (preference in systemApps.sortedBy { it.title.toString() }) {
-                categorySystem.addPreference(preference)
-            }
-            for (preference in internalApps.sortedBy { it.title.toString() }) {
-                categoryInternal.addPreference(preference)
-            }
-            preferenceScreen.addPreference(
-                Preference(requireContext()).apply {
-                    layoutResource = R.layout.preference_divider
-                    isSelectable = false
-                },
-            )
-        }
-
-        private fun onPreferenceClicked(
-            preference: Preference,
-            packageManager: PackageManager,
-        ): Boolean {
-            if (appsToAdd.contains(preference.summary)) {
-                preference.icon = packageManager.getApplicationIcon(preference.summary.toString())
-                appsToAdd.remove(preference.summary)
-                appsToAddNames.remove(preference.title)
-            } else {
-                preference.icon =
-                    LayerDrawable(
-                        arrayOf(
-                            packageManager.getApplicationIcon(
-                                preference.summary.toString(),
-                            ),
-                            ContextCompat.getDrawable(
-                                requireContext(),
-                                R.drawable.overlay_icon,
-                            ),
-                        ),
-                    )
-                if (preference.summary != null) {
-                    appsToAdd.add(
-                        preference.summary ?: error(IMPOSSIBLE_STATE),
-                    )
-                    appsToAddNames.add(
-                        preference.title ?: error(IMPOSSIBLE_STATE),
-                    )
+                    if (packageManager.getLaunchIntentForPackage(app.packageName) != null) {
+                        systemApps.add(listItem)
+                        continue
+                    }
+                    internalApps.add(listItem)
                 }
             }
-            bottomBar.text = appsToAddNames.sortedBy { it.toString() }.joinToString()
-            return true
-        }
 
-        private fun onAddClicked() {
-            val currentList =
+            listItems.add(SimpleListItem(summary = resources.getString(R.string.adding_user)))
+            listItems.addAll(userApps)
+            listItems.add(SimpleListItem(summary = resources.getString(R.string.adding_system)))
+            listItems.addAll(systemApps)
+            listItems.add(SimpleListItem(summary = resources.getString(R.string.adding_internal)))
+            listItems.addAll(internalApps)
+
+            Looper.prepare()
+            runOnUiThread {
+                recyclerView.adapter = SimpleListAdapter(listItems, this)
+            }
+        }.start()
+
+    private fun onAddClicked() {
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .edit()
+            .putString(
+                P.PREF_APP_LIST,
                 JSONArray(
-                    PreferenceManager.getDefaultSharedPreferences(requireContext())
+                    PreferenceManager.getDefaultSharedPreferences(this)
                         .getString(P.PREF_APP_LIST, P.PREF_APP_LIST_DEFAULT),
-                )
-            for (item in appsToAdd) currentList.put(item)
-            PreferenceManager.getDefaultSharedPreferences(requireContext())
-                .edit()
-                .putString(P.PREF_APP_LIST, currentList.toString())
-                .apply()
-            requireActivity().finish()
-        }
+                ).apply {
+                    for (app in appsToAdd) put(app.summary)
+                }.toString(),
+            )
+            .apply()
+        finish()
     }
 
-    companion object {
-        private const val INVALID_LAYOUT = "Invalid layout."
-        private const val IMPOSSIBLE_STATE = "Impossible state."
+    override fun onItemClicked(position: Int) {
+        if (listItems[position].title.isBlank()) return
+
+        if (appsToAdd.contains(listItems[position])) {
+            listItems[position].icon = packageManager.getApplicationIcon(listItems[position].summary)
+            appsToAdd.remove(listItems[position])
+        } else {
+            listItems[position].icon = ResourcesCompat.getDrawable(resources, R.drawable.overlay_icon, theme)
+            appsToAdd.add(listItems[position])
+        }
+        recyclerView.adapter?.notifyItemChanged(position)
+
+        addingList.text = appsToAdd.joinToString { it.title }
     }
 }

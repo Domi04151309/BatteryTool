@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:background="?attr/selectableItemBackground"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/drawable"
+            android:layout_width="@dimen/list_item_icon_size"
+            android:layout_height="@dimen/list_item_icon_size"
+            android:layout_marginStart="@dimen/full_padding"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/full_padding"
+            android:layout_marginEnd="@dimen/full_padding"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:singleLine="true"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:textIsSelectable="false" />
+
+                <TextView
+                    android:id="@+id/summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="4"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    android:textIsSelectable="false" />
+        </LinearLayout>
+</LinearLayout>

@@ -3,32 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="?attr/actionBarSize" />
+        android:paddingBottom="@dimen/recycler_view_safety_addition"
+        android:clipToPadding="false"/>
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:fabAlignmentMode="end"
         style="@style/Widget.Material3.BottomAppBar">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/bottom_app_bar_start"
+            android:layout_marginEnd="@dimen/bottom_app_bar_end"
+            android:layout_marginVertical="@dimen/bottom_app_bar_vertical">
 
             <TextView
-                android:id="@+id/bottom_title"
+                android:id="@+id/adding_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/bottom_app_bar_start"
-                android:layout_marginEnd="@dimen/bottom_app_bar_end"
-                android:layout_marginVertical="@dimen/bottom_app_bar_vertical"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textIsSelectable="false" />
         </RelativeLayout>

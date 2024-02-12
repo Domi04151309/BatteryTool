@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import io.github.domi04151309.batterytool.R
+import io.github.domi04151309.batterytool.data.SimpleListItem
 import io.github.domi04151309.batterytool.services.NotificationService
 import org.json.JSONArray
 
@@ -33,15 +34,15 @@ object AppHelper {
             summary = packageName
         }
 
-    internal fun generatePreference(
+    fun generateListItem(
         context: Context,
         applicationInfo: ApplicationInfo,
-    ): Preference =
-        Preference(context).apply {
-            icon = applicationInfo.loadIcon(context.packageManager)
-            title = applicationInfo.loadLabel(context.packageManager)
-            summary = applicationInfo.packageName
-        }
+    ): SimpleListItem =
+        SimpleListItem(
+            applicationInfo.loadLabel(context.packageManager).toString(),
+            applicationInfo.packageName,
+            applicationInfo.loadIcon(context.packageManager),
+        )
 
     private fun hibernateApps(
         context: Context,
