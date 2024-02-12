@@ -39,8 +39,8 @@ class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
         if (
             !SetupActivity.demoMode &&
             !PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-                P.PREF_SETUP_COMPLETE,
-                P.PREF_SETUP_COMPLETE_DEFAULT,
+                P.SETUP_COMPLETE,
+                P.SETUP_COMPLETE_DEFAULT,
             )
         ) {
             startActivity(Intent(this, SetupActivity::class.java))

@@ -21,14 +21,14 @@ class ScreenStateReceiver : BroadcastReceiver() {
 
     private fun onScreenOff(context: Context) {
         isScreenOn = false
-        if (getPreferences(context).getBoolean(P.PREF_AUTO_STOP, P.PREF_AUTO_STOP_DEFAULT)) {
+        if (getPreferences(context).getBoolean(P.AUTO_STOP, P.AUTO_STOP_DEFAULT)) {
             Handler(Looper.getMainLooper()).postDelayed(
                 { if (!isScreenOn) AppHelper.hibernate(context) },
-                getPreferences(context).getInt(P.PREF_AUTO_STOP_DELAY, P.PREF_AUTO_STOP_DELAY_DEFAULT)
+                getPreferences(context).getInt(P.AUTO_STOP_DELAY, P.AUTO_STOP_DELAY_DEFAULT)
                     .toLong() * SECONDS_TO_MILLIS,
             )
         }
-        if (getPreferences(context).getBoolean(P.PREF_AGGRESSIVE_DOZE, P.PREF_AGGRESSIVE_DOZE_DEFAULT)) {
+        if (getPreferences(context).getBoolean(P.AGGRESSIVE_DOZE, P.AGGRESSIVE_DOZE_DEFAULT)) {
             Handler(Looper.getMainLooper()).postDelayed(
                 {
                     if (!isScreenOn) {
@@ -37,8 +37,8 @@ class ScreenStateReceiver : BroadcastReceiver() {
                     }
                 },
                 getPreferences(context).getInt(
-                    P.PREF_AGGRESSIVE_DOZE_DELAY,
-                    P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
+                    P.AGGRESSIVE_DOZE_DELAY,
+                    P.AGGRESSIVE_DOZE_DELAY_DEFAULT,
                 )
                     .toLong() * SECONDS_TO_MILLIS,
             )

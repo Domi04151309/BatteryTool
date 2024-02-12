@@ -45,13 +45,13 @@ object AppHelper {
         playingMusicPackage: String?,
     ) {
         val apps = P.getBlacklist(context)
-        val commands: ArrayList<String> = ArrayList(apps.size / 2)
         val services = Root.getServices()
+        val commands: ArrayList<String> = ArrayList(apps.size / 2)
         val focused =
             if (
                 PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-                    P.PREF_IGNORE_FOCUSED_APPS,
-                    P.PREF_IGNORE_FOCUSED_APPS_DEFAULT,
+                    P.IGNORE_FOCUSED_APPS,
+                    P.IGNORE_FOCUSED_APPS_DEFAULT,
                 )
             ) {
                 Root.getFocusedApps()
@@ -82,7 +82,7 @@ object AppHelper {
 
     internal fun hibernate(context: Context) {
         if (PreferenceManager.getDefaultSharedPreferences(context)
-                .getBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
+                .getBoolean(P.ALLOW_MUSIC, P.ALLOW_MUSIC_DEFAULT)
         ) {
             NotificationService.getInstance()?.getPlayingPackageName { packageName ->
                 hibernateApps(

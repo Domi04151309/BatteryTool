@@ -20,7 +20,7 @@ class SetupActivity : BaseActivity() {
         findViewById<Button>(R.id.button).setOnClickListener {
             if (Root.request()) {
                 PreferenceManager.getDefaultSharedPreferences(this).edit()
-                    .putBoolean(P.PREF_SETUP_COMPLETE, true)
+                    .putBoolean(P.SETUP_COMPLETE, true)
                     .apply()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()

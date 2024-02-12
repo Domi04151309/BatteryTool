@@ -32,25 +32,25 @@ class SettingsActivity : BaseActivity() {
         private lateinit var notificationSettings: ActivityResultLauncher<Intent>
         private val preferenceChangeListener =
             SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-                if (key == P.PREF_AUTO_STOP_DELAY) updateAutoStopDelaySummary()
-                if (key == P.PREF_AGGRESSIVE_DOZE_DELAY) updateDozeDelaySummary()
-                if (key == P.PREF_ALLOW_MUSIC) updateAllowMusicApps()
+                if (key == P.AUTO_STOP_DELAY) updateAutoStopDelaySummary()
+                if (key == P.AGGRESSIVE_DOZE_DELAY) updateDozeDelaySummary()
+                if (key == P.ALLOW_MUSIC) updateAllowMusicApps()
             }
 
         private fun checkNotificationsPermission() {
             val needsPermission =
                 preferenceManager.sharedPreferences?.getBoolean(
-                    P.PREF_ALLOW_MUSIC,
-                    P.PREF_ALLOW_MUSIC_DEFAULT,
-                ) ?: P.PREF_ALLOW_MUSIC_DEFAULT
+                    P.ALLOW_MUSIC,
+                    P.ALLOW_MUSIC_DEFAULT,
+                ) ?: P.ALLOW_MUSIC_DEFAULT
             val hasPermission = NotificationService.getInstance() != null
             if (needsPermission && !hasPermission) {
                 preferenceManager.sharedPreferences?.edit()
-                    ?.putBoolean(P.PREF_ALLOW_MUSIC, P.PREF_ALLOW_MUSIC_DEFAULT)
+                    ?.putBoolean(P.ALLOW_MUSIC, P.ALLOW_MUSIC_DEFAULT)
                     ?.apply()
                 preferenceScreen.findPreference<SwitchPreference>(
-                    P.PREF_ALLOW_MUSIC,
-                )?.isChecked = P.PREF_ALLOW_MUSIC_DEFAULT
+                    P.ALLOW_MUSIC,
+                )?.isChecked = P.ALLOW_MUSIC_DEFAULT
             }
         }
 
@@ -87,40 +87,40 @@ class SettingsActivity : BaseActivity() {
         }
 
         private fun updateAutoStopDelaySummary() {
-            findPreference<EditIntegerPreference>(P.PREF_AUTO_STOP_DELAY)?.summary =
+            findPreference<EditIntegerPreference>(P.AUTO_STOP_DELAY)?.summary =
                 requireContext().resources.getQuantityString(
                     R.plurals.pref_auto_stop_delay_summary,
                     preferenceManager.sharedPreferences?.getInt(
-                        P.PREF_AUTO_STOP_DELAY,
-                        P.PREF_AUTO_STOP_DELAY_DEFAULT,
-                    ) ?: P.PREF_AUTO_STOP_DELAY_DEFAULT,
+                        P.AUTO_STOP_DELAY,
+                        P.AUTO_STOP_DELAY_DEFAULT,
+                    ) ?: P.AUTO_STOP_DELAY_DEFAULT,
                     preferenceManager.sharedPreferences?.getInt(
-                        P.PREF_AUTO_STOP_DELAY,
-                        P.PREF_AUTO_STOP_DELAY_DEFAULT,
+                        P.AUTO_STOP_DELAY,
+                        P.AUTO_STOP_DELAY_DEFAULT,
                     ),
                 )
         }
 
         private fun updateDozeDelaySummary() {
-            findPreference<EditIntegerPreference>(P.PREF_AGGRESSIVE_DOZE_DELAY)?.summary =
+            findPreference<EditIntegerPreference>(P.AGGRESSIVE_DOZE_DELAY)?.summary =
                 requireContext().resources.getQuantityString(
                     R.plurals.pref_aggressive_doze_delay_summary,
                     preferenceManager.sharedPreferences?.getInt(
-                        P.PREF_AGGRESSIVE_DOZE_DELAY,
-                        P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
-                    ) ?: P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
+                        P.AGGRESSIVE_DOZE_DELAY,
+                        P.AGGRESSIVE_DOZE_DELAY_DEFAULT,
+                    ) ?: P.AGGRESSIVE_DOZE_DELAY_DEFAULT,
                     preferenceManager.sharedPreferences?.getInt(
-                        P.PREF_AGGRESSIVE_DOZE_DELAY,
-                        P.PREF_AGGRESSIVE_DOZE_DELAY_DEFAULT,
+                        P.AGGRESSIVE_DOZE_DELAY,
+                        P.AGGRESSIVE_DOZE_DELAY_DEFAULT,
                     ),
                 )
         }
 
         private fun updateAllowMusicApps() {
             if (preferenceManager.sharedPreferences?.getBoolean(
-                    P.PREF_ALLOW_MUSIC,
-                    P.PREF_ALLOW_MUSIC_DEFAULT,
-                ) ?: P.PREF_ALLOW_MUSIC_DEFAULT
+                    P.ALLOW_MUSIC,
+                    P.ALLOW_MUSIC_DEFAULT,
+                ) ?: P.ALLOW_MUSIC_DEFAULT
             ) {
                 val hasPermission = NotificationService.getInstance() != null
                 if (!hasPermission) {
