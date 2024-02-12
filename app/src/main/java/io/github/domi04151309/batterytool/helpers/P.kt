@@ -35,15 +35,15 @@ object P {
             APP_SET_DEFAULT,
         ) ?: APP_SET_DEFAULT
 
-    internal fun getBlacklistMutable(context: Context): MutableSet<String> = HashSet(getForced(context))
+    internal fun getBlacklistMutable(context: Context): MutableSet<String> = HashSet(getBlacklist(context))
 
     internal fun setBlacklist(
         context: Context,
-        forced: Set<String>,
+        blacklist: Set<String>,
     ) {
         getPreferences(context)
             .edit()
-            .putStringSet(APP_SET, forced)
+            .putStringSet(APP_SET, blacklist)
             .apply()
     }
 
