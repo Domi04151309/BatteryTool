@@ -45,7 +45,7 @@ object AppHelper {
         playingMusicPackage: String?,
     ) {
         val apps = P.getBlacklist(context)
-        val commands: ArrayList<String> = ArrayList(apps.length() / 2)
+        val commands: ArrayList<String> = ArrayList(apps.size / 2)
         val services = Root.getServices()
         val focused =
             if (
@@ -58,12 +58,11 @@ object AppHelper {
             } else {
                 PseudoHashSet()
             }
-        for (i in 0 until apps.length()) {
+        for (packageName in apps) {
             try {
-                val packageName = apps.getString(i)
                 @Suppress("ComplexCondition")
                 if (
-                    !packageName.equals(playingMusicPackage) &&
+                    packageName != playingMusicPackage &&
                     !focused.contains(packageName) &&
                     context.packageManager.getApplicationInfo(
                         packageName,

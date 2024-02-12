@@ -85,14 +85,14 @@ class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
     private fun loadApps() =
         Thread {
             val blacklist = P.getBlacklist(this)
-            val soonApps: MutableList<SimpleListItem> = ArrayList(blacklist.length() / 2)
-            val unnecessaryApps: MutableList<SimpleListItem> = ArrayList(blacklist.length() / 2)
-            val stoppedApps: MutableList<SimpleListItem> = ArrayList(blacklist.length() / 2)
+            val soonApps: MutableList<SimpleListItem> = ArrayList(blacklist.size / 2)
+            val unnecessaryApps: MutableList<SimpleListItem> = ArrayList(blacklist.size / 2)
+            val stoppedApps: MutableList<SimpleListItem> = ArrayList(blacklist.size / 2)
             val services = Root.getServices()
 
             @Suppress("LoopWithTooManyJumpStatements")
-            for (appIndex in 0 until blacklist.length()) {
-                val listItem = AppHelper.generateListItem(this, blacklist.getString(appIndex))
+            for (app in blacklist) {
+                val listItem = AppHelper.generateListItem(this, app)
                 if (
                     packageManager.getApplicationInfo(
                         listItem.summary,
@@ -205,14 +205,12 @@ class MainActivity : BaseActivity(), RecyclerViewHelperInterface {
                 loadApps()
             }
             ITEM_REMOVE_FROM_LIST -> {
-                val apps = P.getBlacklist(this)
-                for (appIndex in 0 until apps.length()) {
-                    if (apps.getString(appIndex) == packageName) {
-                        apps.remove(appIndex)
-                        break
-                    }
-                }
-                P.setBlacklist(this, apps)
+                P.setBlacklist(
+                    this,
+                    P.getBlacklistMutable(this).apply {
+                        remove(packageName)
+                    },
+                )
                 loadApps()
             }
         }

@@ -43,7 +43,7 @@ class AddingActivity : BaseActivity(), RecyclerViewHelperInterface {
         applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED != 0 &&
             applicationInfo.flags and ApplicationInfo.FLAG_HAS_CODE != 0 &&
             applicationInfo.packageName != packageName &&
-            !P.getBlacklist(this).toString().contains(applicationInfo.packageName)
+            !P.getBlacklist(this).contains(applicationInfo.packageName)
 
     @Suppress("CognitiveComplexMethod")
     private fun loadApps() =
@@ -86,8 +86,8 @@ class AddingActivity : BaseActivity(), RecyclerViewHelperInterface {
     private fun onAddClicked() {
         P.setBlacklist(
             this,
-            P.getBlacklist(this).apply {
-                for (app in appsToAdd) put(app.summary)
+            P.getBlacklistMutable(this).apply {
+                for (app in appsToAdd) add(app.summary)
             },
         )
         finish()
